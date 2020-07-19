@@ -1,7 +1,6 @@
 import React from "react";
 import { useStyletron } from "baseui";
 import { StyledLink } from "baseui/link";
-import { Layer } from "baseui/layer";
 import { Unstable_AppNavBar as AppNavBar } from "baseui/app-nav-bar";
 import { Overflow as UserIcon, Upload as Icon } from "baseui/icon";
 
@@ -11,32 +10,24 @@ const Navbar = (props: Props) => {
     const [css] = useStyletron();
 
     const containerStyles = css({
-        boxSizing: "border-box",
         width: "100vw",
-        position: "fixed",
-        top: "0",
-        left: "0",
     });
 
     return (
-        <React.Fragment>
-            <Layer>
-                <div className={containerStyles}>
-                    <AppNavBar
-                        appDisplayName={appDisplayName}
-                        mainNav={MAIN_NAV}
-                        isNavItemActive={({ item }) => {
-                            return false;
-                        }}
-                        onNavItemSelect={({ item }) => {}}
-                        userNav={USER_NAV}
-                        username="Ashish Kumar"
-                        usernameSubtitle="5.0"
-                        userImgUrl=""
-                    />
-                </div>
-            </Layer>
-        </React.Fragment>
+        <header className={containerStyles}>
+            <AppNavBar
+                appDisplayName={appDisplayName}
+                mainNav={MAIN_NAV_ITEMS}
+                isNavItemActive={({ item }) => {
+                    return false;
+                }}
+                onNavItemSelect={({ item }) => {}}
+                userNav={USER_NAV_ITEMS}
+                username="Ashish Kumar"
+                usernameSubtitle="5.0"
+                userImgUrl=""
+            />
+        </header>
     );
 };
 
@@ -52,11 +43,11 @@ const appDisplayName = (
         }}
         href={"#"}
     >
-        App Something
+        RadonV3
     </StyledLink>
 );
 
-const MAIN_NAV = [
+const MAIN_NAV_ITEMS = [
     {
         icon: Icon,
         item: { label: "Primary alpha1" },
@@ -75,7 +66,7 @@ function renderItem(item: any) {
     return item.label;
 }
 
-const USER_NAV = [
+const USER_NAV_ITEMS = [
     {
         icon: UserIcon,
         item: { label: "Dark Mode" },
