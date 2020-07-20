@@ -1,16 +1,24 @@
-export type Post = {
+export interface Post {
     id: number;
     title: string;
     mediaUrl: string;
     sensitive: boolean;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt: Date;
+    deletedAt?: Date;
     width: number;
     height: number;
     aspectRatio: string;
     mime: string;
-};
+    user: User;
+    timeago: string;
+    vote?: number;
+}
+export interface User {
+    id: number;
+    username: string;
+    avatarUrl?: null;
+}
 
 export function createInitialState(): Post {
     return POST_INITIAL_STATE;
@@ -28,4 +36,11 @@ const POST_INITIAL_STATE: Post = {
     height: 0,
     aspectRatio: "n/a",
     mime: "n/a",
+    user: {
+        id: 0,
+        username: "",
+        avatarUrl: null,
+    },
+    timeago: "",
+    vote: 0,
 };

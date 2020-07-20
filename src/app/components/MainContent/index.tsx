@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
+import React from "react";
 import { postService } from "../../state/posts/post.service";
-import { Button } from "baseui/button";
 import { usePostHook } from "../../state/posts/post.hook";
+import InfiniteScroll from "react-infinite-scroller";
+import { Post } from "../../state/posts";
+import PostItem from "../PostItem";
 
 interface Props {}
 
 const MainContent = (props: Props) => {
     const [posts] = usePostHook();
-    let pageNo = 1;
 
-    const fetchData = () => {
+    const fetchData = (pageNo: number) => {
         postService.getPost(pageNo);
-        pageNo++;
+        console.log("posts", posts);
     };
 
     const style = {
@@ -22,29 +22,23 @@ const MainContent = (props: Props) => {
         padding: 8,
     };
 
-    useEffect(() => {
-        fetchData();
-    });
+    const getPostList = (post: Post[]) => {
+        return post.map((item) => <PostItem item={item} key={item.id} />);
+    };
 
     return (
         <main>
-            <Button onClick={fetchData}>Hello</Button>
             <InfiniteScroll
-                dataLength={posts.length}
-                next={fetchData}
+                pageStart={0}
+                loadMore={fetchData}
                 hasMore={true}
-                loader={<h4>Loading...</h4>}
-                endMessage={
-                    <p style={{ textAlign: "center" }}>
-                        <b>Yay! You have seen it all</b>
-                    </p>
+                loader={
+                    <div className="loader" key={0}>
+                        Loading ...
+                    </div>
                 }
             >
-                {posts.map((post) => (
-                    <div style={style} key={post.id}>
-                        {post.title}
-                    </div>
-                ))}
+                {getPostList(posts)}
             </InfiniteScroll>
         </main>
     );
