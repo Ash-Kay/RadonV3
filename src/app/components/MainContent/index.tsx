@@ -4,22 +4,18 @@ import { usePostHook } from "../../state/posts/post.hook";
 import InfiniteScroll from "react-infinite-scroller";
 import { Post } from "../../state/posts";
 import PostItem from "../PostItem";
+import { useAuthStateHook } from "../../state/auth/auth.hook";
 
 interface Props {}
 
 const MainContent = (props: Props) => {
     const [posts] = usePostHook();
+    const [authState] = useAuthStateHook();
 
     const fetchData = (pageNo: number) => {
-        postService.getPost(pageNo);
-        console.log("posts", posts);
-    };
-
-    const style = {
-        height: 300,
-        border: "1px solid green",
-        margin: 6,
-        padding: 8,
+        if (authState.token !== null && authState.token !== undefined && authState.token !== "")
+            postService.getPostAuth(pageNo, authState.token);
+        else postService.getPost(pageNo);
     };
 
     const getPostList = (post: Post[]) => {

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Block } from "baseui/block";
 import { Avatar } from "baseui/avatar";
-import { Post } from "../../state/posts";
+import { Post, postService } from "../../state/posts";
+import { BlockProps } from "baseui/block";
+import { Checkbox, STYLE_TYPE, LABEL_PLACEMENT } from "baseui/checkbox";
+import { useAuthStateHook } from "../../state/auth/auth.hook";
 
 interface Props {
     item: Post;
 }
-
 interface MediaProps {
     mediaUrl: string;
     mime: string;
@@ -24,11 +26,63 @@ const Media = (props: MediaProps) => {
 };
 
 const PostItem = (props: Props) => {
+    const [upvoted, setIsUpvoted] = React.useState(false);
+    const [downvoted, setIsDownvoted] = React.useState(false);
+    const [authState] = useAuthStateHook();
+
+    useEffect(() => {
+        if (props.item.vote !== null && props.item.vote !== undefined) {
+            if (props.item.vote > 0) setIsUpvoted(true);
+            if (props.item.vote < 0) setIsDownvoted(true);
+        }
+    }, []);
+
+    const upvote = (checked: boolean) => {
+        setIsUpvoted(checked);
+        if (checked) {
+            setIsDownvoted(false);
+            postService.upvote(props.item.id, authState.token);
+        } else postService.removeVote(props.item.id, authState.token);
+    };
+    const downvote = (checked: boolean) => {
+        setIsDownvoted(checked);
+        if (checked) {
+            setIsUpvoted(false);
+            postService.downvote(props.item.id, authState.token);
+        } else postService.removeVote(props.item.id, authState.token);
+    };
+
+    const flexGridItemProps: BlockProps = {
+        display: "flex",
+        marginTop: "1rem",
+        marginBottom: "1rem",
+        backgroundColor: "#e2e2e2",
+    };
+
     return (
         <Block>
-            <Avatar name={props.item.user.username} size="50px" src={props.item.user.avatarUrl!} />
-            <h3>{props.item.title}</h3>
+            <Block {...flexGridItemProps}>
+                <Avatar name={props.item.user.username} size="40px" src={props.item.user.avatarUrl!} />
+                <h3>{props.item.title}</h3>
+                <span>{props.item.timeago}</span>
+            </Block>
             <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
+            <Checkbox
+                checked={upvoted}
+                checkmarkType={STYLE_TYPE.toggle}
+                onChange={(e) => upvote(e.currentTarget.checked)}
+                labelPlacement={LABEL_PLACEMENT.right}
+            >
+                Upvoted
+            </Checkbox>
+            <Checkbox
+                checked={downvoted}
+                checkmarkType={STYLE_TYPE.toggle}
+                onChange={(e) => downvote(e.currentTarget.checked)}
+                labelPlacement={LABEL_PLACEMENT.right}
+            >
+                Downvoted
+            </Checkbox>
         </Block>
     );
 };

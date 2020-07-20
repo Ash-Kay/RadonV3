@@ -11,10 +11,12 @@ import { Avatar } from "baseui/avatar";
 import { Modal, ModalHeader, ModalBody, ModalFooter, ModalButton } from "baseui/modal";
 import GoogleLogin from "react-google-login";
 import { authService } from "../../state/auth/auth.service";
+import { useAuthStateHook } from "../../state/auth/auth.hook";
 
 interface Props {}
 
 const Navbar = (props: Props) => {
+    const [authState] = useAuthStateHook();
     const [isSignInModalOpen, setSignInModalOpen] = React.useState(false);
 
     const closeSignInModal = () => {
@@ -22,8 +24,8 @@ const Navbar = (props: Props) => {
     };
 
     const successResponse = (response: any) => {
-        authService.getToken(response.tokenId);
-        console.log("successResponse", response.tokenId);
+        authService.getTokenWithGoogleAuth(response.tokenId);
+        closeSignInModal();
     };
     const failureResponse = (response: any) => {
         console.error("error response", response);
@@ -48,12 +50,21 @@ const Navbar = (props: Props) => {
                 </NavigationList>
                 <NavigationList $align={ALIGN.center} />
                 <NavigationList $align={ALIGN.right}>
-                    <NavigationItem>
-                        <Button onClick={() => setSignInModalOpen(true)}>Sign In</Button>
-                    </NavigationItem>
-                    <NavigationItem>
-                        <Avatar name="ASHISH KUMAR" size="40px" src="" />
-                    </NavigationItem>
+                    {authState.isLoggedIn && (
+                        <NavigationItem>
+                            <Button onClick={authService.logout}>Logout</Button>
+                        </NavigationItem>
+                    )}
+                    {!authState.isLoggedIn && (
+                        <NavigationItem>
+                            <Button onClick={() => setSignInModalOpen(true)}>Sign In</Button>
+                        </NavigationItem>
+                    )}
+                    {authState.isLoggedIn && (
+                        <NavigationItem>
+                            <Avatar name={authState.username} size="40px" src={""} />
+                        </NavigationItem>
+                    )}
                 </NavigationList>
             </HeaderNavigation>
 
@@ -74,9 +85,6 @@ const Navbar = (props: Props) => {
                 <ModalHeader>Sign In</ModalHeader>
                 <ModalBody style={{ flex: "1 1 0" }}>
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, facere.
-                    <Button $as="a" href="http://localhost:3000/api/v1/users/auth/google">
-                        Sign In with Google
-                    </Button>
                     <GoogleLogin
                         clientId="946380795317-321u8sasdpeqe6uuja0cs5c071bs8vqb.apps.googleusercontent.com"
                         buttonText="Login"
@@ -84,28 +92,9 @@ const Navbar = (props: Props) => {
                         onFailure={failureResponse}
                     />
                 </ModalBody>
-                <ModalFooter>
-                    <ModalButton type="submit" onClick={closeSignInModal}>
-                        Sign In
-                    </ModalButton>
-                </ModalFooter>
             </Modal>
         </React.Fragment>
     );
 };
 
 export default Navbar;
-
-const appDisplayName = (
-    <StyledLink
-        $style={{
-            textDecoration: "none",
-            color: "inherit",
-            ":hover": { color: "inherit" },
-            ":visited": { color: "inherit" },
-        }}
-        href={"#"}
-    >
-        RadonV3
-    </StyledLink>
-);

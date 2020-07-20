@@ -1,9 +1,14 @@
+import jwtDecode from "jwt-decode";
+import { AuthToken } from "../../../interface/authtoken.interface";
+
 export interface AuthState {
     email: string;
     id: number;
     googleId: string;
     role: Role;
     username: string;
+    token: string;
+    isLoggedIn: boolean;
 }
 export enum Role {
     USER = "USER",
@@ -11,7 +16,26 @@ export enum Role {
 }
 
 export function createInitialState(): AuthState {
-    return AUTH_INITIAL_STATE;
+    const token = localStorage.getItem("token");
+    if (token == null) return AUTH_INITIAL_STATE;
+
+    let decodedUser: AuthToken;
+    try {
+        decodedUser = jwtDecode(token);
+        const AUTH_INITIAL_LOGGED_IN_STATE: AuthState = {
+            id: decodedUser.id,
+            email: decodedUser.email,
+            googleId: decodedUser.googleId,
+            username: decodedUser.username,
+            role: Role[decodedUser.role as keyof typeof Role],
+            token,
+            isLoggedIn: true,
+        };
+
+        return AUTH_INITIAL_LOGGED_IN_STATE;
+    } catch (error) {
+        return AUTH_INITIAL_STATE;
+    }
 }
 
 export const AUTH_INITIAL_STATE: AuthState = {
@@ -20,4 +44,6 @@ export const AUTH_INITIAL_STATE: AuthState = {
     role: Role.USER,
     username: "",
     googleId: "",
+    token: "",
+    isLoggedIn: false,
 };

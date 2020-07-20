@@ -1,10 +1,10 @@
 import { StoreConfig, Store } from "@datorama/akita";
-import { AuthState, AUTH_INITIAL_STATE } from "./auth.model";
+import { AuthState, createInitialState } from "./auth.model";
 
 @StoreConfig({ name: "auth" })
 export class AuthStore extends Store<AuthState> {
     constructor() {
-        super(AUTH_INITIAL_STATE);
+        super(createInitialState());
     }
 }
 
