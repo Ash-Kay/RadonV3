@@ -1,7 +1,5 @@
 import React from "react";
-import { useStyletron } from "baseui";
 import { StyledLink } from "baseui/link";
-import { Overflow as UserIcon, Upload as Icon } from "baseui/icon";
 import {
     HeaderNavigation,
     ALIGN,
@@ -12,29 +10,20 @@ import { Button } from "baseui/button";
 import { Avatar } from "baseui/avatar";
 import { Modal, ModalHeader, ModalBody, ModalFooter, ModalButton } from "baseui/modal";
 import GoogleLogin from "react-google-login";
+import { authService } from "../../state/auth/auth.service";
 
 interface Props {}
 
 const Navbar = (props: Props) => {
-    const [css] = useStyletron();
     const [isSignInModalOpen, setSignInModalOpen] = React.useState(false);
-
-    const containerStyles = css({
-        // width: "100vw",
-        paddingLeft: "2rem",
-        paddingRight: "2rem",
-    });
-    const style = {
-        paddingLeft: "2rem",
-        paddingRight: "2rem",
-    };
 
     const closeSignInModal = () => {
         setSignInModalOpen(false);
     };
 
     const successResponse = (response: any) => {
-        console.log("successResponse", response);
+        authService.getToken(response.tokenId);
+        console.log("successResponse", response.tokenId);
     };
     const failureResponse = (response: any) => {
         console.error("error response", response);
