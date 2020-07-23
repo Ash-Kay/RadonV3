@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
 import { Block } from "baseui/block";
 import { Avatar } from "baseui/avatar";
-import { Post, postService } from "../../state/posts";
+import { Post, postService, Comment } from "../../state/posts";
 import { BlockProps } from "baseui/block";
 import { Checkbox, STYLE_TYPE, LABEL_PLACEMENT } from "baseui/checkbox";
 import { useAuthStateHook } from "../../state/auth/auth.hook";
+import CommentItem from "../CommentItem";
+import { Button } from "baseui/button";
+import { Input } from "baseui/input";
+import { Upload } from "baseui/icon";
 
 interface Props {
     item: Post;
@@ -28,6 +32,7 @@ const Media = (props: MediaProps) => {
 const PostItem = (props: Props) => {
     const [upvoted, setIsUpvoted] = React.useState(false);
     const [downvoted, setIsDownvoted] = React.useState(false);
+    const [commentText, setCommentText] = React.useState("");
     const [authState] = useAuthStateHook();
 
     useEffect(() => {
@@ -35,6 +40,7 @@ const PostItem = (props: Props) => {
             if (props.item.vote > 0) setIsUpvoted(true);
             if (props.item.vote < 0) setIsDownvoted(true);
         }
+        postService.getComments(props.item.id);
     }, []);
 
     const upvote = (checked: boolean) => {
@@ -52,6 +58,22 @@ const PostItem = (props: Props) => {
         } else postService.removeVote(props.item.id, authState.token);
     };
 
+    const getCommentList = (comments: Comment[]) => {
+        if (comments === undefined) {
+            return <h4>Loading Comments...</h4>;
+        }
+
+        return comments.map((item) => <CommentItem item={item} key={item.id} />);
+    };
+
+    const postComment = () => {
+        //TODO show login modal
+        if (!authState.isLoggedIn) return;
+        postService.postComment(props.item.id, commentText, "", authState.token);
+        //TODO only clear if success
+        setCommentText("");
+    };
+
     const flexGridItemProps: BlockProps = {
         display: "flex",
         marginTop: "1rem",
@@ -59,12 +81,16 @@ const PostItem = (props: Props) => {
         backgroundColor: "#e2e2e2",
     };
 
+    const flexProp: BlockProps = {
+        display: "flex",
+    };
+
     return (
         <Block>
             <Block {...flexGridItemProps}>
                 <Avatar name={props.item.user.username} size="40px" src={props.item.user.avatarUrl!} />
                 <h3>{props.item.title}</h3>
-                <span>{props.item.timeago}</span>
+                <span style={{ paddingLeft: "1rem" }}>{props.item.timeago}</span>
             </Block>
             <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
             <Checkbox
@@ -83,6 +109,20 @@ const PostItem = (props: Props) => {
             >
                 Downvoted
             </Checkbox>
+            <Block>{getCommentList(props.item.comment)}</Block>
+            <Block {...flexProp}>
+                <Input
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.currentTarget.value)}
+                    placeholder="Commnet"
+                    endEnhancer={() => (
+                        <Button>
+                            <Upload />
+                        </Button>
+                    )}
+                />
+                <Button onClick={postComment}>Send</Button>
+            </Block>
         </Block>
     );
 };

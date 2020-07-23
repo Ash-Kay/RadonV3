@@ -13,11 +13,22 @@ export interface Post {
     user: User;
     timeago: string;
     vote?: number;
+    comment: Comment[];
 }
 export interface User {
     id: number;
     username: string;
     avatarUrl?: null;
+}
+export interface Comment {
+    id: number;
+    message: string;
+    mediaUrl: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt?: Date;
+    tagTo?: User;
+    user: User;
 }
 
 export function createInitialState(): Post {
@@ -43,4 +54,5 @@ const POST_INITIAL_STATE: Post = {
     },
     timeago: "",
     vote: 0,
+    comment: [],
 };
