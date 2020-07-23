@@ -1,7 +1,7 @@
 import axios from "axios";
 import { PostStore, postStore } from "./post.store";
 import { postQuery, PostQuery } from "./post.query";
-import { authService } from "../auth/auth.service";
+import { NewPostForm } from "../../components/CreatePostButton";
 
 export class PostService {
     constructor(private store: PostStore, private query: PostQuery) {}
@@ -12,7 +12,7 @@ export class PostService {
     public getPostAuth = (pageNo: number, token: string) => {
         this.store.setLoading(true);
         axios
-            .get(`http://localhost:3000/api/v1/posts/?page=${pageNo}`, getTokenHeader(token))
+            .get(`http://localhost:3000/api/v1/posts/?page=${pageNo}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
                 this.store.add(response.data.data, { prepend: true });
                 this.store.setLoading(false);
@@ -38,7 +38,11 @@ export class PostService {
     public upvote = (postId: number, token: string) => {
         this.store.setLoading(true);
         axios
-            .post(`http://localhost:3000/api/v1/posts/${postId}/upvote`, null, getTokenHeader(token))
+            .post(
+                `http://localhost:3000/api/v1/posts/${postId}/upvote`,
+                null,
+                getHeader({ token }, HeaderType.AUTH_TOKEN)
+            )
             .then((response) => {
                 this.store.update(postId, { vote: 1 });
                 this.store.setLoading(false);
@@ -51,7 +55,11 @@ export class PostService {
     public downvote = (postId: number, token: string) => {
         this.store.setLoading(true);
         axios
-            .post(`http://localhost:3000/api/v1/posts/${postId}/downvote`, null, getTokenHeader(token))
+            .post(
+                `http://localhost:3000/api/v1/posts/${postId}/downvote`,
+                null,
+                getHeader({ token }, HeaderType.AUTH_TOKEN)
+            )
             .then((response) => {
                 this.store.update(postId, { vote: -1 });
                 this.store.setLoading(false);
@@ -64,7 +72,10 @@ export class PostService {
     public removeVote = (postId: number, token: string) => {
         this.store.setLoading(true);
         axios
-            .delete(`http://localhost:3000/api/v1/posts/${postId}/removevote`, getTokenHeader(token))
+            .delete(
+                `http://localhost:3000/api/v1/posts/${postId}/removevote`,
+                getHeader({ token }, HeaderType.AUTH_TOKEN)
+            )
             .then((response) => {
                 this.store.update(postId, { vote: 0 });
                 this.store.setLoading(false);
@@ -94,7 +105,11 @@ export class PostService {
 
         this.store.setLoading(true);
         axios
-            .post(`http://localhost:3000/api/v1/posts/${postId}/comment`, formData, getTokenHeader(token))
+            .post(
+                `http://localhost:3000/api/v1/posts/${postId}/comment`,
+                formData,
+                getHeader({ token }, HeaderType.AUTH_TOKEN)
+            )
             .then((response) => {
                 const updatedComments = postQuery.getCommentsFromEntity(postId).concat(response.data.data);
                 this.store.update(postId, {
@@ -106,14 +121,46 @@ export class PostService {
                 console.error(error);
             });
     };
+
+    public createNewPost = (data: NewPostForm, token: string) => {
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("sensitive", data.sensitive.toString());
+        if (data.file !== null) formData.append("file", data.file);
+
+        this.store.setLoading(true);
+        axios
+            .post(
+                `http://localhost:3000/api/v1/posts/`,
+                formData,
+                getHeader({ token }, HeaderType.AUTH_TOKEN | HeaderType.MULTIPART)
+            )
+            .then((response) => {
+                this.store.setLoading(false);
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    };
 }
 
 export const postService = new PostService(postStore, postQuery);
 
-const getTokenHeader = (token: string) => {
-    return {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    };
+const getHeader = (data: HeaderData, type: number) => {
+    let headersObject: { headers: { [k: string]: string } } = { headers: {} };
+
+    if (type & HeaderType.AUTH_TOKEN) headersObject.headers["Authorization"] = `Bearer ${data.token}`;
+
+    if (type & HeaderType.MULTIPART) headersObject.headers["Content-type"] = "multipart/form-data";
+
+    return headersObject;
 };
+
+enum HeaderType {
+    AUTH_TOKEN = 1,
+    MULTIPART = 2,
+}
+
+interface HeaderData {
+    token?: string;
+}

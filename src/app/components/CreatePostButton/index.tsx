@@ -1,75 +1,34 @@
 import React from "react";
 import { StyledNavigationItem as NavigationItem } from "baseui/header-navigation";
 import { Button } from "baseui/button";
-import { Modal, ModalHeader, ModalBody } from "baseui/modal";
+import { Modal, ModalHeader, ModalBody, ModalFooter, ModalButton } from "baseui/modal";
 import { FileUploader } from "baseui/file-uploader";
-import { Input, StyledInput } from "baseui/input";
+import { Input } from "baseui/input";
 import { Checkbox, LABEL_PLACEMENT } from "baseui/checkbox";
-import { useStyletron } from "baseui";
-import { Tag, VARIANT as TAG_VARIANT } from "baseui/tag";
+import { postService } from "../../state/posts";
+import { AuthState } from "../../state/auth/auth.model";
 
-interface Props {}
-interface Form {
+interface Props {
+    authState: AuthState;
+}
+export interface NewPostForm {
     title: string;
     sensitive: boolean;
-    tags: string[];
+    // tags: string[];
     file: File | null;
-}
-interface InputReplacementProps {
-    tags: string[];
-    removeTag: (tag: string) => void;
 }
 
 const NewPostButton = (props: Props) => {
-    const [css] = useStyletron();
     const [isCreatePostModalOpen, setCreatePostModalOpen] = React.useState(false);
     const [createPostForm, setCreatePostForm] = React.useState(emtyForm);
 
-    //Tags
-    const [value, setValue] = React.useState("");
-    const [tags, setTags] = React.useState(["hello"]);
-    const addTag = (tag: string) => {
-        setTags([...tags, tag]);
-    };
-    const removeTag = (tag: string) => {
-        setTags(tags.filter((t) => t !== tag));
-    };
-    const handleKeyDown = (event: any) => {
-        switch (event.keyCode) {
-            // Enter
-            case 13: {
-                if (!value) return;
-                addTag(value);
-                setValue("");
-                return;
-            }
-            // Backspace
-            case 8: {
-                if (value || !tags.length) return;
-                removeTag(tags[tags.length - 1]);
-                return;
-            }
+    //Todo Tags!
+    const submitNewPostForm = () => {
+        if (createPostForm.file !== null && createPostForm.title !== "") {
+            postService.createNewPost(createPostForm, props.authState.token);
+            setCreatePostModalOpen(false);
         }
     };
-    const InputReplacement: any = React.forwardRef(({ tags, removeTag, ...restProps }: InputReplacementProps, ref) => {
-        return (
-            <div
-                className={css({
-                    flex: "1 1 0%",
-                    flexWrap: "wrap",
-                    display: "flex",
-                    alignItems: "center",
-                })}
-            >
-                {tags.map((tag: string, index: number) => (
-                    <Tag variant={TAG_VARIANT.outlined} onActionClick={() => removeTag(tag)} key={index}>
-                        {tag}
-                    </Tag>
-                ))}
-                <StyledInput ref={ref} {...restProps} />
-            </div>
-        );
-    });
 
     return (
         <>
@@ -111,23 +70,10 @@ const NewPostButton = (props: Props) => {
                     >
                         Sensitive Media
                     </Checkbox>
-                    <Input
-                        placeholder={tags.length ? "" : "Enter A Tag"}
-                        value={value}
-                        onChange={(e) => setValue(e.currentTarget.value)}
-                        overrides={{
-                            Input: {
-                                style: { width: "auto", flexGrow: 1 },
-                                component: InputReplacement,
-                                props: {
-                                    tags: tags,
-                                    removeTag: removeTag,
-                                    onKeyDown: handleKeyDown,
-                                },
-                            },
-                        }}
-                    />
                 </ModalBody>
+                <ModalFooter>
+                    <ModalButton onClick={submitNewPostForm}>Submit</ModalButton>
+                </ModalFooter>
             </Modal>
         </>
     );
@@ -135,9 +81,9 @@ const NewPostButton = (props: Props) => {
 
 export default NewPostButton;
 
-const emtyForm: Form = {
+const emtyForm: NewPostForm = {
     title: "",
     sensitive: false,
-    tags: [],
+    // tags: [],
     file: null,
 };

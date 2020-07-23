@@ -36,7 +36,7 @@ const Navbar = (props: Props) => {
                 </NavigationList>
                 <NavigationList $align={ALIGN.center} />
                 <NavigationList $align={ALIGN.right}>
-                    {authState.isLoggedIn && <CreatePostButton />}
+                    {authState.isLoggedIn && <CreatePostButton authState={authState} />}
                     {authState.isLoggedIn && (
                         <NavigationItem>
                             <Button onClick={authService.logout}>Logout</Button>
