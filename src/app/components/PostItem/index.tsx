@@ -44,6 +44,7 @@ const PostItem = (props: Props) => {
     }, []);
 
     const upvote = (checked: boolean) => {
+        if (!authState.isLoggedIn) return;
         setIsUpvoted(checked);
         if (checked) {
             setIsDownvoted(false);
@@ -51,6 +52,7 @@ const PostItem = (props: Props) => {
         } else postService.removeVote(props.item.id, authState.token);
     };
     const downvote = (checked: boolean) => {
+        if (!authState.isLoggedIn) return;
         setIsDownvoted(checked);
         if (checked) {
             setIsUpvoted(false);
