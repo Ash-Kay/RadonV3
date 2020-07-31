@@ -27,6 +27,7 @@ export interface Comment {
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;
+    timeago: string;
     tagTo?: User;
     user: User;
 }

@@ -2,10 +2,31 @@ import axios from "axios";
 import { PostStore, postStore } from "./post.store";
 import { postQuery, PostQuery } from "./post.query";
 import { NewPostForm } from "../../components/CreatePostButton";
+import { authService } from "../auth/auth.service";
+import { authQuery } from "../auth/auth.query";
+
+enum HeaderType {
+    AUTH_TOKEN = 1,
+    MULTIPART = 2,
+}
 
 export class PostService {
-    constructor(private store: PostStore, private query: PostQuery) {}
-
+    constructor(private store: PostStore, private query: PostQuery) {
+        // axios.interceptors.response.use(
+        //     function (response) {
+        //         // Do something with response data
+        //         return response;
+        //     },
+        //     function (error) {
+        //         // Do something with response error
+        //         console.log("Logged OUT due to error");
+        //         if (error.response.status === 401) {
+        //             authService.logout();
+        //         }
+        //         return Promise.reject(error);
+        //     }
+        // );
+    }
     readonly homefeed$ = this.query.homefeed$;
 
     //TODO logout if 401 in any of call
@@ -18,6 +39,8 @@ export class PostService {
                 this.store.setLoading(false);
             })
             .catch(function (error) {
+                // console.log("error", error.response);
+                // if (error.response.status === 401) authService.logout();
                 console.error(error);
             });
     };
@@ -111,7 +134,11 @@ export class PostService {
                 getHeader({ token }, HeaderType.AUTH_TOKEN)
             )
             .then((response) => {
+                //Response only contains user's ID
+                response.data.data.user.username = authQuery.getValue().username;
+                response.data.data.user.avatarUrl = authQuery.getValue().avatarUrl;
                 const updatedComments = postQuery.getCommentsFromEntity(postId).concat(response.data.data);
+                console.log(response.data.data);
                 this.store.update(postId, {
                     comment: updatedComments,
                 });
@@ -147,7 +174,7 @@ export class PostService {
 export const postService = new PostService(postStore, postQuery);
 
 const getHeader = (data: HeaderData, type: number) => {
-    let headersObject: { headers: { [k: string]: string } } = { headers: {} };
+    const headersObject: { headers: { [k: string]: string } } = { headers: {} };
 
     if (type & HeaderType.AUTH_TOKEN) headersObject.headers["Authorization"] = `Bearer ${data.token}`;
 
@@ -155,11 +182,6 @@ const getHeader = (data: HeaderData, type: number) => {
 
     return headersObject;
 };
-
-enum HeaderType {
-    AUTH_TOKEN = 1,
-    MULTIPART = 2,
-}
 
 interface HeaderData {
     token?: string;

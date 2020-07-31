@@ -4,6 +4,7 @@ export interface AuthToken {
     role: string;
     username: string;
     googleId: string;
+    avatarUrl?: string;
     iat: number;
     exp: number;
 }
