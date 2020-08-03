@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyledNavigationItem as NavigationItem } from "baseui/header-navigation";
 import { Button } from "baseui/button";
 import { Modal, ModalHeader, ModalBody } from "baseui/modal";
 import GoogleLogin from "react-google-login";
 import { authService } from "../../state/auth/auth.service";
+import { Input } from "baseui/input";
 
 interface Props {}
 
 const RegisterLoginModal = (props: Props) => {
     const [isSignInModalOpen, setSignInModalOpen] = React.useState(false);
+    const [loginFormData, setLoginFormData] = useState({ email: "", password: "" }); //for debug
+    const [signupFormData, setSignupFormData] = useState({ username: "", password: "", email: "" }); //for debug
 
     const closeSignInModal = () => {
         setSignInModalOpen(false);
@@ -21,6 +24,13 @@ const RegisterLoginModal = (props: Props) => {
 
     const failureResponse = (response: any) => {
         console.error("error response", response);
+    };
+
+    const submitLoginForm = () => {
+        authService.loginWithUsernamePassword(loginFormData.email, loginFormData.password);
+    };
+    const submitSignupForm = () => {
+        authService.signupWithUsernamePassword(signupFormData.username, signupFormData.password, signupFormData.email);
     };
 
     return (
@@ -51,6 +61,39 @@ const RegisterLoginModal = (props: Props) => {
                         onSuccess={successResponse}
                         onFailure={failureResponse}
                     />
+                    <h2>Login</h2>
+                    <Input
+                        value={loginFormData.email}
+                        onChange={(e) => setLoginFormData({ ...loginFormData, email: e.currentTarget.value })}
+                        placeholder="Email"
+                        type="mail"
+                    />
+                    <Input
+                        value={loginFormData.password}
+                        onChange={(e) => setLoginFormData({ ...loginFormData, password: e.currentTarget.value })}
+                        placeholder="Password"
+                        type="Password"
+                    />
+                    <Button onClick={submitLoginForm}>Login</Button>
+                    <h2>SignUp</h2>
+                    <Input
+                        value={signupFormData.username}
+                        onChange={(e) => setSignupFormData({ ...signupFormData, username: e.currentTarget.value })}
+                        placeholder="Username"
+                    />
+                    <Input
+                        value={signupFormData.email}
+                        onChange={(e) => setSignupFormData({ ...signupFormData, email: e.currentTarget.value })}
+                        placeholder="email"
+                        type="email"
+                    />
+                    <Input
+                        value={signupFormData.password}
+                        onChange={(e) => setSignupFormData({ ...signupFormData, password: e.currentTarget.value })}
+                        placeholder="Password"
+                        type="Password"
+                    />
+                    <Button onClick={submitSignupForm}>Register</Button>
                 </ModalBody>
             </Modal>
         </>
