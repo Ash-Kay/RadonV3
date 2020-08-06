@@ -1,16 +1,9 @@
 import React from "react";
-import {
-    HeaderNavigation,
-    ALIGN,
-    StyledNavigationItem as NavigationItem,
-    StyledNavigationList as NavigationList,
-} from "baseui/header-navigation";
-import { Button } from "baseui/button";
-import { Avatar } from "baseui/avatar";
 import { authService } from "../../state/auth/auth.service";
 import { useAuthStateHook } from "../../state/auth/auth.hook";
 import CreatePostButton from "../CreatePostButton";
 import RegisterLoginModal from "../RegisterLoginModal";
+import { Flex, Text, Box, Button, Image } from "rebass";
 
 interface Props {}
 
@@ -19,37 +12,39 @@ const Navbar = (props: Props) => {
 
     return (
         <>
-            <HeaderNavigation
-                overrides={{
-                    Root: {
-                        style: {
-                            paddingLeft: "2rem",
-                            paddingRight: "2rem",
+            <Flex sx={{ px: [1, 2, 3], py: [2, 3, 3], color: "white", bg: "black", alignItems: "center" }}>
+                <Text
+                    sx={{
+                        p: "2",
+                        fontWeight: "bold",
+                        borderRadius: "3px",
+                        ":hover": {
+                            backgroundColor: "#ffffff24",
                         },
-                    },
-                }}
-            >
-                <NavigationList $align={ALIGN.left}>
-                    <NavigationItem>
-                        <h3>RadonV3</h3>
-                    </NavigationItem>
-                </NavigationList>
-                <NavigationList $align={ALIGN.center} />
-                <NavigationList $align={ALIGN.right}>
+                        ":focus": {
+                            backgroundColor: "#ffffff24",
+                        },
+                    }}
+                >
+                    RadonV3
+                </Text>
+                <Box mx="auto" />
+                <Box sx={{ display: "flex", columnGap: "1rem" }}>
                     {authState.isLoggedIn && <CreatePostButton authState={authState} />}
-                    {authState.isLoggedIn && (
-                        <NavigationItem>
-                            <Button onClick={authService.logout}>Logout</Button>
-                        </NavigationItem>
-                    )}
+                    {authState.isLoggedIn && <Button onClick={authService.logout}>Logout</Button>}
                     {!authState.isLoggedIn && <RegisterLoginModal />}
                     {authState.isLoggedIn && (
-                        <NavigationItem>
-                            <Avatar name={authState.username} size="40px" src={""} />
-                        </NavigationItem>
+                        <Image
+                            src={authState.avatarUrl}
+                            sx={{
+                                width: 30,
+                                height: 30,
+                                borderRadius: 9999,
+                            }}
+                        />
                     )}
-                </NavigationList>
-            </HeaderNavigation>
+                </Box>
+            </Flex>
         </>
     );
 };

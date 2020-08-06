@@ -6,10 +6,8 @@ const main = axios.create({
 });
 
 main.interceptors.response.use(
-    function (response) {
-        return response;
-    },
-    function (error) {
+    (response) => response,
+    (error) => {
         if (error.response.status === 401) {
             console.log("Invalid token Loggin Out....");
             authService.logout();

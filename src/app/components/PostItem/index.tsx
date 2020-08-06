@@ -1,14 +1,9 @@
 import React, { useEffect } from "react";
-import { Block } from "baseui/block";
-import { Avatar } from "baseui/avatar";
 import { Post, postService, Comment } from "../../state/posts";
-import { BlockProps } from "baseui/block";
-import { Checkbox, STYLE_TYPE, LABEL_PLACEMENT } from "baseui/checkbox";
 import { useAuthStateHook } from "../../state/auth/auth.hook";
 import CommentItem from "../CommentItem";
-import { Button } from "baseui/button";
-import { Input } from "baseui/input";
-import { Upload } from "baseui/icon";
+import { Box, Button, Image } from "rebass";
+import { Input, Label, Checkbox } from "@rebass/forms";
 
 interface Props {
     item: Post;
@@ -76,56 +71,51 @@ const PostItem = (props: Props) => {
         setCommentText("");
     };
 
-    const flexGridItemProps: BlockProps = {
+    const flexGridItemProps = {
         display: "flex",
         marginTop: "1rem",
         marginBottom: "1rem",
         backgroundColor: "#e2e2e2",
     };
 
-    const flexProp: BlockProps = {
+    const flexProp = {
         display: "flex",
     };
 
     return (
-        <Block>
-            <Block {...flexGridItemProps}>
-                <Avatar name={props.item.user.username} size="40px" src={props.item.user.avatarUrl!} />
+        <Box>
+            <Box sx={flexGridItemProps}>
+                <Image
+                    src={props.item.user.avatarUrl!}
+                    sx={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: 9999,
+                    }}
+                />
+                <h5>{props.item.user.username}</h5>
                 <h3>{props.item.title}</h3>
                 <span style={{ paddingLeft: "1rem" }}>{props.item.timeago}</span>
-            </Block>
+            </Box>
             <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
-            <Checkbox
-                checked={upvoted}
-                checkmarkType={STYLE_TYPE.toggle}
-                onChange={(e) => upvote(e.currentTarget.checked)}
-                labelPlacement={LABEL_PLACEMENT.right}
-            >
+            <Label>
+                <Checkbox checked={upvoted} onChange={(e) => upvote(e.currentTarget.checked)} />
                 Upvoted
-            </Checkbox>
-            <Checkbox
-                checked={downvoted}
-                checkmarkType={STYLE_TYPE.toggle}
-                onChange={(e) => downvote(e.currentTarget.checked)}
-                labelPlacement={LABEL_PLACEMENT.right}
-            >
+            </Label>
+            <Label>
+                <Checkbox checked={downvoted} onChange={(e) => downvote(e.currentTarget.checked)} />
                 Downvoted
-            </Checkbox>
-            <Block>{getCommentList(props.item.comment)}</Block>
-            <Block {...flexProp}>
+            </Label>
+            <Box>{getCommentList(props.item.comment)}</Box>
+            <Box {...flexProp}>
                 <Input
                     value={commentText}
                     onChange={(e) => setCommentText(e.currentTarget.value)}
                     placeholder="Commnet"
-                    endEnhancer={() => (
-                        <Button>
-                            <Upload />
-                        </Button>
-                    )}
                 />
                 <Button onClick={postComment}>Send</Button>
-            </Block>
-        </Block>
+            </Box>
+        </Box>
     );
 };
 

@@ -17,6 +17,7 @@ export enum Role {
 }
 
 export function createInitialState(): AuthState {
+    console.log("setting intital state: " + Date.now());
     const token = localStorage.getItem("token");
     if (token === null || token === "") return AUTH_INITIAL_STATE;
 
@@ -34,8 +35,11 @@ export function createInitialState(): AuthState {
             avatarUrl: decodedUser.avatarUrl,
         };
 
+        console.log("loaded token: " + Date.now());
+
         return AUTH_INITIAL_LOGGED_IN_STATE;
     } catch (error) {
+        console.log("initial");
         return AUTH_INITIAL_STATE;
     }
 }

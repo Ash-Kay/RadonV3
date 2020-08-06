@@ -15,6 +15,7 @@ export class PostService {
 
     //TODO logout if 401 in any of call
     public getPostAuth = (pageNo: number, token: string) => {
+        console.log("[Auth] fetching post" + pageNo);
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
@@ -27,6 +28,7 @@ export class PostService {
     };
 
     public getPost = (pageNo: number) => {
+        console.log("{NOAuth} fetching post" + pageNo);
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`)
             .then((response) => {
@@ -113,7 +115,7 @@ export class PostService {
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("sensitive", data.sensitive.toString());
-        if (data.file !== null) formData.append("file", data.file);
+        if (data.file !== null && data.file !== undefined) formData.append("file", data.file);
 
         this.store.setLoading(true);
         main.post(`/posts/`, formData, getHeader({ token }, HeaderType.AUTH_TOKEN | HeaderType.MULTIPART))
