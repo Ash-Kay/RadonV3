@@ -13,6 +13,7 @@ const MainContent = (props: Props) => {
     const [authState] = useAuthStateHook();
 
     const fetchData = (pageNo: number) => {
+        //TODO: Fix bug that first page have no auth token even when authenticated
         if (authState.token !== null && authState.token !== undefined && authState.token !== "")
             postService.getPostAuth(pageNo, authState.token);
         else postService.getPost(pageNo);
@@ -25,7 +26,7 @@ const MainContent = (props: Props) => {
     return (
         <main>
             <InfiniteScroll
-                pageStart={0}
+                pageStart={-1}
                 loadMore={fetchData}
                 hasMore={true}
                 loader={

@@ -1,14 +1,9 @@
 import React from "react";
-import { useStyletron } from "baseui";
-
+import { Box } from "rebass";
 interface Props {}
 
 const SideNavigation = (props: Props) => {
-    const [css] = useStyletron();
-
-    const containerStyles = css({});
-
-    return <nav className={containerStyles}> SIDE MENU</nav>;
+    return <Box> SIDE MENU</Box>;
 };
 
 export default SideNavigation;

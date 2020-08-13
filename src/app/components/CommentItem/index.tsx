@@ -1,26 +1,35 @@
 import React from "react";
 import { Comment } from "../../state/posts";
-import { Block, BlockProps } from "baseui/block";
-import { Avatar } from "baseui/avatar";
+import { Box, Image, Flex, Text } from "rebass";
+import Avatar from "../core/Avatar";
 
 interface Props {
     item: Comment;
 }
 
 const CommentItem = (props: Props) => {
-    const commentBlock: BlockProps = {
-        padding: "1rem",
-        backgroundColor: "#e0fff3",
-        margin: "2px",
+    const commentBlock = {
+        borderRadius: "3px",
+        padding: "5px",
+        backgroundColor: "#ededed",
+        marginLeft: "0.5rem",
     };
 
     return (
-        <Block>
-            <Avatar name={props.item.user.username} src={props.item.user.avatarUrl!} />
-            <h3>{props.item.user.username}</h3>
-            <Block {...commentBlock}>{props.item.message} </Block>
-            <span>{props.item.timeago}</span>
-        </Block>
+        <Flex sx={{ marginBottom: "0.5rem" }}>
+            <Avatar avatarUrl={props.item.user.avatarUrl} focusRingColor="#00000044" sx={{ marginTop: "5px" }} />
+            <Box sx={commentBlock}>
+                <Flex>
+                    <Text fontSize={16} fontWeight="bold">
+                        {props.item.user.username}
+                    </Text>
+                    <Text fontSize={16} paddingLeft="0.5rem" color="#5c5c5c">
+                        {props.item.timeago}
+                    </Text>
+                </Flex>
+                {props.item.message}
+            </Box>
+        </Flex>
     );
 };
 

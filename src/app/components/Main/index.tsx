@@ -1,41 +1,40 @@
 import React from "react";
 import MainContent from "../MainContent";
-import { BlockProps, Block } from "baseui/block";
 import SideNavigation from "../SideNavigation";
-import { useStyletron } from "baseui";
+import { Box } from "rebass";
 
 interface Props {}
 
 const Main = (props: Props) => {
-    const [css, theme] = useStyletron();
-
-    const sideNavStyle = css({
+    const sideNavStyle = {
         width: "20rem",
         backgroundColor: "#e2e2e2",
-    });
-    const mainDivStyle = css({
+        display: ["none", "none", "block"],
+    };
+    const mainDivStyle = {
         maxWidth: "45rem",
         width: "40rem",
-    });
-    const mainFlexDivStyle = css({
+    };
+    const mainFlexDivStyle = {
         justifyContent: "center",
-        marginTop: "1rem",
+        paddingTop: "1rem",
         gridColumnGap: "1rem",
         display: "flex",
-    });
+        backgroundColor: "#e0e0e0",
+    };
 
     return (
-        <div className={mainFlexDivStyle}>
-            <div className={sideNavStyle}>
+        <Box sx={mainFlexDivStyle}>
+            <Box sx={sideNavStyle}>
                 <SideNavigation />
-            </div>
-            <div className={mainDivStyle}>
+            </Box>
+            <Box sx={mainDivStyle}>
                 <MainContent />
-            </div>
-            <div className={sideNavStyle}>
+            </Box>
+            <Box sx={sideNavStyle}>
                 <SideNavigation />
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 

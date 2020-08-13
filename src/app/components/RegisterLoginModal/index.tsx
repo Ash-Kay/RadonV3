@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { StyledNavigationItem as NavigationItem } from "baseui/header-navigation";
-import { Button } from "baseui/button";
-import { Modal, ModalHeader, ModalBody } from "baseui/modal";
 import GoogleLogin from "react-google-login";
 import { authService } from "../../state/auth/auth.service";
-import { Input } from "baseui/input";
+import { Box, Button } from "rebass";
+import { Input } from "@rebass/forms";
+import Modal from "../core/Modal";
 
 interface Props {}
 
@@ -16,16 +15,13 @@ const RegisterLoginModal = (props: Props) => {
     const closeSignInModal = () => {
         setSignInModalOpen(false);
     };
-
     const successResponse = (response: any) => {
         authService.getTokenWithGoogleAuth(response.tokenId);
         closeSignInModal();
     };
-
     const failureResponse = (response: any) => {
         console.error("error response", response);
     };
-
     const submitLoginForm = () => {
         authService.loginWithUsernamePassword(loginFormData.email, loginFormData.password);
     };
@@ -35,26 +31,11 @@ const RegisterLoginModal = (props: Props) => {
 
     return (
         <>
-            <NavigationItem>
-                <Button onClick={() => setSignInModalOpen(true)}>Sign In</Button>
-            </NavigationItem>
-            <Modal
-                onClose={closeSignInModal}
-                isOpen={isSignInModalOpen}
-                overrides={{
-                    Dialog: {
-                        style: {
-                            width: "40vw",
-                            height: "80vh",
-                            display: "flex",
-                            flexDirection: "column",
-                        },
-                    },
-                }}
-            >
-                <ModalHeader>Sign In</ModalHeader>
-                <ModalBody style={{ flex: "1 1 0" }}>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, facere.
+            <Button onClick={() => setSignInModalOpen(true)} variant="primary">
+                Sign In
+            </Button>
+            <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal}>
+                <Box sx={{ color: "text" }}>
                     <GoogleLogin
                         clientId="946380795317-321u8sasdpeqe6uuja0cs5c071bs8vqb.apps.googleusercontent.com"
                         buttonText="Login"
@@ -94,7 +75,7 @@ const RegisterLoginModal = (props: Props) => {
                         type="Password"
                     />
                     <Button onClick={submitSignupForm}>Register</Button>
-                </ModalBody>
+                </Box>
             </Modal>
         </>
     );

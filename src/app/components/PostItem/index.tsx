@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
-import { Block } from "baseui/block";
-import { Avatar } from "baseui/avatar";
 import { Post, postService, Comment } from "../../state/posts";
-import { BlockProps } from "baseui/block";
-import { Checkbox, STYLE_TYPE, LABEL_PLACEMENT } from "baseui/checkbox";
 import { useAuthStateHook } from "../../state/auth/auth.hook";
 import CommentItem from "../CommentItem";
-import { Button } from "baseui/button";
-import { Input } from "baseui/input";
-import { Upload } from "baseui/icon";
+import { Box, Button, Text, Flex, Image } from "rebass";
+import { Input, Label, Checkbox } from "@rebass/forms";
+import Avatar from "../core/Avatar";
+import { Upvote } from "../Icons";
+import Downvote from "../Icons/Downvote";
 
 interface Props {
     item: Post;
@@ -41,6 +39,7 @@ const PostItem = (props: Props) => {
             if (props.item.vote < 0) setIsDownvoted(true);
         }
         postService.getComments(props.item.id);
+        postService.getVoteSum(props.item.id);
     }, []);
 
     const upvote = (checked: boolean) => {
@@ -76,56 +75,72 @@ const PostItem = (props: Props) => {
         setCommentText("");
     };
 
-    const flexGridItemProps: BlockProps = {
-        display: "flex",
-        marginTop: "1rem",
+    //#region Style
+    const postItemStyle = {
+        background: "#fff",
+        p: "1rem",
+        pt: "0.5rem",
         marginBottom: "1rem",
-        backgroundColor: "#e2e2e2",
+        borderRadius: "5px",
     };
 
-    const flexProp: BlockProps = {
-        display: "flex",
+    const commentStyle = {
+        borderRadius: "16px",
+        borderColor: "transparent",
+        backgroundColor: "#ededed",
+        marginRight: "1rem",
     };
+    //#endregion
 
     return (
-        <Block>
-            <Block {...flexGridItemProps}>
-                <Avatar name={props.item.user.username} size="40px" src={props.item.user.avatarUrl!} />
-                <h3>{props.item.title}</h3>
-                <span style={{ paddingLeft: "1rem" }}>{props.item.timeago}</span>
-            </Block>
+        <Box sx={postItemStyle}>
+            <Flex sx={{ marginBottom: "1rem" }}>
+                <Flex sx={{ flexDirection: "column" }}>
+                    <Text fontSize={18} fontWeight="bold">
+                        {props.item.title}
+                    </Text>
+                    <Flex sx={{ marginTop: "0.5rem" }}>
+                        <Avatar
+                            avatarUrl={props.item.user.avatarUrl}
+                            focusRingColor="#00000044"
+                            height={20}
+                            width={20}
+                        />
+                        <Text sx={{ marginLeft: "0.5rem", fontSize: 16, fontWeight: "bold" }}>
+                            {props.item.user.username}
+                        </Text>
+                        <Text fontSize={16} sx={{ marginLeft: "0.5rem", color: "#5c5c5c" }}>
+                            {props.item.timeago}
+                        </Text>
+                    </Flex>
+                </Flex>
+            </Flex>
             <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
-            <Checkbox
-                checked={upvoted}
-                checkmarkType={STYLE_TYPE.toggle}
-                onChange={(e) => upvote(e.currentTarget.checked)}
-                labelPlacement={LABEL_PLACEMENT.right}
-            >
-                Upvoted
-            </Checkbox>
-            <Checkbox
-                checked={downvoted}
-                checkmarkType={STYLE_TYPE.toggle}
-                onChange={(e) => downvote(e.currentTarget.checked)}
-                labelPlacement={LABEL_PLACEMENT.right}
-            >
-                Downvoted
-            </Checkbox>
-            <Block>{getCommentList(props.item.comment)}</Block>
-            <Block {...flexProp}>
+            <Flex>
+                <Box onClick={() => upvote(!upvoted)} sx={{ cursor: "pointer" }}>
+                    <Upvote size={20} sizeViewbox={30} isChecked={upvoted} />
+                    {/* <Checkbox checked={upvoted} onChange={(e) => upvote(e.currentTarget.checked)} /> */}
+                </Box>
+                <Box>{props.item.voteSum}</Box>
+                <Box onClick={() => downvote(!downvoted)} sx={{ cursor: "pointer" }}>
+                    <Downvote size={20} sizeViewbox={30} isChecked={downvoted} />
+                    {/* <Checkbox checked={downvoted} onChange={(e) => downvote(e.currentTarget.checked)} /> */}
+                </Box>
+            </Flex>
+            <Box sx={{ backgroundColor: "#d1d1d1", height: 1, my: "0.5rem" }} />
+            <Box>{getCommentList(props.item.comment)}</Box>
+            <Flex>
                 <Input
                     value={commentText}
                     onChange={(e) => setCommentText(e.currentTarget.value)}
                     placeholder="Commnet"
-                    endEnhancer={() => (
-                        <Button>
-                            <Upload />
-                        </Button>
-                    )}
+                    sx={commentStyle}
                 />
-                <Button onClick={postComment}>Send</Button>
-            </Block>
-        </Block>
+                <Button onClick={postComment} sx={{ borderRadius: "16px" }}>
+                    Submit
+                </Button>
+            </Flex>
+        </Box>
     );
 };
 
