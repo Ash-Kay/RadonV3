@@ -9,6 +9,7 @@ export interface AuthState {
     username: string;
     token: string;
     isLoggedIn: boolean;
+    avatarUrl?: string;
 }
 export enum Role {
     USER = "USER",
@@ -17,7 +18,7 @@ export enum Role {
 
 export function createInitialState(): AuthState {
     const token = localStorage.getItem("token");
-    if (token == null) return AUTH_INITIAL_STATE;
+    if (token === null || token === "") return AUTH_INITIAL_STATE;
 
     let decodedUser: AuthToken;
     try {
@@ -30,6 +31,7 @@ export function createInitialState(): AuthState {
             role: Role[decodedUser.role as keyof typeof Role],
             token,
             isLoggedIn: true,
+            avatarUrl: decodedUser.avatarUrl,
         };
 
         return AUTH_INITIAL_LOGGED_IN_STATE;

@@ -1,38 +1,41 @@
 import React from "react";
-import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import MainContent from "../MainContent";
-import { BlockProps } from "baseui/block";
+import { BlockProps, Block } from "baseui/block";
 import SideNavigation from "../SideNavigation";
+import { useStyletron } from "baseui";
 
 interface Props {}
 
 const Main = (props: Props) => {
-    const sideNavFlexGridItemProps: BlockProps = {
-        maxWidth: "16rem",
+    const [css, theme] = useStyletron();
+
+    const sideNavStyle = css({
+        width: "20rem",
         backgroundColor: "#e2e2e2",
-    };
-    const mainContentFlexGridItemProps: BlockProps = {
-        maxWidth: "25rem",
-        minWidth: "20rem",
-    };
-    const flexGridItemProps: BlockProps = {
+    });
+    const mainDivStyle = css({
+        maxWidth: "45rem",
+        width: "40rem",
+    });
+    const mainFlexDivStyle = css({
         justifyContent: "center",
         marginTop: "1rem",
         gridColumnGap: "1rem",
-    };
+        display: "flex",
+    });
 
     return (
-        <FlexGrid flexGridColumnCount={[1, 3]} {...flexGridItemProps}>
-            <FlexGridItem display={["none", "block"]} {...sideNavFlexGridItemProps}>
+        <div className={mainFlexDivStyle}>
+            <div className={sideNavStyle}>
                 <SideNavigation />
-            </FlexGridItem>
-            <FlexGridItem {...mainContentFlexGridItemProps}>
+            </div>
+            <div className={mainDivStyle}>
                 <MainContent />
-            </FlexGridItem>
-            <FlexGridItem {...sideNavFlexGridItemProps}>
+            </div>
+            <div className={sideNavStyle}>
                 <SideNavigation />
-            </FlexGridItem>
-        </FlexGrid>
+            </div>
+        </div>
     );
 };
 

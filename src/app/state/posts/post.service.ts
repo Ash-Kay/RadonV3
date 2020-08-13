@@ -1,18 +1,22 @@
-import axios from "axios";
 import { PostStore, postStore } from "./post.store";
 import { postQuery, PostQuery } from "./post.query";
 import { NewPostForm } from "../../components/CreatePostButton";
+import { authQuery } from "../auth/auth.query";
+import { main } from "../../../utils/axios";
+
+enum HeaderType {
+    AUTH_TOKEN = 1,
+    MULTIPART = 2,
+}
 
 export class PostService {
     constructor(private store: PostStore, private query: PostQuery) {}
-
     readonly homefeed$ = this.query.homefeed$;
 
     //TODO logout if 401 in any of call
     public getPostAuth = (pageNo: number, token: string) => {
         this.store.setLoading(true);
-        axios
-            .get(`http://localhost:3000/api/v1/posts/?page=${pageNo}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
+        main.get(`/posts/?page=${pageNo}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
                 this.store.add(response.data.data, { prepend: true });
                 this.store.setLoading(false);
@@ -24,8 +28,7 @@ export class PostService {
 
     public getPost = (pageNo: number) => {
         this.store.setLoading(true);
-        axios
-            .get(`http://localhost:3000/api/v1/posts/?page=${pageNo}`)
+        main.get(`/posts/?page=${pageNo}`)
             .then((response) => {
                 this.store.add(response.data.data, { prepend: true });
                 this.store.setLoading(false);
@@ -37,12 +40,7 @@ export class PostService {
 
     public upvote = (postId: number, token: string) => {
         this.store.setLoading(true);
-        axios
-            .post(
-                `http://localhost:3000/api/v1/posts/${postId}/upvote`,
-                null,
-                getHeader({ token }, HeaderType.AUTH_TOKEN)
-            )
+        main.post(`/posts/${postId}/upvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
                 this.store.update(postId, { vote: 1 });
                 this.store.setLoading(false);
@@ -54,12 +52,7 @@ export class PostService {
 
     public downvote = (postId: number, token: string) => {
         this.store.setLoading(true);
-        axios
-            .post(
-                `http://localhost:3000/api/v1/posts/${postId}/downvote`,
-                null,
-                getHeader({ token }, HeaderType.AUTH_TOKEN)
-            )
+        main.post(`/posts/${postId}/downvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
                 this.store.update(postId, { vote: -1 });
                 this.store.setLoading(false);
@@ -71,11 +64,7 @@ export class PostService {
 
     public removeVote = (postId: number, token: string) => {
         this.store.setLoading(true);
-        axios
-            .delete(
-                `http://localhost:3000/api/v1/posts/${postId}/removevote`,
-                getHeader({ token }, HeaderType.AUTH_TOKEN)
-            )
+        main.delete(`/posts/${postId}/removevote`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
                 this.store.update(postId, { vote: 0 });
                 this.store.setLoading(false);
@@ -87,8 +76,7 @@ export class PostService {
 
     public getComments = (postId: number) => {
         this.store.setLoading(true);
-        axios
-            .get(`http://localhost:3000/api/v1/posts/${postId}/comment`)
+        main.get(`/posts/${postId}/comment`)
             .then((response) => {
                 this.store.update(postId, { comment: response.data.data });
                 this.store.setLoading(false);
@@ -104,14 +92,13 @@ export class PostService {
         // formData.append("tagTo", tagTo);
 
         this.store.setLoading(true);
-        axios
-            .post(
-                `http://localhost:3000/api/v1/posts/${postId}/comment`,
-                formData,
-                getHeader({ token }, HeaderType.AUTH_TOKEN)
-            )
+        main.post(`/posts/${postId}/comment`, formData, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
+                //Response only contains user's ID
+                response.data.data.user.username = authQuery.getValue().username;
+                response.data.data.user.avatarUrl = authQuery.getValue().avatarUrl;
                 const updatedComments = postQuery.getCommentsFromEntity(postId).concat(response.data.data);
+                console.log(response.data.data);
                 this.store.update(postId, {
                     comment: updatedComments,
                 });
@@ -129,12 +116,7 @@ export class PostService {
         if (data.file !== null) formData.append("file", data.file);
 
         this.store.setLoading(true);
-        axios
-            .post(
-                `http://localhost:3000/api/v1/posts/`,
-                formData,
-                getHeader({ token }, HeaderType.AUTH_TOKEN | HeaderType.MULTIPART)
-            )
+        main.post(`/posts/`, formData, getHeader({ token }, HeaderType.AUTH_TOKEN | HeaderType.MULTIPART))
             .then((response) => {
                 this.store.setLoading(false);
             })
@@ -147,7 +129,7 @@ export class PostService {
 export const postService = new PostService(postStore, postQuery);
 
 const getHeader = (data: HeaderData, type: number) => {
-    let headersObject: { headers: { [k: string]: string } } = { headers: {} };
+    const headersObject: { headers: { [k: string]: string } } = { headers: {} };
 
     if (type & HeaderType.AUTH_TOKEN) headersObject.headers["Authorization"] = `Bearer ${data.token}`;
 
@@ -155,11 +137,6 @@ const getHeader = (data: HeaderData, type: number) => {
 
     return headersObject;
 };
-
-enum HeaderType {
-    AUTH_TOKEN = 1,
-    MULTIPART = 2,
-}
 
 interface HeaderData {
     token?: string;
