@@ -9,6 +9,7 @@ const Main = (props: Props) => {
     const sideNavStyle = {
         width: "20rem",
         backgroundColor: "#e2e2e2",
+        display: ["none", "none", "block"],
     };
     const mainDivStyle = {
         maxWidth: "45rem",
@@ -16,9 +17,10 @@ const Main = (props: Props) => {
     };
     const mainFlexDivStyle = {
         justifyContent: "center",
-        marginTop: "1rem",
+        paddingTop: "1rem",
         gridColumnGap: "1rem",
         display: "flex",
+        backgroundColor: "#e0e0e0",
     };
 
     return (

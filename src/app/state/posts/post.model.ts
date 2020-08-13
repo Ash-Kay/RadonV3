@@ -13,12 +13,13 @@ export interface Post {
     user: User;
     timeago: string;
     vote?: number;
+    voteSum: number;
     comment: Comment[];
 }
 export interface User {
     id: number;
     username: string;
-    avatarUrl?: null;
+    avatarUrl?: string | null;
 }
 export interface Comment {
     id: number;
@@ -55,5 +56,6 @@ const POST_INITIAL_STATE: Post = {
     },
     timeago: "",
     vote: 0,
+    voteSum: 0,
     comment: [],
 };

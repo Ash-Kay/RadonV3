@@ -2,8 +2,11 @@ import React, { useEffect } from "react";
 import { Post, postService, Comment } from "../../state/posts";
 import { useAuthStateHook } from "../../state/auth/auth.hook";
 import CommentItem from "../CommentItem";
-import { Box, Button, Image } from "rebass";
+import { Box, Button, Text, Flex, Image } from "rebass";
 import { Input, Label, Checkbox } from "@rebass/forms";
+import Avatar from "../core/Avatar";
+import { Upvote } from "../Icons";
+import Downvote from "../Icons/Downvote";
 
 interface Props {
     item: Post;
@@ -36,6 +39,7 @@ const PostItem = (props: Props) => {
             if (props.item.vote < 0) setIsDownvoted(true);
         }
         postService.getComments(props.item.id);
+        postService.getVoteSum(props.item.id);
     }, []);
 
     const upvote = (checked: boolean) => {
@@ -71,50 +75,71 @@ const PostItem = (props: Props) => {
         setCommentText("");
     };
 
-    const flexGridItemProps = {
-        display: "flex",
-        marginTop: "1rem",
+    //#region Style
+    const postItemStyle = {
+        background: "#fff",
+        p: "1rem",
+        pt: "0.5rem",
         marginBottom: "1rem",
-        backgroundColor: "#e2e2e2",
+        borderRadius: "5px",
     };
 
-    const flexProp = {
-        display: "flex",
+    const commentStyle = {
+        borderRadius: "16px",
+        borderColor: "transparent",
+        backgroundColor: "#ededed",
+        marginRight: "1rem",
     };
+    //#endregion
 
     return (
-        <Box>
-            <Box sx={flexGridItemProps}>
-                <Image
-                    src={props.item.user.avatarUrl!}
-                    sx={{
-                        width: 30,
-                        height: 30,
-                        borderRadius: 9999,
-                    }}
-                />
-                <h5>{props.item.user.username}</h5>
-                <h3>{props.item.title}</h3>
-                <span style={{ paddingLeft: "1rem" }}>{props.item.timeago}</span>
-            </Box>
+        <Box sx={postItemStyle}>
+            <Flex sx={{ marginBottom: "1rem" }}>
+                <Flex sx={{ flexDirection: "column" }}>
+                    <Text fontSize={18} fontWeight="bold">
+                        {props.item.title}
+                    </Text>
+                    <Flex sx={{ marginTop: "0.5rem" }}>
+                        <Avatar
+                            avatarUrl={props.item.user.avatarUrl}
+                            focusRingColor="#00000044"
+                            height={20}
+                            width={20}
+                        />
+                        <Text sx={{ marginLeft: "0.5rem", fontSize: 16, fontWeight: "bold" }}>
+                            {props.item.user.username}
+                        </Text>
+                        <Text fontSize={16} sx={{ marginLeft: "0.5rem", color: "#5c5c5c" }}>
+                            {props.item.timeago}
+                        </Text>
+                    </Flex>
+                </Flex>
+            </Flex>
             <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
-            <Label>
-                <Checkbox checked={upvoted} onChange={(e) => upvote(e.currentTarget.checked)} />
-                Upvoted
-            </Label>
-            <Label>
-                <Checkbox checked={downvoted} onChange={(e) => downvote(e.currentTarget.checked)} />
-                Downvoted
-            </Label>
+            <Flex>
+                <Box onClick={() => upvote(!upvoted)} sx={{ cursor: "pointer" }}>
+                    <Upvote size={20} sizeViewbox={30} isChecked={upvoted} />
+                    {/* <Checkbox checked={upvoted} onChange={(e) => upvote(e.currentTarget.checked)} /> */}
+                </Box>
+                <Box>{props.item.voteSum}</Box>
+                <Box onClick={() => downvote(!downvoted)} sx={{ cursor: "pointer" }}>
+                    <Downvote size={20} sizeViewbox={30} isChecked={downvoted} />
+                    {/* <Checkbox checked={downvoted} onChange={(e) => downvote(e.currentTarget.checked)} /> */}
+                </Box>
+            </Flex>
+            <Box sx={{ backgroundColor: "#d1d1d1", height: 1, my: "0.5rem" }} />
             <Box>{getCommentList(props.item.comment)}</Box>
-            <Box {...flexProp}>
+            <Flex>
                 <Input
                     value={commentText}
                     onChange={(e) => setCommentText(e.currentTarget.value)}
                     placeholder="Commnet"
+                    sx={commentStyle}
                 />
-                <Button onClick={postComment}>Send</Button>
-            </Box>
+                <Button onClick={postComment} sx={{ borderRadius: "16px" }}>
+                    Submit
+                </Button>
+            </Flex>
         </Box>
     );
 };

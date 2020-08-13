@@ -88,6 +88,18 @@ export class PostService {
             });
     };
 
+    public getVoteSum = (postId: number) => {
+        this.store.setLoading(true);
+        main.get(`/posts/${postId}/vote`)
+            .then((response) => {
+                this.store.update(postId, { voteSum: response.data.data.voteSum });
+                this.store.setLoading(false);
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    };
+
     public postComment = (postId: number, commentText: string, tagTo: string, token: string) => {
         const formData = new FormData();
         formData.append("message", commentText);

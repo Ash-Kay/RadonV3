@@ -4,6 +4,7 @@ import { useAuthStateHook } from "../../state/auth/auth.hook";
 import CreatePostButton from "../CreatePostButton";
 import RegisterLoginModal from "../RegisterLoginModal";
 import { Flex, Text, Box, Button, Image } from "rebass";
+import Avatar from "../core/Avatar";
 
 interface Props {}
 
@@ -29,21 +30,12 @@ const Navbar = (props: Props) => {
                     RadonV3
                 </Text>
                 <Box mx="auto" />
-                <Box sx={{ display: "flex", columnGap: "1rem" }}>
+                <Flex sx={{ columnGap: "1rem" }}>
                     {authState.isLoggedIn && <CreatePostButton authState={authState} />}
                     {authState.isLoggedIn && <Button onClick={authService.logout}>Logout</Button>}
                     {!authState.isLoggedIn && <RegisterLoginModal />}
-                    {authState.isLoggedIn && (
-                        <Image
-                            src={authState.avatarUrl}
-                            sx={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 9999,
-                            }}
-                        />
-                    )}
-                </Box>
+                    {authState.isLoggedIn && <Avatar avatarUrl={authState.avatarUrl} />}
+                </Flex>
             </Flex>
         </>
     );
