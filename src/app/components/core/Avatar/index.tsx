@@ -5,7 +5,6 @@ interface Props {
     avatarUrl?: string | null;
     height?: number;
     width?: number;
-    focusRingColor?: string;
     sx?: SxStyleProp;
 }
 
@@ -35,7 +34,6 @@ Avatar.defaultProps = {
     avatarUrl: `${process.env.PUBLIC_URL}/avatar.jpg`,
     height: 30,
     width: 30,
-    focusRingColor: "#ffffff44",
 };
 
 export default Avatar;

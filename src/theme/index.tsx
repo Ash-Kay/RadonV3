@@ -116,6 +116,14 @@ export const preset = {
             },
         },
     },
+    input: {
+        ":focus": {
+            outlineWidth: 0,
+            "::placeholder": {
+                opacity: 0.4,
+            },
+        },
+    },
     styles: {
         root: {
             fontFamily: "body",

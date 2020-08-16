@@ -3,6 +3,7 @@ import { postQuery, PostQuery } from "./post.query";
 import { NewPostForm } from "../../components/CreatePostButton";
 import { authQuery } from "../auth/auth.query";
 import { main } from "../../../utils/axios";
+import { CommentForm } from "../../components/PostItem";
 
 enum HeaderType {
     AUTH_TOKEN = 1,
@@ -100,9 +101,10 @@ export class PostService {
             });
     };
 
-    public postComment = (postId: number, commentText: string, tagTo: string, token: string) => {
+    public postComment = (postId: number, data: CommentForm, token: string) => {
         const formData = new FormData();
-        formData.append("message", commentText);
+        formData.append("message", data.comment);
+        if (data.file !== null && data.file !== undefined) formData.append("file", data.file);
         // formData.append("tagTo", tagTo);
 
         this.store.setLoading(true);
@@ -112,7 +114,6 @@ export class PostService {
                 response.data.data.user.username = authQuery.getValue().username;
                 response.data.data.user.avatarUrl = authQuery.getValue().avatarUrl;
                 const updatedComments = postQuery.getCommentsFromEntity(postId).concat(response.data.data);
-                console.log(response.data.data);
                 this.store.update(postId, {
                     comment: updatedComments,
                 });
@@ -132,6 +133,43 @@ export class PostService {
         this.store.setLoading(true);
         main.post(`/posts/`, formData, getHeader({ token }, HeaderType.AUTH_TOKEN | HeaderType.MULTIPART))
             .then((response) => {
+                this.store.setLoading(false);
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    };
+
+    //TODO: Should be in comment services
+    public cupvote = (commId: number, token: string) => {
+        this.store.setLoading(true);
+        main.post(`/comments/${commId}/upvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
+            .then((response) => {
+                this.store.update(commId, { vote: 1 });
+                this.store.setLoading(false);
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    };
+
+    public cdownvote = (commId: number, token: string) => {
+        this.store.setLoading(true);
+        main.post(`/comments/${commId}/downvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
+            .then((response) => {
+                this.store.update(commId, { vote: -1 });
+                this.store.setLoading(false);
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    };
+
+    public cremoveVote = (commId: number, token: string) => {
+        this.store.setLoading(true);
+        main.delete(`/comments/${commId}/removevote`, getHeader({ token }, HeaderType.AUTH_TOKEN))
+            .then((response) => {
+                this.store.update(commId, { vote: 0 });
                 this.store.setLoading(false);
             })
             .catch(function (error) {

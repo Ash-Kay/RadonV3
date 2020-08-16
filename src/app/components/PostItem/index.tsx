@@ -3,35 +3,26 @@ import { Post, postService, Comment } from "../../state/posts";
 import { useAuthStateHook } from "../../state/auth/auth.hook";
 import CommentItem from "../CommentItem";
 import { Box, Button, Text, Flex, Image } from "rebass";
-import { Input, Label, Checkbox } from "@rebass/forms";
+import { Input } from "@rebass/forms";
 import Avatar from "../core/Avatar";
-import { Upvote } from "../Icons";
-import Downvote from "../Icons/Downvote";
+import { Upvote, Downvote, PaperClip, CloseRound } from "../Icons";
+import Media from "../core/Media";
 
 interface Props {
     item: Post;
 }
-interface MediaProps {
-    mediaUrl: string;
-    mime: string;
+export interface CommentForm {
+    comment: string;
+    file: File | null | undefined;
+    //tagTo: number;
 }
-
-const Media = (props: MediaProps) => {
-    if (props.mime.startsWith("image"))
-        return <img style={{ width: "100%" }} src={"http://localhost:3000/" + props.mediaUrl} alt="" />;
-    else
-        return (
-            <video width="100%" controls>
-                <source src={"http://localhost:3000/" + props.mediaUrl} type={props.mime} />
-            </video>
-        );
-};
 
 const PostItem = (props: Props) => {
     const [upvoted, setIsUpvoted] = React.useState(false);
     const [downvoted, setIsDownvoted] = React.useState(false);
-    const [commentText, setCommentText] = React.useState("");
+    const [commentForm, setCommentForm] = React.useState(emptyCommentForm);
     const [authState] = useAuthStateHook();
+    const hiddenCommentFileInput = React.useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (props.item.vote !== null && props.item.vote !== undefined) {
@@ -70,9 +61,15 @@ const PostItem = (props: Props) => {
     const postComment = () => {
         //TODO show login modal
         if (!authState.isLoggedIn) return;
-        postService.postComment(props.item.id, commentText, "", authState.token);
+        postService.postComment(props.item.id, commentForm, authState.token);
         //TODO only clear if success
-        setCommentText("");
+        setCommentForm(emptyCommentForm);
+    };
+
+    const commentInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            postComment();
+        }
     };
 
     //#region Style
@@ -88,7 +85,8 @@ const PostItem = (props: Props) => {
         borderRadius: "16px",
         borderColor: "transparent",
         backgroundColor: "#ededed",
-        marginRight: "1rem",
+        marginRight: "0.5rem",
+        marginLeft: "2rem",
     };
     //#endregion
 
@@ -100,12 +98,7 @@ const PostItem = (props: Props) => {
                         {props.item.title}
                     </Text>
                     <Flex sx={{ marginTop: "0.5rem" }}>
-                        <Avatar
-                            avatarUrl={props.item.user.avatarUrl}
-                            focusRingColor="#00000044"
-                            height={20}
-                            width={20}
-                        />
+                        <Avatar avatarUrl={props.item.user.avatarUrl} height={20} width={20} />
                         <Text sx={{ marginLeft: "0.5rem", fontSize: 16, fontWeight: "bold" }}>
                             {props.item.user.username}
                         </Text>
@@ -117,31 +110,56 @@ const PostItem = (props: Props) => {
             </Flex>
             <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
             <Flex>
-                <Box onClick={() => upvote(!upvoted)} sx={{ cursor: "pointer" }}>
-                    <Upvote size={20} sizeViewbox={30} isChecked={upvoted} />
-                    {/* <Checkbox checked={upvoted} onChange={(e) => upvote(e.currentTarget.checked)} /> */}
+                <Box onClick={() => upvote(!upvoted)} sx={{ cursor: "pointer", my: "auto" }}>
+                    <Upvote isChecked={upvoted} />
                 </Box>
-                <Box>{props.item.voteSum}</Box>
-                <Box onClick={() => downvote(!downvoted)} sx={{ cursor: "pointer" }}>
-                    <Downvote size={20} sizeViewbox={30} isChecked={downvoted} />
-                    {/* <Checkbox checked={downvoted} onChange={(e) => downvote(e.currentTarget.checked)} /> */}
+                <Box sx={{ px: "0.5rem" }}>{props.item.voteSum}</Box>
+                <Box onClick={() => downvote(!downvoted)} sx={{ cursor: "pointer", my: "auto" }}>
+                    <Downvote isChecked={downvoted} />
                 </Box>
             </Flex>
             <Box sx={{ backgroundColor: "#d1d1d1", height: 1, my: "0.5rem" }} />
             <Box>{getCommentList(props.item.comment)}</Box>
             <Flex>
                 <Input
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.currentTarget.value)}
+                    value={commentForm.comment}
+                    onChange={(e) => setCommentForm({ ...commentForm, comment: e.currentTarget.value })}
                     placeholder="Commnet"
                     sx={commentStyle}
+                    onKeyDown={commentInputKeyDown}
                 />
-                <Button onClick={postComment} sx={{ borderRadius: "16px" }}>
-                    Submit
-                </Button>
+                <Box
+                    sx={{ cursor: "pointer", my: "auto" }}
+                    onClick={() => {
+                        hiddenCommentFileInput.current?.click();
+                    }}
+                >
+                    <PaperClip color={commentForm.file !== null ? "#2ce" : undefined} />
+                    <Input
+                        onChange={(e) => setCommentForm({ ...commentForm, file: e.currentTarget.files?.item(0) })}
+                        ref={hiddenCommentFileInput}
+                        type="file"
+                        sx={{ display: "none" }}
+                    />
+                </Box>
             </Flex>
+            {commentForm.file && (
+                <Flex>
+                    <Text fontSize={12} fontWeight="bold" sx={{ ml: "2.5rem", mr: "0.5rem" }}>
+                        {commentForm.file?.name}
+                    </Text>
+                    <Box onClick={(e) => setCommentForm({ ...commentForm, file: null })}>
+                        <CloseRound width={12} />
+                    </Box>
+                </Flex>
+            )}
         </Box>
     );
 };
 
 export default PostItem;
+
+const emptyCommentForm: CommentForm = {
+    comment: "",
+    file: null,
+};

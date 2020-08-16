@@ -31,6 +31,9 @@ export interface Comment {
     timeago: string;
     tagTo?: User;
     user: User;
+    width: number;
+    height: number;
+    mime: string;
 }
 
 export function createInitialState(): Post {
