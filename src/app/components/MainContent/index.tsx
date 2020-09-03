@@ -1,22 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { postService } from "../../state/posts/post.service";
-import { usePostHook } from "../../state/posts/post.hook";
+import { usePostFeedHook } from "../../state/posts/post.hook";
 import InfiniteScroll from "react-infinite-scroller";
 import { Post } from "../../state/posts";
 import PostItem from "../PostItem";
-import { useAuthStateHook } from "../../state/auth/auth.hook";
+import { AuthContext } from "../../context/auth.context";
 
 interface Props {}
 
 const MainContent = (props: Props) => {
-    const [posts] = usePostHook();
-    const [authState] = useAuthStateHook();
+    const [posts] = usePostFeedHook();
+    const authState = useContext(AuthContext);
 
     const fetchData = (pageNo: number) => {
-        //TODO: Fix bug that first page have no auth token even when authenticated
-        if (authState.token !== null && authState.token !== undefined && authState.token !== "")
-            postService.getPostAuth(pageNo, authState.token);
-        else postService.getPost(pageNo);
+        if (authState.token) postService.getPostPageAuth(pageNo, authState.token);
+        else postService.getPostPage(pageNo);
     };
 
     const getPostList = (post: Post[]) => {
@@ -26,7 +24,7 @@ const MainContent = (props: Props) => {
     return (
         <main>
             <InfiniteScroll
-                pageStart={-1}
+                pageStart={0}
                 loadMore={fetchData}
                 hasMore={true}
                 loader={

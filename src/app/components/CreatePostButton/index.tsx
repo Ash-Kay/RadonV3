@@ -1,7 +1,7 @@
 import React from "react";
 import { postService } from "../../state/posts";
 import { AuthState } from "../../state/auth/auth.model";
-import { Box, Button, Image } from "rebass";
+import { Box, Button } from "rebass";
 import Modal from "../core/Modal";
 import { Input, Label, Checkbox } from "@rebass/forms";
 

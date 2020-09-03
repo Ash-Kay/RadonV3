@@ -1,4 +1,5 @@
 import React from "react";
+import theme from "../../../theme";
 
 interface Props {
     color?: string;
@@ -27,7 +28,7 @@ const PaperClip = (props: Props) => {
 export default PaperClip;
 
 PaperClip.defaultProps = {
-    color: "#2e2e2e",
+    color: theme.colors.defaultIcon,
 };
 
 //https://iconify.design/icon-sets/bx/

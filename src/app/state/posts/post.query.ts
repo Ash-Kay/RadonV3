@@ -8,9 +8,13 @@ import { PostState, PostStore, postStore } from "./post.store";
 export class PostQuery extends QueryEntity<PostState> {
     homefeed$ = this.selectAll();
 
+    selectPost(id: number) {
+        return this.selectEntity(id);
+    }
+
     getCommentsFromEntity = (id: number) => {
         const entity = this.getEntity(id);
-        if (entity !== undefined && entity !== null) {
+        if (entity) {
             return entity.comment;
         }
         return [];

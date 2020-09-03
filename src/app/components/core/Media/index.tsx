@@ -8,7 +8,13 @@ interface Props {
 
 const Media = (props: Props) => {
     if (props.mime.startsWith("image"))
-        return <Image style={{ width: "100%" }} src={"http://localhost:3000/" + props.mediaUrl} alt="" />;
+        return (
+            <Image
+                sx={{ width: "100%", maxHeight: "500px", objectFit: "cover" }}
+                src={"http://localhost:3000/" + props.mediaUrl}
+                alt=""
+            />
+        );
     else
         return (
             <video width="100%" controls>

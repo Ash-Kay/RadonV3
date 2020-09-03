@@ -40,7 +40,7 @@ export function createInitialState(): Post {
     return POST_INITIAL_STATE;
 }
 
-const POST_INITIAL_STATE: Post = {
+export const POST_INITIAL_STATE: Post = {
     id: 0,
     title: "test",
     mediaUrl: "test",

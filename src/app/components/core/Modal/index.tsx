@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Box, Button } from "rebass";
+import { Box } from "rebass";
 
 interface Props {
     isOpen: boolean;

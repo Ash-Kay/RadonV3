@@ -12,15 +12,14 @@ const Main = (props: Props) => {
         display: ["none", "none", "block"],
     };
     const mainDivStyle = {
-        maxWidth: "45rem",
-        width: "40rem",
+        maxWidth: "550px",
     };
     const mainFlexDivStyle = {
+        display: "flex",
         justifyContent: "center",
         paddingTop: "1rem",
         gridColumnGap: "1rem",
-        display: "flex",
-        backgroundColor: "#e0e0e0",
+        backgroundColor: "globalBackground",
     };
 
     return (

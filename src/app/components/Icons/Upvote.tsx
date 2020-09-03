@@ -1,13 +1,16 @@
 import React from "react";
+import theme from "../../../theme";
 
 interface Props {
     isChecked: boolean;
+    color?: string;
+    activeColor?: string;
 }
 
 const Upvote = (props: Props) => {
     const getColor = () => {
-        if (props.isChecked) return "#4287f5";
-        else return "#2e2e2e";
+        if (props.isChecked) return props.activeColor;
+        else return props.color;
     };
 
     return (
@@ -23,5 +26,10 @@ const Upvote = (props: Props) => {
 };
 
 export default Upvote;
+
+Upvote.defaultProps = {
+    color: theme.colors.upvote.default,
+    activeColor: theme.colors.upvote.active,
+};
 
 //https://uxwing.com/arrow-top-icon/

@@ -16,14 +16,13 @@ export enum Role {
     ADMIN = "ADMIN",
 }
 
-export function createInitialState(): AuthState {
+export const createInitialState = (): AuthState => {
     console.log("setting intital state: " + Date.now());
     const token = localStorage.getItem("token");
-    if (token === null || token === "") return AUTH_INITIAL_STATE;
+    if (!token) return AUTH_INITIAL_STATE;
 
-    let decodedUser: AuthToken;
     try {
-        decodedUser = jwtDecode(token);
+        const decodedUser: AuthToken = jwtDecode(token);
         const AUTH_INITIAL_LOGGED_IN_STATE: AuthState = {
             id: decodedUser.id,
             email: decodedUser.email,
@@ -35,14 +34,14 @@ export function createInitialState(): AuthState {
             avatarUrl: decodedUser.avatarUrl,
         };
 
-        console.log("loaded token: " + Date.now());
+        console.log("decoded loaded token: " + Date.now());
 
         return AUTH_INITIAL_LOGGED_IN_STATE;
     } catch (error) {
-        console.log("initial");
+        console.log("INITIAL_NO AUTH");
         return AUTH_INITIAL_STATE;
     }
-}
+};
 
 export const AUTH_INITIAL_STATE: AuthState = {
     id: 0,

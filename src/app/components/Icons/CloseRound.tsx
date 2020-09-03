@@ -1,4 +1,5 @@
 import React from "react";
+import theme from "../../../theme";
 
 interface Props {
     color?: string;
@@ -28,7 +29,7 @@ const CloseRound = (props: Props) => {
 export default CloseRound;
 
 CloseRound.defaultProps = {
-    color: "#2e2e2e",
+    color: theme.colors.defaultIcon,
     height: 24,
     width: 24,
 };

@@ -1,6 +1,6 @@
 // default theme preset form @rebass/preset
 
-export const preset = {
+export const theme = {
     colors: {
         text: "#000",
         background: "#fff",
@@ -9,6 +9,20 @@ export const preset = {
         muted: "#f6f6f9",
         gray: "#dddddf",
         highlight: "hsla(205, 100%, 40%, 0.125)",
+
+        //Global
+        globalBackground: "#e0e0e0",
+        card: "#fff",
+        defaultIcon: "#464646",
+
+        upvote: {
+            default: "#464646",
+            active: "#347fe0",
+        },
+        downvote: {
+            default: "#464646",
+            active: "#9c1b1b",
+        },
     },
     fonts: {
         body: "system-ui, sans-serif",
@@ -133,4 +147,4 @@ export const preset = {
     },
 };
 
-export default preset;
+export default theme;

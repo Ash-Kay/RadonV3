@@ -15,8 +15,7 @@ export class PostService {
     readonly homefeed$ = this.query.homefeed$;
 
     //TODO logout if 401 in any of call
-    public getPostAuth = (pageNo: number, token: string) => {
-        console.log("[Auth] fetching post" + pageNo);
+    public getPostPageAuth = (pageNo: number, token: string) => {
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
@@ -28,8 +27,7 @@ export class PostService {
             });
     };
 
-    public getPost = (pageNo: number) => {
-        console.log("{NOAuth} fetching post" + pageNo);
+    public getPostPage = (pageNo: number) => {
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`)
             .then((response) => {
@@ -39,6 +37,16 @@ export class PostService {
             .catch(function (error) {
                 console.error(error);
             });
+    };
+
+    public getPostPromise = (postId: number): Promise<any> => {
+        this.store.setLoading(true);
+        return main.get(`/posts/${postId}`);
+    };
+
+    public getPostAuthPromise = (postId: number, token: string): Promise<any> => {
+        this.store.setLoading(true);
+        return main.get(`/posts/${postId}`, getHeader({ token }, HeaderType.AUTH_TOKEN));
     };
 
     public upvote = (postId: number, token: string) => {

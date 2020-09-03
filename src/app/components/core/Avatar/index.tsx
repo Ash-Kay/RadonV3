@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, SxStyleProp, Link, Box } from "rebass";
+import { Image, SxStyleProp, Link } from "rebass";
 
 interface Props {
     avatarUrl?: string | null;

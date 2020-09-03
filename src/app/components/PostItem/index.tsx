@@ -5,8 +5,10 @@ import CommentItem from "../CommentItem";
 import { Box, Button, Text, Flex, Image } from "rebass";
 import { Input } from "@rebass/forms";
 import Avatar from "../core/Avatar";
-import { Upvote, Downvote, PaperClip, CloseRound } from "../Icons";
+import { Upvote, Downvote, PaperClip, CloseRound, Comment as CommentIcon } from "../Icons";
 import Media from "../core/Media";
+import CommentButton from "../core/Buttons/CommentButton";
+import { Link } from "react-router-dom";
 
 interface Props {
     item: Post;
@@ -29,8 +31,8 @@ const PostItem = (props: Props) => {
             if (props.item.vote > 0) setIsUpvoted(true);
             if (props.item.vote < 0) setIsDownvoted(true);
         }
-        postService.getComments(props.item.id);
-        postService.getVoteSum(props.item.id);
+        // postService.getComments(props.item.id);
+        // postService.getVoteSum(props.item.id);
     }, []);
 
     const upvote = (checked: boolean) => {
@@ -75,7 +77,6 @@ const PostItem = (props: Props) => {
     //#region Style
     const postItemStyle = {
         background: "#fff",
-        p: "1rem",
         pt: "0.5rem",
         marginBottom: "1rem",
         borderRadius: "5px",
@@ -92,34 +93,35 @@ const PostItem = (props: Props) => {
 
     return (
         <Box sx={postItemStyle}>
-            <Flex sx={{ marginBottom: "1rem" }}>
-                <Flex sx={{ flexDirection: "column" }}>
-                    <Text fontSize={18} fontWeight="bold">
-                        {props.item.title}
+            <Link to={`/posts/${props.item.id}`}>
+                <Text fontSize="3" fontWeight="bold" sx={{ px: "1rem" }}>
+                    {props.item.title}
+                </Text>
+            </Link>
+            <Box sx={{ mt: "0.5rem", position: "relative" }}>
+                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
+                {props.item.height > props.item.width && (
+                    <Button sx={{ position: "absolute", bottom: "1rem", left: "50%", transform: "translateX(-50%)" }}>
+                        See Full Image
+                    </Button>
+                )}
+            </Box>
+            <Flex sx={{ mx: "1rem", py: "0.5rem", justifyContent: "space-between" }}>
+                <Flex>
+                    <Box onClick={() => upvote(!upvoted)} sx={{ cursor: "pointer", my: "auto" }}>
+                        <Upvote isChecked={upvoted} />
+                    </Box>
+                    <Text fontSize="3" sx={{ px: "1rem" }}>
+                        {props.item.voteSum ? props.item.voteSum : "0"}
                     </Text>
-                    <Flex sx={{ marginTop: "0.5rem" }}>
-                        <Avatar avatarUrl={props.item.user.avatarUrl} height={20} width={20} />
-                        <Text sx={{ marginLeft: "0.5rem", fontSize: 16, fontWeight: "bold" }}>
-                            {props.item.user.username}
-                        </Text>
-                        <Text fontSize={16} sx={{ marginLeft: "0.5rem", color: "#5c5c5c" }}>
-                            {props.item.timeago}
-                        </Text>
-                    </Flex>
+                    <Box onClick={() => downvote(!downvoted)} sx={{ cursor: "pointer", my: "auto" }}>
+                        <Downvote isChecked={downvoted} />
+                    </Box>
                 </Flex>
+                <CommentButton />
             </Flex>
-            <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
-            <Flex>
-                <Box onClick={() => upvote(!upvoted)} sx={{ cursor: "pointer", my: "auto" }}>
-                    <Upvote isChecked={upvoted} />
-                </Box>
-                <Box sx={{ px: "0.5rem" }}>{props.item.voteSum}</Box>
-                <Box onClick={() => downvote(!downvoted)} sx={{ cursor: "pointer", my: "auto" }}>
-                    <Downvote isChecked={downvoted} />
-                </Box>
-            </Flex>
+            {/* <Box>{getCommentList(props.item.comment)}</Box>
             <Box sx={{ backgroundColor: "#d1d1d1", height: 1, my: "0.5rem" }} />
-            <Box>{getCommentList(props.item.comment)}</Box>
             <Flex>
                 <Input
                     value={commentForm.comment}
@@ -152,7 +154,7 @@ const PostItem = (props: Props) => {
                         <CloseRound width={12} />
                     </Box>
                 </Flex>
-            )}
+            )} */}
         </Box>
     );
 };

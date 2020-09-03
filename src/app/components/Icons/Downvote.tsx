@@ -1,13 +1,16 @@
 import React from "react";
+import theme from "../../../theme";
 
 interface Props {
     isChecked: boolean;
+    color?: string;
+    activeColor?: string;
 }
 
 const Downvote = (props: Props) => {
     const getColor = () => {
-        if (props.isChecked) return "#4287f5";
-        else return "#2e2e2e";
+        if (props.isChecked) return props.activeColor;
+        else return props.color;
     };
 
     return (
@@ -23,5 +26,10 @@ const Downvote = (props: Props) => {
 };
 
 export default Downvote;
+
+Downvote.defaultProps = {
+    color: theme.colors.downvote.default,
+    activeColor: theme.colors.downvote.active,
+};
 
 //https://uxwing.com/arrow-bottom-icon/
