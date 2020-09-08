@@ -31,7 +31,7 @@ const RegisterLoginModal = (props: Props) => {
 
     return (
         <>
-            <Button onClick={() => setSignInModalOpen(true)} variant="primary">
+            <Button onClick={() => setSignInModalOpen(true)} variant="nav">
                 Sign In
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal}>

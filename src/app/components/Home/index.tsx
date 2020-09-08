@@ -1,14 +1,14 @@
 import React from "react";
-import MainContent from "../MainContent";
+import HomeFeed from "../HomeFeed";
 import SideNavigation from "../SideNavigation";
 import { Box } from "rebass";
 
 interface Props {}
 
-const Main = (props: Props) => {
+const Home = (props: Props) => {
     const sideNavStyle = {
         width: "20rem",
-        backgroundColor: "#e2e2e2",
+        backgroundColor: "#f1f1f1",
         display: ["none", "none", "block"],
     };
     const mainDivStyle = {
@@ -17,9 +17,9 @@ const Main = (props: Props) => {
     const mainFlexDivStyle = {
         display: "flex",
         justifyContent: "center",
-        paddingTop: "1rem",
+        paddingTop: "66px",
         gridColumnGap: "1rem",
-        backgroundColor: "globalBackground",
+        backgroundColor: "white",
     };
 
     return (
@@ -28,7 +28,7 @@ const Main = (props: Props) => {
                 <SideNavigation />
             </Box>
             <Box sx={mainDivStyle}>
-                <MainContent />
+                <HomeFeed />
             </Box>
             <Box sx={sideNavStyle}>
                 <SideNavigation />
@@ -37,4 +37,4 @@ const Main = (props: Props) => {
     );
 };
 
-export default Main;
+export default Home;

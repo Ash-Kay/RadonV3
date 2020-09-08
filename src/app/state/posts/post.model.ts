@@ -34,6 +34,13 @@ export interface Comment {
     width: number;
     height: number;
     mime: string;
+    vote?: number;
+    voteSum: number;
+}
+export enum Vote {
+    DEFAULT = 0,
+    UPVOTED = 1,
+    DOWNVOTED = -1,
 }
 
 export function createInitialState(): Post {

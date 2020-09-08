@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "./components/Navbar";
 import { akitaDevtools } from "@datorama/akita";
 import { Switch, Route } from "react-router-dom";
-import Main from "./components/Main";
+import Home from "./components/Home";
 import FullScreenPost from "./components/FullScreenPost";
 import { useAuthStateHook } from "./state/auth/auth.hook";
 import { AuthContext } from "./context/auth.context";
@@ -21,7 +21,7 @@ const App = (props: Props) => {
                 <AuthContext.Provider value={authState}>
                     <Navbar />
                     <Switch>
-                        <Route exact path="/" component={Main} />
+                        <Route exact path="/" component={Home} />
                         <Route path="/posts/:id" component={FullScreenPost} />
                     </Switch>
                 </AuthContext.Provider>

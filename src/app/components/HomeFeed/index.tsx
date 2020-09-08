@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { postService } from "../../state/posts/post.service";
 import { usePostFeedHook } from "../../state/posts/post.hook";
 import InfiniteScroll from "react-infinite-scroller";
@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/auth.context";
 
 interface Props {}
 
-const MainContent = (props: Props) => {
+const HomeFeed = (props: Props) => {
     const [posts] = usePostFeedHook();
     const authState = useContext(AuthContext);
 
@@ -39,4 +39,4 @@ const MainContent = (props: Props) => {
     );
 };
 
-export default MainContent;
+export default HomeFeed;

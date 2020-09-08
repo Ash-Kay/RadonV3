@@ -8,7 +8,7 @@ interface Props {
     sx?: SxStyleProp;
 }
 
-const Avatar: React.FunctionComponent<Props> = (props: Props) => {
+const Avatar = (props: Props) => {
     const getAvatarUrl = (avatarUrl: string | null | undefined): string => {
         if (avatarUrl === null || avatarUrl === undefined || avatarUrl === "")
             return `${process.env.PUBLIC_URL}/avatar.jpg`;

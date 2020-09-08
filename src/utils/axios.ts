@@ -12,7 +12,7 @@ main.interceptors.response.use(
             console.log("Invalid token Loggin Out....");
             authService.logout();
         }
-        return error;
+        throw error;
     }
 );
 

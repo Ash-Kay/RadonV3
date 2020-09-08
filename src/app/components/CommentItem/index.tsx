@@ -1,42 +1,27 @@
-import React from "react";
-import { Comment, postService } from "../../state/posts";
+import React, { useContext } from "react";
+import { Comment, Vote } from "../../state/posts";
 import { Box, Flex, Text } from "rebass";
 import Avatar from "../core/Avatar";
 import Media from "../core/Media";
-import { Upvote, Downvote } from "../Icons";
-import { useAuthStateHook } from "../../state/auth/auth.hook";
+import { AuthContext } from "../../context/auth.context";
+import CUpvoteButton from "../core/Buttons/CUpvoteButton";
+import { checkVoteState } from "../../../utils/checkVoteState";
+import CDownvoteButton from "../core/Buttons/CDownvoteButton";
 
 interface Props {
+    postId: number;
     item: Comment;
 }
 
 const CommentItem = (props: Props) => {
-    const [authState] = useAuthStateHook();
-    const [upvoted, setIsUpvoted] = React.useState(false);
-    const [downvoted, setIsDownvoted] = React.useState(false);
-
-    const upvote = (checked: boolean) => {
-        if (!authState.isLoggedIn) return;
-        setIsUpvoted(checked);
-        if (checked) {
-            setIsDownvoted(false);
-            postService.cupvote(props.item.id, authState.token);
-        } else postService.cremoveVote(props.item.id, authState.token);
-    };
-    const downvote = (checked: boolean) => {
-        if (!authState.isLoggedIn) return;
-        setIsDownvoted(checked);
-        if (checked) {
-            setIsUpvoted(false);
-            postService.cdownvote(props.item.id, authState.token);
-        } else postService.cremoveVote(props.item.id, authState.token);
-    };
+    const authState = useContext(AuthContext);
 
     const commentBlock = {
         borderRadius: "3px",
         padding: "5px",
         backgroundColor: "#ededed",
         marginLeft: "0.5rem",
+        width: "100%",
     };
 
     return (
@@ -57,13 +42,19 @@ const CommentItem = (props: Props) => {
                 </Box>
             </Flex>
             <Flex sx={{ justifyContent: "flex-start", mb: "0.5rem", ml: "2.5rem" }}>
-                <Box onClick={() => upvote(!upvoted)} sx={{ cursor: "pointer" }}>
-                    <Upvote isChecked={upvoted} />
-                </Box>
-                <Box sx={{}}>2k</Box>
-                <Box onClick={() => downvote(!downvoted)} sx={{ cursor: "pointer" }}>
-                    <Downvote isChecked={downvoted} />
-                </Box>
+                <CUpvoteButton
+                    postId={props.postId}
+                    commId={props.item.id}
+                    checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.UPVOTED)}
+                />
+                <Text fontSize="3" sx={{ px: "0.5rem", py: "6px" }}>
+                    {props.item.voteSum ? props.item.voteSum : "0"}
+                </Text>
+                <CDownvoteButton
+                    postId={props.postId}
+                    commId={props.item.id}
+                    checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.DOWNVOTED)}
+                />
             </Flex>
         </Box>
     );

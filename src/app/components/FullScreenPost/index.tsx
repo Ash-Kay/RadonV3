@@ -1,35 +1,37 @@
 import React, { useEffect, useContext } from "react";
-import { Flex, Box } from "rebass";
-import PostItem from "../PostItem";
+import { Box } from "rebass";
 import CommentItem from "../CommentItem";
 import { Comment, postService, postStore } from "../../state/posts";
 import { useParams } from "react-router-dom";
 import { postQuery } from "../../state/posts/post.query";
 import { AuthContext } from "../../context/auth.context";
 import { usePostHook } from "../../state/posts/post.hook";
+import FullScreenPostItem from "../FullScreenPostItem";
+import CommentInput from "../CommentInput";
 
 interface Props {}
 
 const FullScreenPost = (props: Props) => {
     const { id } = useParams();
     const authState = useContext(AuthContext);
-    const post = usePostHook(id);
+    const [post] = usePostHook(id);
 
     useEffect(() => {
         getPost();
-    }, [authState]);
+    }, []);
 
     const getCommentList = (comments: Comment[]) => {
-        if (comments === undefined) {
+        if (!comments || !post) {
             return <h4>Loading Comments...</h4>;
         }
-        return comments.map((item) => <CommentItem item={item} key={item.id} />);
+        return comments.map((item) => <CommentItem item={item} postId={post.id} key={item.id} />);
     };
 
     const getPost = () => {
         if (postQuery.hasEntity(id)) {
             if (!post?.comment) {
-                postService.getComments(id);
+                if (authState.isLoggedIn) postService.getCommentsAuth(id, authState.token);
+                else postService.getComments(id);
             }
         } else {
             if (authState.isLoggedIn) {
@@ -37,11 +39,11 @@ const FullScreenPost = (props: Props) => {
                     .getPostAuthPromise(id, authState.token)
                     .then((response) => {
                         postStore.add(response.data.data, { prepend: true });
-                        postService.getComments(id);
+                        postService.getCommentsAuth(id, authState.token);
                     })
                     .catch(function (error) {
                         console.error(error);
-                        //404
+                        //TODO 404 page
                     });
             } else {
                 postService
@@ -52,17 +54,19 @@ const FullScreenPost = (props: Props) => {
                     })
                     .catch(function (error) {
                         console.error(error);
-                        //404
+                        //TODO 404 page
                     });
             }
         }
     };
 
     return (
-        <Flex>
-            <Box sx={{ width: "50%" }}>{post && <PostItem item={post} />}</Box>
-            <Box>{post && getCommentList(post?.comment)}</Box>
-        </Flex>
+        <Box sx={{ width: "600px", mx: "auto", mt: "66px" }}>
+            <Box>{post && <FullScreenPostItem item={post} />}</Box>
+            <Box sx={{ backgroundColor: "#d1d1d1", height: 1, my: "0.5rem" }} />
+            {post && <CommentInput postId={post.id} />}
+            <Box sx={{ mt: "1rem" }}>{post && getCommentList(post.comment)}</Box>
+        </Box>
     );
 };
 

@@ -129,6 +129,13 @@ export const theme = {
                 filter: "brightness(120%)",
             },
         },
+        nav: {
+            variant: "buttons.primary",
+            p: "0.2rem 0.5rem",
+            mx: "0.5rem",
+            height: "30px",
+            borderRadius: "1px",
+        },
     },
     input: {
         ":focus": {
@@ -143,6 +150,9 @@ export const theme = {
             fontFamily: "body",
             fontWeight: "body",
             lineHeight: "body",
+        },
+        button: {
+            cursor: "pointer",
         },
     },
 };

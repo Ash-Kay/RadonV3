@@ -83,9 +83,6 @@ export class AuthService {
     public logout = () => {
         this.store.update(() => AUTH_INITIAL_STATE);
         localStorage.removeItem("token");
-
-        //to refetch and remove upvote/downvte state
-        window.location.reload();
     };
 }
 

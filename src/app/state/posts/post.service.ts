@@ -3,7 +3,8 @@ import { postQuery, PostQuery } from "./post.query";
 import { NewPostForm } from "../../components/CreatePostButton";
 import { authQuery } from "../auth/auth.query";
 import { main } from "../../../utils/axios";
-import { CommentForm } from "../../components/PostItem";
+import { handleResponseError } from "../../../utils/handleResponseError";
+import { CommentForm } from "../../components/CommentInput";
 
 enum HeaderType {
     AUTH_TOKEN = 1,
@@ -22,9 +23,7 @@ export class PostService {
                 this.store.add(response.data.data, { prepend: true });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
-            });
+            .catch((error) => handleResponseError(error, this.store));
     };
 
     public getPostPage = (pageNo: number) => {
@@ -34,8 +33,8 @@ export class PostService {
                 this.store.add(response.data.data, { prepend: true });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
@@ -56,8 +55,8 @@ export class PostService {
                 this.store.update(postId, { vote: 1 });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
@@ -68,8 +67,8 @@ export class PostService {
                 this.store.update(postId, { vote: -1 });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
@@ -80,8 +79,8 @@ export class PostService {
                 this.store.update(postId, { vote: 0 });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
@@ -92,8 +91,20 @@ export class PostService {
                 this.store.update(postId, { comment: response.data.data });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
+            });
+    };
+
+    public getCommentsAuth = (postId: number, token: string) => {
+        this.store.setLoading(true);
+        main.get(`/posts/${postId}/comment`, getHeader({ token }, HeaderType.AUTH_TOKEN))
+            .then((response) => {
+                this.store.update(postId, { comment: response.data.data });
+                this.store.setLoading(false);
+            })
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
@@ -104,8 +115,8 @@ export class PostService {
                 this.store.update(postId, { voteSum: response.data.data.voteSum });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
@@ -127,8 +138,8 @@ export class PostService {
                 });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
@@ -143,45 +154,66 @@ export class PostService {
             .then((response) => {
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
     //TODO: Should be in comment services
-    public cupvote = (commId: number, token: string) => {
+    public cupvote = (postId: number, commId: number, token: string) => {
         this.store.setLoading(true);
         main.post(`/comments/${commId}/upvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
-                this.store.update(commId, { vote: 1 });
+                this.store.update(postId, (post) => {
+                    let updatedPost = Object.assign({}, post);
+                    updatedPost.comment = post.comment.map((comm) => {
+                        if (comm.id == commId) return { ...comm, vote: 1 };
+                        else return comm;
+                    });
+                    return updatedPost;
+                });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
-    public cdownvote = (commId: number, token: string) => {
+    public cdownvote = (postId: number, commId: number, token: string) => {
         this.store.setLoading(true);
         main.post(`/comments/${commId}/downvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
-                this.store.update(commId, { vote: -1 });
+                this.store.update(postId, (post) => {
+                    let updatedPost = Object.assign({}, post);
+                    updatedPost.comment = post.comment.map((comm) => {
+                        if (comm.id == commId) return { ...comm, vote: -1 };
+                        else return comm;
+                    });
+                    return updatedPost;
+                });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 
-    public cremoveVote = (commId: number, token: string) => {
+    public cremoveVote = (postId: number, commId: number, token: string) => {
         this.store.setLoading(true);
         main.delete(`/comments/${commId}/removevote`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
-                this.store.update(commId, { vote: 0 });
+                this.store.update(postId, (post) => {
+                    let updatedPost = Object.assign({}, post);
+                    updatedPost.comment = post.comment.map((comm) => {
+                        if (comm.id == commId) return { ...comm, vote: 0 };
+                        else return comm;
+                    });
+                    return updatedPost;
+                });
                 this.store.setLoading(false);
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch((error) => {
+                handleResponseError(error, this.store);
             });
     };
 }

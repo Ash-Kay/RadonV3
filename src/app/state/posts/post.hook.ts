@@ -7,11 +7,10 @@ export type PostFeedHook = [Post[]];
 
 export function usePostFeedHook(): PostFeedHook {
     const [postFeed] = useObservable(postService.homefeed$, []);
-
     return [postFeed];
 }
 
-export function usePostHook(id: number): Post | undefined {
+export function usePostHook(id: number): [Post | undefined] {
     const [post] = useObservable(postQuery.selectPost(id));
-    return post;
+    return [post];
 }

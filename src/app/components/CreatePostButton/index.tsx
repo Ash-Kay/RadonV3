@@ -1,7 +1,7 @@
 import React from "react";
 import { postService } from "../../state/posts";
 import { AuthState } from "../../state/auth/auth.model";
-import { Box, Button } from "rebass";
+import { Box, Button, Text } from "rebass";
 import Modal from "../core/Modal";
 import { Input, Label, Checkbox } from "@rebass/forms";
 
@@ -32,7 +32,9 @@ const NewPostButton = (props: Props) => {
     //TODO: Make modal bigger, show chosen image (maybe)
     return (
         <>
-            <Button onClick={() => setCreatePostModalOpen(true)}>Create Post</Button>
+            <Button variant="nav" onClick={() => setCreatePostModalOpen(true)}>
+                Create Post
+            </Button>
             <Modal isOpen={isCreatePostModalOpen} onModalClose={closeCreatePostModal}>
                 <Box sx={{ color: "text" }}>
                     <h2>Create New Post</h2>

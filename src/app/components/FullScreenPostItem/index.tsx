@@ -6,15 +6,11 @@ import UpvoteButton from "../core/Buttons/UpvoteButton";
 import { AuthContext } from "../../context/auth.context";
 import { checkVoteState } from "../../../utils/checkVoteState";
 import DownvoteButton from "../core/Buttons/DownvoteButton";
-import CommentButton from "../core/Buttons/CommentButton";
-import SeeFullPostButton from "../core/Buttons/SeeFullPostButton";
-import ChevronDownButton from "../core/Buttons/ChevronDownButton";
 
 interface Props {
     item: Post;
 }
-
-const PostItem = (props: Props) => {
+const FullScreenPostItem = (props: Props) => {
     const authState = useContext(AuthContext);
 
     //#region Style
@@ -22,36 +18,27 @@ const PostItem = (props: Props) => {
         background: "#fff",
         pt: "0.5rem",
         marginBottom: "1rem",
-        boxShadow: "0 0 0 1px rgba(0,0,0,0.15),0 2px 3px rgba(0,0,0,0.2)",
     };
     //#endregion
 
     return (
         <Box sx={postItemStyle}>
-            <Flex justifyContent="space-between" sx={{ px: "10px" }}>
-                <Link
-                    href={`/posts/${props.item.id}`}
-                    sx={{
-                        color: "black",
-                        textDecoration: "none",
-                        ":hover,:focus,.active": {
-                            color: "primary",
-                        },
-                    }}
-                >
-                    <Text fontSize="3" fontWeight="bold">
-                        {props.item.title}
-                    </Text>
-                </Link>
-                <ChevronDownButton />
-            </Flex>
+            <Link
+                href={`/posts/${props.item.id}`}
+                sx={{
+                    color: "black",
+                    textDecoration: "none",
+                    ":hover,:focus,.active": {
+                        color: "primary",
+                    },
+                }}
+            >
+                <Text fontSize="3" fontWeight="bold">
+                    {props.item.title}
+                </Text>
+            </Link>
             <Box sx={{ mt: "0.5rem", position: "relative" }}>
-                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
-                {props.item.height > props.item.width && (
-                    <Link href={`/posts/${props.item.id}`}>
-                        <SeeFullPostButton />
-                    </Link>
-                )}
+                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} showFull />
             </Box>
             <Flex sx={{ mx: "4px", height: "40px" }}>
                 <UpvoteButton
@@ -65,12 +52,9 @@ const PostItem = (props: Props) => {
                     id={props.item.id}
                     checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.DOWNVOTED)}
                 />
-                <Link href={`/posts/${props.item.id}`}>
-                    <CommentButton />
-                </Link>
             </Flex>
         </Box>
     );
 };
 
-export default PostItem;
+export default FullScreenPostItem;
