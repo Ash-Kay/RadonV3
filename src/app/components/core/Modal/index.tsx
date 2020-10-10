@@ -1,10 +1,11 @@
 import React, { ReactNode } from "react";
-import { Box } from "rebass";
+import { Box, SxStyleProp } from "rebass";
 
 interface Props {
     isOpen: boolean;
     onModalClose: (param: any) => void;
     children: ReactNode;
+    sx?: SxStyleProp;
 }
 
 const Modal = (props: Props) => {
@@ -49,6 +50,7 @@ const Modal = (props: Props) => {
                     textAlign: "left",
                     boxShadow: "0 20px 30px rgba(0, 0, 0, 0.2)",
                     overflowY: "auto",
+                    ...props.sx
                 }}
             >
                 {props.children}

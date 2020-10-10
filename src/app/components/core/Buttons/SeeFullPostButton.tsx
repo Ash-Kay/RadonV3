@@ -14,6 +14,10 @@ const SeeFullPostButton = (props: Props) => {
                 height: "50px",
                 cursor: "pointer",
                 background: "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 100%)",
+                color: "rgba(255, 255, 255, 0.7)",
+                ":hover": {
+                    color: "white",
+                },
             }}
         >
             <Text
@@ -23,7 +27,6 @@ const SeeFullPostButton = (props: Props) => {
                     bottom: 10,
                     left: "50%",
                     transform: "translateX(-50%)",
-                    color: "rgba(255, 255, 255, 0.7)",
                 }}
             >
                 See Full Post

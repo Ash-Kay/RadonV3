@@ -22,7 +22,8 @@ const PostItem = (props: Props) => {
         background: "#fff",
         pt: "0.5rem",
         marginBottom: "1rem",
-        boxShadow: "0 0 0 1px rgba(0,0,0,0.15),0 2px 3px rgba(0,0,0,0.2)",
+        border: "1px solid rgba(0,0,0,0.15)",
+        borderRadius: "5px",
     };
     //#endregion
 
@@ -46,7 +47,7 @@ const PostItem = (props: Props) => {
                 <ChevronDownButton />
             </Flex>
             <Box sx={{ mt: "0.5rem", position: "relative" }}>
-                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />
+                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
                 {props.item.height > props.item.width && (
                     <Link href={`/posts/${props.item.id}`}>
                         <SeeFullPostButton />

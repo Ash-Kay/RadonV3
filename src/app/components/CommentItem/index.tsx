@@ -37,7 +37,9 @@ const CommentItem = (props: Props) => {
                             {props.item.timeago}
                         </Text>
                     </Flex>
-                    {props.item.mediaUrl && <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} />}
+                    {props.item.mediaUrl && (
+                        <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
+                    )}
                     {props.item.message}
                 </Box>
             </Flex>

@@ -134,7 +134,12 @@ export const theme = {
             p: "0.2rem 0.5rem",
             mx: "0.5rem",
             height: "30px",
-            borderRadius: "1px",
+        },
+        navOutline: {
+            variant: "buttons.outline",
+            p: "0.2rem 0.5rem",
+            mx: "0.5rem",
+            height: "30px",
         },
     },
     input: {

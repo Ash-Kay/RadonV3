@@ -10,6 +10,7 @@ const Home = (props: Props) => {
         width: "20rem",
         backgroundColor: "#f1f1f1",
         display: ["none", "none", "block"],
+        ml: "2rem",
     };
     const mainDivStyle = {
         maxWidth: "550px",
@@ -24,9 +25,6 @@ const Home = (props: Props) => {
 
     return (
         <Box sx={mainFlexDivStyle}>
-            <Box sx={sideNavStyle}>
-                <SideNavigation />
-            </Box>
             <Box sx={mainDivStyle}>
                 <HomeFeed />
             </Box>

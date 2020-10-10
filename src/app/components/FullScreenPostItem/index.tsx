@@ -38,7 +38,7 @@ const FullScreenPostItem = (props: Props) => {
                 </Text>
             </Link>
             <Box sx={{ mt: "0.5rem", position: "relative" }}>
-                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} showFull />
+                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} showFull id={props.item.id} />
             </Box>
             <Flex sx={{ mx: "4px", height: "40px" }}>
                 <UpvoteButton
