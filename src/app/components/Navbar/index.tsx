@@ -7,6 +7,7 @@ import { Flex, Text, Box, Button, Link } from "rebass";
 import Avatar from "../core/Avatar";
 import { AuthContext } from "../../context/auth.context";
 import { PaperClip } from "../Icons";
+import DropDownItem from "../core/DropDownItem";
 
 interface Props {}
 
@@ -48,11 +49,6 @@ const Navbar = (props: Props) => {
             <Box mx="auto" />
             <>
                 {authState.isLoggedIn && <CreatePostButton authState={authState} />}
-                {authState.isLoggedIn && (
-                    <Button variant="nav" onClick={authService.logout}>
-                        Logout
-                    </Button>
-                )}
                 {!authState.isLoggedIn && <LoginModal />}
                 {!authState.isLoggedIn && <SignupModal />}
                 {authState.isLoggedIn && (
@@ -70,7 +66,7 @@ const Navbar = (props: Props) => {
                         <Avatar avatarUrl={authState.avatarUrl} />
                     </Box>
                 )}
-                {isDropdownOpen && (
+                {isDropdownOpen && authState.isLoggedIn && (
                     <Box>
                         <Box
                             sx={{
@@ -93,46 +89,21 @@ const Navbar = (props: Props) => {
                                 backgroundColor: "white",
                                 top: 50,
                                 right: 2,
-                                border: "1px solid rgba(0,0,0,0.15)",
+                                border: "1px solid rgba(0, 0, 0, 0.15)",
                                 borderRadius: "5px",
                             }}
                         >
                             <DropDownItem text={"Settings"} icon={<PaperClip color="gray" />} />
                             <DropDownItem text={"Privacy"} icon={<PaperClip color="gray" />} />
-                            <DropDownItem text={"Logout"} icon={<PaperClip color="gray" />} />
+                            <DropDownItem
+                                text={"Logout"}
+                                icon={<PaperClip color="gray" />}
+                                onClickCallback={authService.logout}
+                            />
                         </Box>
                     </Box>
                 )}
             </>
-        </Flex>
-    );
-};
-
-interface DropDownItemProps {
-    text: string;
-    icon: JSX.Element;
-    url?: string;
-}
-
-const DropDownItem = (props: DropDownItemProps) => {
-    return (
-        <Flex
-            sx={{
-                height: "40px",
-                lineHeight: "35px",
-                cursor: "pointer",
-                "&:not(:last-child)": {
-                    borderBottom: "1px solid rgba(1, 1, 1, 0.1)",
-                },
-                ":hover": {
-                    backgroundColor: "rgba(1, 1, 1, 0.05)",
-                },
-            }}
-        >
-            <Box sx={{ width: "40px", display: "flex", alignSelf: "center", justifyContent: "center" }}>
-                {props.icon}
-            </Box>
-            <Text>{props.text}</Text>
         </Flex>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Post, Vote } from "../../state/posts";
 import { Box, Text, Flex, Link } from "rebass";
 import Media from "../core/Media";
@@ -9,6 +9,7 @@ import DownvoteButton from "../core/Buttons/DownvoteButton";
 import CommentButton from "../core/Buttons/CommentButton";
 import SeeFullPostButton from "../core/Buttons/SeeFullPostButton";
 import ChevronDownButton from "../core/Buttons/ChevronDownButton";
+import DropDownItem from "../core/DropDownItem";
 
 interface Props {
     item: Post;
@@ -16,13 +17,14 @@ interface Props {
 
 const PostItem = (props: Props) => {
     const authState = useContext(AuthContext);
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     //#region Style
     const postItemStyle = {
         background: "#fff",
         pt: "0.5rem",
         marginBottom: "1rem",
-        border: "1px solid rgba(0,0,0,0.15)",
+        border: "1px solid rgba(0, 0, 0, 0.15)",
         borderRadius: "5px",
     };
     //#endregion
@@ -35,7 +37,7 @@ const PostItem = (props: Props) => {
                     sx={{
                         color: "black",
                         textDecoration: "none",
-                        ":hover,:focus,.active": {
+                        ":hover,:focus,:active": {
                             color: "primary",
                         },
                     }}
@@ -44,8 +46,50 @@ const PostItem = (props: Props) => {
                         {props.item.title}
                     </Text>
                 </Link>
-                <ChevronDownButton />
+                {authState.isLoggedIn && (
+                    <Box sx={{ position: "relative" }}>
+                        <ChevronDownButton
+                            onClick={() => {
+                                setDropdownOpen(true);
+                            }}
+                        />
+
+                        {isDropdownOpen && authState.isLoggedIn && (
+                            <Box
+                                sx={{
+                                    position: "fixed",
+                                    top: 0,
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    width: "100%",
+                                    height: "100%",
+                                    zIndex: 1,
+                                }}
+                                onClick={() => setDropdownOpen(false)}
+                            />
+                        )}
+
+                        {isDropdownOpen && (
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    right: 0,
+                                    color: "black",
+                                    backgroundColor: "white",
+                                    zIndex: 2,
+                                    border: "1px solid rgba(0, 0, 0, 0.15)",
+                                    borderRadius: "5px",
+                                }}
+                            >
+                                <DropDownItem text={"Report"} />
+                                <DropDownItem text={"Delete"} />
+                            </Box>
+                        )}
+                    </Box>
+                )}
             </Flex>
+
             <Box sx={{ mt: "0.5rem", position: "relative" }}>
                 <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
                 {props.item.height > props.item.width && (
@@ -59,7 +103,7 @@ const PostItem = (props: Props) => {
                     id={props.item.id}
                     checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.UPVOTED)}
                 />
-                <Text fontSize="3" sx={{ px: "0.5rem", py: "6px" }}>
+                <Text fontSize="3" sx={{ px: "0.5rem", lineHeight: "38px" }}>
                     {props.item.voteSum ? props.item.voteSum : "0"}
                 </Text>
                 <DownvoteButton

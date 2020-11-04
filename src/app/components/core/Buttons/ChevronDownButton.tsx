@@ -2,7 +2,9 @@ import React from "react";
 import { Box } from "rebass";
 import { ChevronDown } from "../../Icons";
 
-interface Props {}
+interface Props {
+    onClick: () => void;
+}
 
 const ChevronDownButton = (props: Props) => {
     return (
@@ -18,6 +20,7 @@ const ChevronDownButton = (props: Props) => {
                     backgroundColor: "gray",
                 },
             }}
+            onClick={props.onClick}
         >
             <ChevronDown size="12px" color="gray" />
         </Box>

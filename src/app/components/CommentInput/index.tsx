@@ -37,13 +37,13 @@ const CommentInput = (props: Props) => {
         borderRadius: "16px",
         borderColor: "transparent",
         backgroundColor: "#ededed",
-        marginRight: "0.5rem",
-        marginLeft: "2rem",
+        // marginRight: "0.5rem",
+        // marginLeft: "2rem",
     };
 
     return (
         <Box>
-            <Flex>
+            <Flex sx={{ position: "relative" }}>
                 <Input
                     value={commentForm.comment}
                     onChange={(e) => setCommentForm({ ...commentForm, comment: e.currentTarget.value })}
@@ -52,7 +52,14 @@ const CommentInput = (props: Props) => {
                     onKeyDown={commentInputKeyDown}
                 />
                 <Box
-                    sx={{ cursor: "pointer", my: "auto" }}
+                    sx={{
+                        cursor: "pointer",
+                        my: "auto",
+                        position: "absolute",
+                        right: "8px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                    }}
                     onClick={() => {
                         hiddenCommentFileInput.current?.click();
                     }}
