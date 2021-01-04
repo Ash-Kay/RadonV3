@@ -167,7 +167,7 @@ export class PostService {
                 this.store.update(postId, (post) => {
                     let updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.map((comm) => {
-                        if (comm.id == commId) return { ...comm, vote: 1 };
+                        if (comm.id === commId) return { ...comm, vote: 1 };
                         else return comm;
                     });
                     return updatedPost;
@@ -186,7 +186,7 @@ export class PostService {
                 this.store.update(postId, (post) => {
                     let updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.map((comm) => {
-                        if (comm.id == commId) return { ...comm, vote: -1 };
+                        if (comm.id === commId) return { ...comm, vote: -1 };
                         else return comm;
                     });
                     return updatedPost;
@@ -205,8 +205,38 @@ export class PostService {
                 this.store.update(postId, (post) => {
                     let updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.map((comm) => {
-                        if (comm.id == commId) return { ...comm, vote: 0 };
+                        if (comm.id === commId) return { ...comm, vote: 0 };
                         else return comm;
+                    });
+                    return updatedPost;
+                });
+                this.store.setLoading(false);
+            })
+            .catch((error) => {
+                handleResponseError(error, this.store);
+            });
+    };
+
+    public softDeletePost = (postId: number, token: string) => {
+        this.store.setLoading(true);
+        main.delete(`/posts/${postId}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
+            .then((response) => {
+                this.store.remove(postId);
+                this.store.setLoading(false);
+            })
+            .catch((error) => {
+                handleResponseError(error, this.store);
+            });
+    };
+
+    public softDeleteComment = (postId: number, commId: number, token: string) => {
+        this.store.setLoading(true);
+        main.delete(`/comments/${commId}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
+            .then((response) => {
+                this.store.update(postId, (post) => {
+                    let updatedPost = Object.assign({}, post);
+                    updatedPost.comment = post.comment.filter((comm) => {
+                        if (comm.id !== commId) return;
                     });
                     return updatedPost;
                 });

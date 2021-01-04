@@ -77,13 +77,13 @@ const Navbar = (props: Props) => {
                                 right: 0,
                                 width: "100%",
                                 height: "100%",
+                                backgroundColor: "rgba(255, 110, 110, 0.589)",
                             }}
                             onClick={() => setDropdownOpen(false)}
                         />
 
                         <Box
                             sx={{
-                                width: "200px",
                                 position: "fixed",
                                 color: "black",
                                 backgroundColor: "white",

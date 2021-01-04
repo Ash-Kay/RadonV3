@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Post, Vote } from "../../state/posts";
+import { Post, postService, Vote } from "../../state/posts";
 import { Box, Text, Flex, Link } from "rebass";
 import Media from "../core/Media";
 import UpvoteButton from "../core/Buttons/UpvoteButton";
@@ -64,7 +64,8 @@ const PostItem = (props: Props) => {
                                     right: 0,
                                     width: "100%",
                                     height: "100%",
-                                    zIndex: 1,
+                                    zIndex: 100,
+                                    backgroundColor: "rgba(255, 110, 110, 0.589)",
                                 }}
                                 onClick={() => setDropdownOpen(false)}
                             />
@@ -77,13 +78,20 @@ const PostItem = (props: Props) => {
                                     right: 0,
                                     color: "black",
                                     backgroundColor: "white",
-                                    zIndex: 2,
+                                    zIndex: 101,
                                     border: "1px solid rgba(0, 0, 0, 0.15)",
                                     borderRadius: "5px",
                                 }}
                             >
                                 <DropDownItem text={"Report"} />
-                                <DropDownItem text={"Delete"} />
+                                {props.item.user.id === authState.id && (
+                                    <DropDownItem
+                                        text={"Delete"}
+                                        onClickCallback={() =>
+                                            postService.softDeletePost(props.item.id, authState.token)
+                                        }
+                                    />
+                                )}
                             </Box>
                         )}
                     </Box>

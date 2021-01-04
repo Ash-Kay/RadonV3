@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Comment, Vote } from "../../state/posts";
+import React, { useContext, useState } from "react";
+import { Comment, postService, Vote } from "../../state/posts";
 import { Box, Flex, Text } from "rebass";
 import Avatar from "../core/Avatar";
 import Media from "../core/Media";
@@ -7,6 +7,8 @@ import { AuthContext } from "../../context/auth.context";
 import CUpvoteButton from "../core/Buttons/CUpvoteButton";
 import { checkVoteState } from "../../../utils/checkVoteState";
 import CDownvoteButton from "../core/Buttons/CDownvoteButton";
+import ChevronDownButton from "../core/Buttons/ChevronDownButton";
+import DropDownItem from "../core/DropDownItem";
 
 interface Props {
     postId: number;
@@ -15,6 +17,7 @@ interface Props {
 
 const CommentItem = (props: Props) => {
     const authState = useContext(AuthContext);
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     const commentBlock = {
         borderRadius: "3px",
@@ -36,6 +39,60 @@ const CommentItem = (props: Props) => {
                         <Text fontSize={16} paddingLeft="0.5rem" color="#5c5c5c">
                             {props.item.timeago}
                         </Text>
+                        {authState.isLoggedIn && (
+                            <Box sx={{ position: "relative", marginLeft: "auto" }}>
+                                <ChevronDownButton
+                                    onClick={() => {
+                                        setDropdownOpen(true);
+                                    }}
+                                />
+
+                                {isDropdownOpen && authState.isLoggedIn && (
+                                    <Box
+                                        sx={{
+                                            position: "fixed",
+                                            top: 0,
+                                            bottom: 0,
+                                            left: 0,
+                                            right: 0,
+                                            width: "100%",
+                                            height: "100%",
+                                            zIndex: 100,
+                                            backgroundColor: "rgba(255, 110, 110, 0.589)",
+                                        }}
+                                        onClick={() => setDropdownOpen(false)}
+                                    />
+                                )}
+
+                                {isDropdownOpen && (
+                                    <Box
+                                        sx={{
+                                            position: "absolute",
+                                            right: 0,
+                                            color: "black",
+                                            backgroundColor: "white",
+                                            zIndex: 101,
+                                            border: "1px solid rgba(0, 0, 0, 0.15)",
+                                            borderRadius: "5px",
+                                        }}
+                                    >
+                                        <DropDownItem text={"Report"} />
+                                        {props.item.user.id === authState.id && (
+                                            <DropDownItem
+                                                text={"Delete"}
+                                                onClickCallback={() =>
+                                                    postService.softDeleteComment(
+                                                        props.postId,
+                                                        props.item.id,
+                                                        authState.token
+                                                    )
+                                                }
+                                            />
+                                        )}
+                                    </Box>
+                                )}
+                            </Box>
+                        )}
                     </Flex>
                     {props.item.mediaUrl && (
                         <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />

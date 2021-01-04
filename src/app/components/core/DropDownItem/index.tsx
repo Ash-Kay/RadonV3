@@ -25,11 +25,20 @@ const DropDownItem = (props: Props) => {
             onClick={props.onClickCallback}
         >
             {props.icon && (
-                <Box sx={{ width: "40px", display: "flex", alignSelf: "center", justifyContent: "center" }}>
+                <Box
+                    sx={{
+                        paddingLeft: "30px",
+                        paddingRight: "10px",
+                        display: "flex",
+                        alignSelf: "center",
+                        justifyContent: "center",
+                    }}
+                >
                     {props.icon}
                 </Box>
             )}
-            <Text sx={{ px: "40px" }}>{props.text}</Text>
+            {!props.icon && <Box sx={{ paddingLeft: "40px" }} />}
+            <Text sx={{ paddingRight: "40px" }}>{props.text}</Text>
         </Flex>
     );
 };

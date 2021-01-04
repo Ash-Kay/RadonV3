@@ -32,7 +32,7 @@ const LoginModal = (props: Props) => {
     return (
         <>
             <Button onClick={() => setSignInModalOpen(true)} variant="navOutline">
-                Login In
+                Log In
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal} sx={modalStyle}>
                 <Box sx={{ color: "text" }}>
