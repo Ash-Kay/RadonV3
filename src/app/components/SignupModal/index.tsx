@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
 import { authService } from "../../state/auth/auth.service";
-import { Box, Button, Text } from "rebass";
-import { Input } from "@rebass/forms";
+import { Box, Button, Text, Input } from "theme-ui";
 import Modal from "../core/Modal";
 
 interface Props {}
@@ -36,9 +35,7 @@ const SignupModal = (props: Props) => {
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal} sx={modalStyle}>
                 <Box sx={{ color: "text" }}>
-                    <Text fontSize={5} fontWeight="bold" sx={{ mb: "2rem" }}>
-                        Welcome to RadonV3!
-                    </Text>
+                    <Text sx={{ fontSize: 5, fontWeight: "bold", mb: "2rem" }}>Welcome to RadonV3!</Text>
                     <GoogleLogin
                         clientId="946380795317-321u8sasdpeqe6uuja0cs5c071bs8vqb.apps.googleusercontent.com"
                         buttonText="Sign up with Google"
@@ -46,9 +43,7 @@ const SignupModal = (props: Props) => {
                         onFailure={failureResponse}
                     />
 
-                    <Text fontSize={3} fontWeight="bold" sx={{ my: "1.5rem" }}>
-                        Or
-                    </Text>
+                    <Text sx={{ fontSize: 3, fontWeight: "bold", my: "1.5rem" }}>Or</Text>
 
                     <h2>Sign Up with Email</h2>
                     <Input

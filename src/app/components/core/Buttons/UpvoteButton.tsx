@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Box } from "rebass";
+import { Box } from "theme-ui";
 import { AuthContext } from "../../../context/auth.context";
 import { postService } from "../../../state/posts";
 import { Upvote } from "../../Icons";

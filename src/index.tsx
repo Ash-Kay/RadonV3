@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import { ThemeProvider } from "emotion-theming";
+import { ThemeProvider } from "theme-ui";
 import theme from "./theme";
 import App from "./app/App";
 import { BrowserRouter } from "react-router-dom";

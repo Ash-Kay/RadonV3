@@ -14,15 +14,12 @@
         "@types/react-dom": "^16.9.8",
         "@types/react-infinite-scroller": "^1.2.1",
         "@types/react-router-dom": "^5.1.5",
-        "@types/rebass": "^4.0.6",
-        "@types/rebass__forms": "^4.0.2",
+        "@types/theme-ui": "^0.3.7",
         "eslint-plugin-react": "^7.20.3"
     },
     "dependencies": {
         "@datorama/akita": "^5.2.1",
-        "@rebass/forms": "^4.0.6",
         "axios": "^0.19.2",
-        "emotion-theming": "^10.0.27",
         "jwt-decode": "^2.2.0",
         "query-string": "^6.13.1",
         "react": "^16.13.1",
@@ -31,7 +28,7 @@
         "react-infinite-scroller": "^1.2.4",
         "react-router-dom": "^5.2.0",
         "react-scripts": "3.4.1",
-        "rebass": "^4.0.7",
+        "theme-ui": "^0.3.5",
         "typescript": "~3.9.7"
     },
     "scripts": {

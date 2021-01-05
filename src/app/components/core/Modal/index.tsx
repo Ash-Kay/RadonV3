@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Box, SxStyleProp } from "rebass";
+import { Box, SxStyleProp } from "theme-ui";
 
 interface Props {
     isOpen: boolean;
@@ -11,13 +11,12 @@ interface Props {
 const Modal = (props: Props) => {
     return (
         <Box
-            display={props.isOpen ? "flex" : "none"}
             sx={{
                 height: "100%",
                 width: "100%",
                 position: "fixed",
                 zIndex: 1,
-                display: "flex",
+                display: `${props.isOpen ? "flex" : "none"}`,
                 alignItems: "center",
                 justifyContent: "center",
                 top: 0,
@@ -50,7 +49,7 @@ const Modal = (props: Props) => {
                     textAlign: "left",
                     boxShadow: "0 20px 30px rgba(0, 0, 0, 0.2)",
                     overflowY: "auto",
-                    ...props.sx
+                    ...props.sx,
                 }}
             >
                 {props.children}

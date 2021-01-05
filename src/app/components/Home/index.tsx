@@ -1,7 +1,7 @@
 import React from "react";
 import HomeFeed from "../HomeFeed";
 import SideNavigation from "../SideNavigation";
-import { Box } from "rebass";
+import { Box } from "theme-ui";
 
 interface Props {}
 
@@ -28,9 +28,9 @@ const Home = (props: Props) => {
             <Box sx={mainDivStyle}>
                 <HomeFeed />
             </Box>
-            <Box sx={sideNavStyle}>
+            {/* <Box sx={sideNavStyle}>
                 <SideNavigation />
-            </Box>
+            </Box> */}
         </Box>
     );
 };

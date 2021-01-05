@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
 import { authService } from "../../state/auth/auth.service";
-import { Box, Button, Text } from "rebass";
-import { Input } from "@rebass/forms";
+import { Box, Button, Text } from "theme-ui";
+import { Input } from "theme-ui";
 import Modal from "../core/Modal";
 
 interface Props {}

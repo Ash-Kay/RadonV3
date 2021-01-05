@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text } from "rebass";
+import { Box, Text } from "theme-ui";
 
 interface Props {}
 
@@ -21,8 +21,8 @@ const SeeFullPostButton = (props: Props) => {
             }}
         >
             <Text
-                fontWeight="bold"
                 sx={{
+                    fontWeight: "bold",
                     position: "absolute",
                     bottom: 10,
                     left: "50%",

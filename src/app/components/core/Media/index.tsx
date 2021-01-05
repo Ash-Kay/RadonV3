@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Link } from "rebass";
+import { Image, Link } from "theme-ui";
 
 interface Props {
     mediaUrl: string;
@@ -13,8 +13,7 @@ const Media = (props: Props) => {
         return (
             <Link href={`/posts/${props.id}`}>
                 <Image
-                    maxHeight={!props.showFull ? "500px" : "auto"}
-                    sx={{ width: "100%", objectFit: "cover" }}
+                    sx={{ width: "100%", objectFit: "cover", maxHeight: `${!props.showFull ? "500px" : "auto"}` }}
                     src={"http://localhost:3000/" + props.mediaUrl}
                     alt=""
                 />

@@ -3,7 +3,7 @@ import { authService } from "../../state/auth/auth.service";
 import CreatePostButton from "../CreatePostButton";
 import SignupModal from "../SignupModal";
 import LoginModal from "../LoginModal";
-import { Flex, Text, Box, Button, Link } from "rebass";
+import { Flex, Text, Box, Button, Link } from "theme-ui";
 import Avatar from "../core/Avatar";
 import { AuthContext } from "../../context/auth.context";
 import { PaperClip } from "../Icons";
@@ -29,23 +29,25 @@ const Navbar = (props: Props) => {
                 zIndex: 100,
             }}
         >
-            <Text
-                sx={{
-                    px: "6px",
-                    height: "30px",
-                    lineHeight: "30px",
-                    fontWeight: "bold",
-                    borderRadius: "2px",
-                    ":hover": {
-                        backgroundColor: "#ffffff24",
-                    },
-                    ":focus": {
-                        backgroundColor: "#ffffff24",
-                    },
-                }}
-            >
-                RadonV3
-            </Text>
+            <Link href="/">
+                <Text
+                    sx={{
+                        px: "6px",
+                        height: "30px",
+                        lineHeight: "30px",
+                        fontWeight: "bold",
+                        borderRadius: "2px",
+                        ":hover": {
+                            backgroundColor: "#ffffff24",
+                        },
+                        ":focus": {
+                            backgroundColor: "#ffffff24",
+                        },
+                    }}
+                >
+                    RadonV3
+                </Text>
+            </Link>
             <Box mx="auto" />
             <>
                 {authState.isLoggedIn && <CreatePostButton authState={authState} />}

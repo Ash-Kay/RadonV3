@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { Box } from "rebass";
+import { Box } from "theme-ui";
 import CommentItem from "../CommentItem";
 import { Comment, postService, postStore } from "../../state/posts";
 import { useParams } from "react-router-dom";
@@ -11,8 +11,12 @@ import CommentInput from "../CommentInput";
 
 interface Props {}
 
+interface ParamTypes {
+    id: string;
+}
+
 const FullScreenPost = (props: Props) => {
-    const { id } = useParams();
+    const id = +useParams<ParamTypes>().id;
     const authState = useContext(AuthContext);
     const [post] = usePostHook(id);
 
@@ -61,7 +65,7 @@ const FullScreenPost = (props: Props) => {
     };
 
     return (
-        <Box sx={{ width: "600px", mx: "auto", mt: "66px" }}>
+        <Box sx={{ width: ["auto", "600px"], mx: "auto", mt: "66px" }}>
             <Box>{post && <FullScreenPostItem item={post} />}</Box>
             <Box sx={{ backgroundColor: "#d1d1d1", height: 1, my: "0.5rem" }} />
             {post && <CommentInput postId={post.id} />}

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Post, postService, Vote } from "../../state/posts";
-import { Box, Text, Flex, Link } from "rebass";
+import { Box, Text, Flex, Link } from "theme-ui";
 import Media from "../core/Media";
 import UpvoteButton from "../core/Buttons/UpvoteButton";
 import { AuthContext } from "../../context/auth.context";
@@ -31,7 +31,7 @@ const PostItem = (props: Props) => {
 
     return (
         <Box sx={postItemStyle}>
-            <Flex justifyContent="space-between" sx={{ px: "10px" }}>
+            <Flex sx={{ px: "10px", justifyContent: "space-between" }}>
                 <Link
                     href={`/posts/${props.item.id}`}
                     sx={{
@@ -42,9 +42,7 @@ const PostItem = (props: Props) => {
                         },
                     }}
                 >
-                    <Text fontSize="3" fontWeight="bold">
-                        {props.item.title}
-                    </Text>
+                    <Text sx={{ fontSize: 3, fontWeight: "bold" }}>{props.item.title}</Text>
                 </Link>
                 {authState.isLoggedIn && (
                     <Box sx={{ position: "relative" }}>
@@ -111,7 +109,7 @@ const PostItem = (props: Props) => {
                     id={props.item.id}
                     checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.UPVOTED)}
                 />
-                <Text fontSize="3" sx={{ px: "0.5rem", lineHeight: "38px" }}>
+                <Text sx={{ fontSize: 3, px: "0.5rem", lineHeight: "38px" }}>
                     {props.item.voteSum ? props.item.voteSum : "0"}
                 </Text>
                 <DownvoteButton

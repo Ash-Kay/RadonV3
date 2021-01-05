@@ -1,9 +1,9 @@
 import React from "react";
 import { postService } from "../../state/posts";
 import { AuthState } from "../../state/auth/auth.model";
-import { Box, Button, Text } from "rebass";
+import { Box, Button, Text } from "theme-ui";
 import Modal from "../core/Modal";
-import { Input, Label, Checkbox } from "@rebass/forms";
+import { Input, Label, Checkbox } from "theme-ui";
 
 interface Props {
     authState: AuthState;

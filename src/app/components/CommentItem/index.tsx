@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Comment, postService, Vote } from "../../state/posts";
-import { Box, Flex, Text } from "rebass";
+import { Box, Flex, Text } from "theme-ui";
 import Avatar from "../core/Avatar";
 import Media from "../core/Media";
 import { AuthContext } from "../../context/auth.context";
@@ -33,10 +33,8 @@ const CommentItem = (props: Props) => {
                 <Avatar avatarUrl={props.item.user.avatarUrl} sx={{ marginTop: "5px" }} />
                 <Box sx={commentBlock}>
                     <Flex>
-                        <Text fontSize={16} fontWeight="bold">
-                            {props.item.user.username}
-                        </Text>
-                        <Text fontSize={16} paddingLeft="0.5rem" color="#5c5c5c">
+                        <Text sx={{ fontSize: 3, fontWeight: "bold" }}>{props.item.user.username}</Text>
+                        <Text paddingLeft="0.5rem" color="#5c5c5c" sx={{ fontSize: 3 }}>
                             {props.item.timeago}
                         </Text>
                         {authState.isLoggedIn && (
@@ -106,7 +104,7 @@ const CommentItem = (props: Props) => {
                     commId={props.item.id}
                     checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.UPVOTED)}
                 />
-                <Text fontSize="3" sx={{ px: "0.5rem", py: "6px" }}>
+                <Text sx={{ px: "0.5rem", py: "6px", fontSize: 3 }}>
                     {props.item.voteSum ? props.item.voteSum : "0"}
                 </Text>
                 <CDownvoteButton

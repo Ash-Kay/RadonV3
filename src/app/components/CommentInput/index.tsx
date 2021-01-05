@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { postService } from "../../state/posts";
-import { Box, Flex, Text } from "rebass";
+import { Box, Flex, Text } from "theme-ui";
 import { CloseRound, PaperClip } from "../Icons";
 import { AuthContext } from "../../context/auth.context";
-import { Input } from "@rebass/forms";
+import { Input } from "theme-ui";
 
 interface Props {
     postId: number;
@@ -75,7 +75,7 @@ const CommentInput = (props: Props) => {
             </Flex>
             {commentForm.file && (
                 <Flex>
-                    <Text fontSize={12} fontWeight="bold" sx={{ ml: "2.5rem", mr: "0.5rem" }}>
+                    <Text sx={{ ml: "2.5rem", mr: "0.5rem", fontSize: 1, fontWeight: "bold" }}>
                         {commentForm.file?.name}
                     </Text>
                     <Box onClick={(e) => setCommentForm({ ...commentForm, file: null })}>
