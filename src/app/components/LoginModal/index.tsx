@@ -36,9 +36,7 @@ const LoginModal = (props: Props) => {
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal} sx={modalStyle}>
                 <Box sx={{ color: "text" }}>
-                    <Text fontSize={5} fontWeight="bold" sx={{ mb: "2rem" }}>
-                        Welcome back!
-                    </Text>
+                    <Text sx={{ fontSize: 5, fontWeight: "bold", mb: "2rem" }}>Welcome back!</Text>
                     <GoogleLogin
                         clientId="946380795317-321u8sasdpeqe6uuja0cs5c071bs8vqb.apps.googleusercontent.com"
                         buttonText="Login with Google"
@@ -46,13 +44,9 @@ const LoginModal = (props: Props) => {
                         onFailure={failureResponse}
                     />
 
-                    <Text fontSize={3} fontWeight="bold" sx={{ my: "2rem" }}>
-                        Or
-                    </Text>
+                    <Text sx={{ fontSize: 3, fontWeight: "bold", my: "2rem" }}>Or</Text>
 
-                    <Text fontSize={4} fontWeight="bold">
-                        Login With Email
-                    </Text>
+                    <Text sx={{ fontSize: 4, fontWeight: "bold" }}>Login With Email</Text>
                     <Input
                         value={loginFormData.email}
                         onChange={(e) => setLoginFormData({ ...loginFormData, email: e.currentTarget.value })}
