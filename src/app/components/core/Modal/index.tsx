@@ -42,7 +42,7 @@ const Modal = (props: Props) => {
                     maxHeight: "80vh",
                     padding: 20,
                     boxSizing: "border-box",
-                    backgroundColor: "#fff",
+                    backgroundColor: "foreground",
                     margin: "40px auto",
                     borderRadius: 3,
                     zIndex: 2,

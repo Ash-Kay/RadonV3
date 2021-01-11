@@ -8,16 +8,24 @@ interface Props {
     commId: number;
     postId: number;
     checked: boolean;
+    activeColor: string;
+    color: string;
 }
 
 const CUpvoteButton = (props: Props) => {
     const authState = useContext(AuthContext);
+
     const upvote = () => {
         //TODO show login modal
         if (!authState.isLoggedIn) return;
         if (!props.checked) {
             postService.cupvote(props.postId, props.commId, authState.token);
         } else postService.cremoveVote(props.postId, props.commId, authState.token);
+    };
+
+    const getColor = () => {
+        if (props.checked) return props.activeColor;
+        else return props.color;
     };
 
     return (
@@ -30,13 +38,19 @@ const CUpvoteButton = (props: Props) => {
                 px: "1rem",
                 py: "0.2rem",
                 ":hover": {
-                    backgroundColor: "gray",
+                    backgroundColor: "actionBarIconHighlightBackground",
                 },
+                "> svg": { fill: getColor },
             }}
         >
-            <Upvote isChecked={props.checked} />
+            <Upvote />
         </Box>
     );
 };
 
 export default CUpvoteButton;
+
+CUpvoteButton.defaultProps = {
+    color: "voteDefault",
+    activeColor: "upvoteActive",
+};

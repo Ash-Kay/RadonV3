@@ -1,20 +1,8 @@
 import React from "react";
-import theme from "../../../theme";
 
-interface Props {
-    isChecked: boolean;
-    color?: string;
-    activeColor?: string;
-}
-
-const Downvote = (props: Props) => {
-    const getColor = () => {
-        if (props.isChecked) return props.activeColor;
-        else return props.color;
-    };
-
+const Downvote = () => {
     return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill={getColor()} xmlns="http://www.w3.org/2000/svg">
+        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -26,10 +14,5 @@ const Downvote = (props: Props) => {
 };
 
 export default Downvote;
-
-Downvote.defaultProps = {
-    color: theme.colors.downvote.default,
-    activeColor: theme.colors.downvote.active,
-};
 
 //https://uxwing.com/arrow-bottom-icon/

@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { postService } from "../../state/posts";
-import { Box, Flex, Text } from "theme-ui";
+import { Box, Flex, Text, Textarea, Input, Button } from "theme-ui";
 import { CloseRound, PaperClip } from "../Icons";
 import { AuthContext } from "../../context/auth.context";
-import { Input } from "theme-ui";
 
 interface Props {
     postId: number;
@@ -27,51 +26,50 @@ const CommentInput = (props: Props) => {
         setCommentForm(emptyCommentForm);
     };
 
-    const commentInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-            postComment();
-        }
-    };
-
     const commentStyle = {
-        borderRadius: "16px",
         borderColor: "transparent",
-        backgroundColor: "#ededed",
-        // marginRight: "0.5rem",
-        // marginLeft: "2rem",
+        backgroundColor: "commentBoxBackground",
+        fontSize: 3,
+        "&::placeholder": {
+            fontWeight: "bold",
+        },
     };
 
     return (
         <Box>
-            <Flex sx={{ position: "relative" }}>
-                <Input
-                    value={commentForm.comment}
-                    onChange={(e) => setCommentForm({ ...commentForm, comment: e.currentTarget.value })}
-                    placeholder="Commnet"
-                    sx={commentStyle}
-                    onKeyDown={commentInputKeyDown}
-                />
-                <Box
-                    sx={{
-                        cursor: "pointer",
-                        my: "auto",
-                        position: "absolute",
-                        right: "8px",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                    }}
-                    onClick={() => {
-                        hiddenCommentFileInput.current?.click();
-                    }}
-                >
-                    <PaperClip color={commentForm.file !== null ? "#2ce" : undefined} />
-                    <Input
-                        onChange={(e) => setCommentForm({ ...commentForm, file: e.currentTarget.files?.item(0) })}
-                        ref={hiddenCommentFileInput}
-                        type="file"
-                        sx={{ display: "none" }}
+            <Flex>
+                <Flex sx={{ position: "relative", flexGrow: 1 }}>
+                    <Textarea
+                        value={commentForm.comment}
+                        onChange={(e) => setCommentForm({ ...commentForm, comment: e.currentTarget.value })}
+                        placeholder="Commnet"
+                        sx={commentStyle}
                     />
-                </Box>
+                    <Box
+                        sx={{
+                            cursor: "pointer",
+                            my: "auto",
+                            position: "absolute",
+                            right: "8px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                        }}
+                        onClick={() => {
+                            hiddenCommentFileInput.current?.click();
+                        }}
+                    >
+                        <PaperClip color={commentForm.file !== null ? "#2ce" : undefined} />
+                        <Input
+                            onChange={(e) => setCommentForm({ ...commentForm, file: e.currentTarget.files?.item(0) })}
+                            ref={hiddenCommentFileInput}
+                            type="file"
+                            sx={{ display: "none" }}
+                        />
+                    </Box>
+                </Flex>
+                <Button onClick={postComment} sx={{ ml: 1 }}>
+                    Post
+                </Button>
             </Flex>
             {commentForm.file && (
                 <Flex>

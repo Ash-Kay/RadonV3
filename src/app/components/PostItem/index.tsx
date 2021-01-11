@@ -21,11 +21,10 @@ const PostItem = (props: Props) => {
 
     //#region Style
     const postItemStyle = {
-        background: "#fff",
+        backgroundColor: "foreground",
         pt: "0.5rem",
         marginBottom: "1rem",
         border: "1px solid rgba(0, 0, 0, 0.15)",
-        borderRadius: "5px",
     };
     //#endregion
 
@@ -42,7 +41,7 @@ const PostItem = (props: Props) => {
                         },
                     }}
                 >
-                    <Text sx={{ fontSize: 3, fontWeight: "bold" }}>{props.item.title}</Text>
+                    <Text sx={{ fontSize: 3, fontWeight: "bold", color: "text" }}>{props.item.title}</Text>
                 </Link>
                 {authState.isLoggedIn && (
                     <Box sx={{ position: "relative" }}>
@@ -78,7 +77,6 @@ const PostItem = (props: Props) => {
                                     backgroundColor: "white",
                                     zIndex: 101,
                                     border: "1px solid rgba(0, 0, 0, 0.15)",
-                                    borderRadius: "5px",
                                 }}
                             >
                                 <DropDownItem text={"Report"} />

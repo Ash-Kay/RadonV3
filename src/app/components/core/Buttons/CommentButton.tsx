@@ -14,7 +14,7 @@ const CommentButton = (props: Props) => {
                 px: "1rem",
                 py: "0.2rem",
                 ":hover": {
-                    backgroundColor: "gray",
+                    backgroundColor: "actionBarIconHighlightBackground",
                 },
             }}
         >

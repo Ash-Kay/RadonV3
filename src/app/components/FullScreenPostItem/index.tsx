@@ -15,7 +15,7 @@ const FullScreenPostItem = (props: Props) => {
 
     //#region Style
     const postItemStyle = {
-        background: "#fff",
+        background: "foreground",
         pt: "0.5rem",
         marginBottom: "1rem",
     };
@@ -33,7 +33,7 @@ const FullScreenPostItem = (props: Props) => {
                     },
                 }}
             >
-                <Text sx={{ fontSize: 3, fontWeight: "bold" }}>{props.item.title}</Text>
+                <Text sx={{ fontSize: 3, fontWeight: "bold", color: "text" }}>{props.item.title}</Text>
             </Link>
             <Box sx={{ mt: "0.5rem", position: "relative" }}>
                 <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} showFull id={props.item.id} />

@@ -7,6 +7,8 @@ import { Downvote } from "../../Icons";
 interface Props {
     id: number;
     checked: boolean;
+    activeColor: string;
+    color: string;
 }
 
 const DownvoteButton = (props: Props) => {
@@ -20,6 +22,11 @@ const DownvoteButton = (props: Props) => {
         } else postService.removeVote(props.id, authState.token);
     };
 
+    const getColor = () => {
+        if (props.checked) return props.activeColor;
+        else return props.color;
+    };
+
     return (
         <Box
             onClick={() => downvote()}
@@ -30,13 +37,19 @@ const DownvoteButton = (props: Props) => {
                 px: "1rem",
                 py: "0.2rem",
                 ":hover": {
-                    backgroundColor: "gray",
+                    backgroundColor: "actionBarIconHighlightBackground",
                 },
+                "> svg": { fill: getColor },
             }}
         >
-            <Downvote isChecked={props.checked} />
+            <Downvote />
         </Box>
     );
 };
 
 export default DownvoteButton;
+
+DownvoteButton.defaultProps = {
+    color: "voteDefault",
+    activeColor: "downvoteActive",
+};

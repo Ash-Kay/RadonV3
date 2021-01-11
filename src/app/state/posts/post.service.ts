@@ -236,7 +236,7 @@ export class PostService {
                 this.store.update(postId, (post) => {
                     let updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.filter((comm) => {
-                        if (comm.id !== commId) return;
+                        if (comm.id !== commId) return comm;
                     });
                     return updatedPost;
                 });

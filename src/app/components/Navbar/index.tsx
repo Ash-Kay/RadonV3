@@ -8,12 +8,14 @@ import Avatar from "../core/Avatar";
 import { AuthContext } from "../../context/auth.context";
 import { PaperClip } from "../Icons";
 import DropDownItem from "../core/DropDownItem";
+import { useColorMode } from "theme-ui";
 
 interface Props {}
 
 const Navbar = (props: Props) => {
     const authState = useContext(AuthContext);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const [colorMode, setColorMode] = useColorMode();
 
     return (
         <Flex
@@ -22,19 +24,34 @@ const Navbar = (props: Props) => {
                 color: "white",
                 bg: "black",
                 alignItems: "center",
-                height: "50px",
+                height: "70px",
                 position: "fixed",
                 width: "100%",
                 top: 0,
                 zIndex: 100,
+                borderBottomWidth: "3px",
+                borderBottomStyle: "solid",
+                borderBottomColor: "white",
             }}
         >
-            <Link href="/">
+            <Link
+                href="/"
+                sx={{
+                    border: "3px solid white",
+                    textDecoration: "none",
+                    ":hover,:focus,:active": {
+                        color: "primary",
+                    },
+                }}
+            >
                 <Text
                     sx={{
+                        color: "white",
                         px: "6px",
-                        height: "30px",
-                        lineHeight: "30px",
+                        height: "40px",
+                        width: "40px",
+                        fontSize: "40px",
+                        lineHeight: "35px",
                         fontWeight: "bold",
                         borderRadius: "2px",
                         ":hover": {
@@ -45,7 +62,7 @@ const Navbar = (props: Props) => {
                         },
                     }}
                 >
-                    RadonV3
+                    R
                 </Text>
             </Link>
             <Box mx="auto" />
@@ -97,14 +114,17 @@ const Navbar = (props: Props) => {
                         >
                             <DropDownItem text={"Settings"} icon={<PaperClip color="gray" />} />
                             <DropDownItem text={"Privacy"} icon={<PaperClip color="gray" />} />
-                            <DropDownItem
-                                text={"Logout"}
-                                icon={<PaperClip color="gray" />}
-                                onClickCallback={authService.logout}
-                            />
                         </Box>
                     </Box>
                 )}
+                <Button
+                    variant="navOutline"
+                    onClick={(e) => {
+                        setColorMode(colorMode === "default" ? "dark" : "default");
+                    }}
+                >
+                    Toggle {colorMode === "default" ? "Dark" : "Light"}
+                </Button>
             </>
         </Flex>
     );

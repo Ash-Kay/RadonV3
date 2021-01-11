@@ -4,16 +4,37 @@ export const theme = {
     colors: {
         text: "#000",
         background: "#fff",
+        foreground: "#fff",
         primary: "#07c",
         secondary: "#30c",
         muted: "#f6f6f9",
         gray: "#dddddf",
         highlight: "hsla(205, 100%, 40%, 0.125)",
-
-        //Global
-        globalBackground: "#e0e0e0",
         card: "#fff",
-        defaultIcon: "#464646",
+        defaultIcon: "#8f8f8f",
+        commentBoxBackground: "#ededed",
+
+        //Vote
+        voteDefault: "#8f8f8f",
+        upvoteActive: "#347fe0",
+        downvoteActive: "#9c1b1b",
+        actionBarIconHighlightBackground: "#cccccc",
+
+        modes: {
+            dark: {
+                text: "#fff",
+                background: "#12181b",
+                foreground: "#242e33",
+                primary: "#0cf",
+                commentBoxBackground: "#242e33",
+
+                //Vote
+                voteDefault: "#8f8f8f",
+                upvoteActive: "#347fe0",
+                downvoteActive: "#9c1b1b",
+                actionBarIconHighlightBackground: "#394950",
+            },
+        },
 
         upvote: {
             default: "#464646",

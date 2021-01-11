@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import ReactMarkdown, { NodeType } from "react-markdown";
 import { Comment, postService, Vote } from "../../state/posts";
 import { Box, Flex, Text } from "theme-ui";
 import Avatar from "../core/Avatar";
@@ -18,13 +19,17 @@ interface Props {
 const CommentItem = (props: Props) => {
     const authState = useContext(AuthContext);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const disallowedTypes: NodeType[] = ["image", "link", "listItem", "list"];
 
     const commentBlock = {
         borderRadius: "3px",
         padding: "5px",
-        backgroundColor: "#ededed",
+        backgroundColor: "commentBoxBackground",
         marginLeft: "0.5rem",
         width: "100%",
+        ">p": {
+            whiteSpace: "pre-line",
+        },
     };
 
     return (
@@ -95,7 +100,7 @@ const CommentItem = (props: Props) => {
                     {props.item.mediaUrl && (
                         <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
                     )}
-                    {props.item.message}
+                    <ReactMarkdown children={props.item.message} disallowedTypes={disallowedTypes} />
                 </Box>
             </Flex>
             <Flex sx={{ justifyContent: "flex-start", mb: "0.5rem", ml: "2.5rem" }}>
