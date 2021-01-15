@@ -13,6 +13,7 @@ export const theme = {
         card: "#fff",
         defaultIcon: "#8f8f8f",
         commentBoxBackground: "#ededed",
+        debugColorBackground: "rgba(255, 110, 110, 0.589)",
 
         //Vote
         voteDefault: "#8f8f8f",
@@ -65,6 +66,7 @@ export const theme = {
         avatar: 48,
     },
     radii: {
+        none: 0,
         default: 4,
         circle: 99999,
     },
@@ -123,7 +125,7 @@ export const theme = {
             fontWeight: "bold",
             color: "background",
             bg: "primary",
-            borderRadius: "default",
+            borderRadius: "none",
             ":focus": {
                 outlineWidth: 0,
                 filter: "brightness(120%)",

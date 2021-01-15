@@ -147,6 +147,9 @@ export class PostService {
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("sensitive", data.sensitive.toString());
+        data.tags.forEach((tag) => {
+            formData.append("tags[]", tag);
+        });
         if (data.file !== null && data.file !== undefined) formData.append("file", data.file);
 
         this.store.setLoading(true);

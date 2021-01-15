@@ -62,7 +62,7 @@ const PostItem = (props: Props) => {
                                     width: "100%",
                                     height: "100%",
                                     zIndex: 100,
-                                    backgroundColor: "rgba(255, 110, 110, 0.589)",
+                                    backgroundColor: "debugColorBackground",
                                 }}
                                 onClick={() => setDropdownOpen(false)}
                             />
@@ -73,8 +73,8 @@ const PostItem = (props: Props) => {
                                 sx={{
                                     position: "absolute",
                                     right: 0,
-                                    color: "black",
-                                    backgroundColor: "white",
+                                    color: "text",
+                                    backgroundColor: "foreground",
                                     zIndex: 101,
                                     border: "1px solid rgba(0, 0, 0, 0.15)",
                                 }}

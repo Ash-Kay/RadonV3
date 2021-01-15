@@ -22,7 +22,6 @@ const CommentItem = (props: Props) => {
     const disallowedTypes: NodeType[] = ["image", "link", "listItem", "list"];
 
     const commentBlock = {
-        borderRadius: "3px",
         padding: "5px",
         backgroundColor: "commentBoxBackground",
         marginLeft: "0.5rem",
@@ -61,7 +60,7 @@ const CommentItem = (props: Props) => {
                                             width: "100%",
                                             height: "100%",
                                             zIndex: 100,
-                                            backgroundColor: "rgba(255, 110, 110, 0.589)",
+                                            backgroundColor: "debugColorBackground",
                                         }}
                                         onClick={() => setDropdownOpen(false)}
                                     />
@@ -72,11 +71,10 @@ const CommentItem = (props: Props) => {
                                         sx={{
                                             position: "absolute",
                                             right: 0,
-                                            color: "black",
-                                            backgroundColor: "white",
+                                            color: "text",
+                                            backgroundColor: "foreground",
                                             zIndex: 101,
                                             border: "1px solid rgba(0, 0, 0, 0.15)",
-                                            borderRadius: "5px",
                                         }}
                                     >
                                         <DropDownItem text={"Report"} />

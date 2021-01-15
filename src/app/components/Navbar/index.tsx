@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState } from "react";
 import { authService } from "../../state/auth/auth.service";
 import CreatePostButton from "../CreatePostButton";
 import SignupModal from "../SignupModal";
@@ -9,6 +9,7 @@ import { AuthContext } from "../../context/auth.context";
 import { PaperClip } from "../Icons";
 import DropDownItem from "../core/DropDownItem";
 import { useColorMode } from "theme-ui";
+import { DarkModeSwitch } from "react-toggle-dark-mode";
 
 interface Props {}
 
@@ -67,9 +68,32 @@ const Navbar = (props: Props) => {
             </Link>
             <Box mx="auto" />
             <>
+                <Box
+                    sx={{
+                        mr: "0.5rem",
+                        p: 1,
+                        borderRadius: "circle",
+                        cursor: "pointer",
+                        ":hover": {
+                            background: "rgba(255, 255, 255, 0.15)",
+                        },
+                    }}
+                >
+                    <DarkModeSwitch
+                        style={{}}
+                        checked={colorMode === "dark"}
+                        onChange={() => {
+                            setColorMode(colorMode === "default" ? "dark" : "default");
+                        }}
+                        size={25}
+                        sunColor="#fff"
+                        moonColor="#fff"
+                    />
+                </Box>
+
                 {authState.isLoggedIn && <CreatePostButton authState={authState} />}
                 {!authState.isLoggedIn && <LoginModal />}
-                {!authState.isLoggedIn && <SignupModal />}
+                {!authState.isLoggedIn && false && <SignupModal />}
                 {authState.isLoggedIn && (
                     <Box
                         sx={{
@@ -96,7 +120,7 @@ const Navbar = (props: Props) => {
                                 right: 0,
                                 width: "100%",
                                 height: "100%",
-                                backgroundColor: "rgba(255, 110, 110, 0.589)",
+                                backgroundColor: "debugColorBackground",
                             }}
                             onClick={() => setDropdownOpen(false)}
                         />
@@ -104,27 +128,23 @@ const Navbar = (props: Props) => {
                         <Box
                             sx={{
                                 position: "fixed",
-                                color: "black",
-                                backgroundColor: "white",
+                                color: "text",
+                                backgroundColor: "foreground",
                                 top: 50,
                                 right: 2,
                                 border: "1px solid rgba(0, 0, 0, 0.15)",
-                                borderRadius: "5px",
                             }}
                         >
                             <DropDownItem text={"Settings"} icon={<PaperClip color="gray" />} />
                             <DropDownItem text={"Privacy"} icon={<PaperClip color="gray" />} />
+                            <DropDownItem
+                                text={"Logout"}
+                                icon={<PaperClip color="gray" />}
+                                onClickCallback={authService.logout}
+                            />
                         </Box>
                     </Box>
                 )}
-                <Button
-                    variant="navOutline"
-                    onClick={(e) => {
-                        setColorMode(colorMode === "default" ? "dark" : "default");
-                    }}
-                >
-                    Toggle {colorMode === "default" ? "Dark" : "Light"}
-                </Button>
             </>
         </Flex>
     );

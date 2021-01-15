@@ -4,6 +4,8 @@ import { AuthState } from "../../state/auth/auth.model";
 import { Box, Button, Text } from "theme-ui";
 import Modal from "../core/Modal";
 import { Input, Label, Checkbox } from "theme-ui";
+import TagsInput from "react-tagsinput";
+import "./tagsInputStyle.css";
 
 interface Props {
     authState: AuthState;
@@ -11,7 +13,7 @@ interface Props {
 export interface NewPostForm {
     title: string;
     sensitive: boolean;
-    // tags: string[];
+    tags: string[];
     file: File | null | undefined;
 }
 
@@ -50,6 +52,32 @@ const NewPostButton = (props: Props) => {
                         placeholder="Enter Title"
                         sx={{ my: "1rem" }}
                     />
+                    <Box
+                        sx={{
+                            ".react-tagsinput-tag": {
+                                color: "text",
+                                backgroundColor: "actionBarIconHighlightBackground",
+                                fontFamily: "body",
+                                fontSize: "inherit",
+                            },
+
+                            ".react-tagsinput-input": {
+                                color: "text",
+                                fontSize: 2,
+                                "::placeholder": {
+                                    fontFamily: "inherit",
+                                    fontSize: 2,
+                                },
+                            },
+                        }}
+                    >
+                        <TagsInput
+                            value={createPostForm.tags}
+                            onChange={(tags) => setCreatePostForm({ ...createPostForm, tags })}
+                            maxTags={5}
+                            validationRegex={/^[a-z0-9]+$/i}
+                        />
+                    </Box>
                     <Label sx={{ my: "1rem" }}>
                         <Checkbox
                             checked={createPostForm.sensitive}
@@ -73,6 +101,6 @@ export default NewPostButton;
 const emtyForm: NewPostForm = {
     title: "",
     sensitive: false,
-    // tags: [],
+    tags: [],
     file: null,
 };

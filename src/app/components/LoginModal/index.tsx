@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
 import { authService } from "../../state/auth/auth.service";
-import { Box, Button, Text } from "theme-ui";
-import { Input } from "theme-ui";
+import { Box, Button, Text, Input } from "theme-ui";
 import Modal from "../core/Modal";
 
 interface Props {}
@@ -36,32 +35,36 @@ const LoginModal = (props: Props) => {
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal} sx={modalStyle}>
                 <Box sx={{ color: "text" }}>
-                    <Text sx={{ fontSize: 5, fontWeight: "bold", mb: "2rem" }}>Welcome back!</Text>
+                    <Text sx={{ fontSize: 5, fontWeight: "bold", mb: "2rem" }}>Welcome to R</Text>
                     <GoogleLogin
                         clientId="946380795317-321u8sasdpeqe6uuja0cs5c071bs8vqb.apps.googleusercontent.com"
-                        buttonText="Login with Google"
+                        buttonText="Continue with Google"
                         onSuccess={successResponse}
                         onFailure={failureResponse}
                     />
 
-                    <Text sx={{ fontSize: 3, fontWeight: "bold", my: "2rem" }}>Or</Text>
+                    <h3>Continue with Facebook</h3>
 
-                    <Text sx={{ fontSize: 4, fontWeight: "bold" }}>Login With Email</Text>
-                    <Input
-                        value={loginFormData.email}
-                        onChange={(e) => setLoginFormData({ ...loginFormData, email: e.currentTarget.value })}
-                        placeholder="Email"
-                        type="mail"
-                        sx={{ my: "1rem" }}
-                    />
-                    <Input
-                        value={loginFormData.password}
-                        onChange={(e) => setLoginFormData({ ...loginFormData, password: e.currentTarget.value })}
-                        placeholder="Password"
-                        type="Password"
-                        sx={{ my: "1rem" }}
-                    />
-                    <Button onClick={submitLoginForm}>Login</Button>
+                    <Box sx={{ display: "none" }}>
+                        <Text sx={{ fontSize: 3, fontWeight: "bold", my: "2rem" }}>Or</Text>
+
+                        <Text sx={{ fontSize: 4, fontWeight: "bold" }}>Login With Email</Text>
+                        <Input
+                            value={loginFormData.email}
+                            onChange={(e) => setLoginFormData({ ...loginFormData, email: e.currentTarget.value })}
+                            placeholder="Email"
+                            type="mail"
+                            sx={{ my: "1rem" }}
+                        />
+                        <Input
+                            value={loginFormData.password}
+                            onChange={(e) => setLoginFormData({ ...loginFormData, password: e.currentTarget.value })}
+                            placeholder="Password"
+                            type="Password"
+                            sx={{ my: "1rem" }}
+                        />
+                        <Button onClick={submitLoginForm}>Login</Button>
+                    </Box>
                 </Box>
             </Modal>
         </>
