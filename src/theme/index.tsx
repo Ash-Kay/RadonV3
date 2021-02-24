@@ -47,7 +47,7 @@ export const theme = {
         },
     },
     fonts: {
-        body: "system-ui, sans-serif",
+        body: "Poppins, system-ui, sans-serif",
         heading: "inherit",
         monospace: "Menlo, monospace",
     },

@@ -6,7 +6,7 @@ import LoginModal from "../LoginModal";
 import { Flex, Text, Box, Button, Link } from "theme-ui";
 import Avatar from "../core/Avatar";
 import { AuthContext } from "../../context/auth.context";
-import { PaperClip } from "../Icons";
+import { Logout, Cog, Globe } from "../Icons";
 import DropDownItem from "../core/DropDownItem";
 import { useColorMode } from "theme-ui";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
@@ -135,11 +135,11 @@ const Navbar = (props: Props) => {
                                 border: "1px solid rgba(0, 0, 0, 0.15)",
                             }}
                         >
-                            <DropDownItem text={"Settings"} icon={<PaperClip color="gray" />} />
-                            <DropDownItem text={"Privacy"} icon={<PaperClip color="gray" />} />
+                            <DropDownItem text={"Settings"} icon={<Cog color="gray" />} />
+                            <DropDownItem text={"Privacy"} icon={<Globe color="gray" />} />
                             <DropDownItem
                                 text={"Logout"}
-                                icon={<PaperClip color="gray" />}
+                                icon={<Logout color="gray" />}
                                 onClickCallback={authService.logout}
                             />
                         </Box>

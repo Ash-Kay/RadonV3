@@ -15,8 +15,7 @@ export class AuthService {
 
     public getTokenWithGoogleAuth = (idtoken: string) => {
         this.store.setLoading(true);
-        axios
-            .get(`http://localhost:3000/api/v1/users/auth/google`, getIdTokenHeader(idtoken))
+        main.get("/users/auth/google", getIdTokenHeader(idtoken))
             .then((response) => {
                 const decodedUser: AuthToken = jwtDecode(response.data.data.token);
                 this.store.update(() => ({
