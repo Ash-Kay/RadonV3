@@ -1,8 +1,9 @@
 import axios from "axios";
 import { authService } from "../app/state/auth/auth.service";
+import { getBaseUrl } from "./baseUrl";
 
 const main = axios.create({
-    baseURL: "http://localhost:3000/api/v1",
+    baseURL: getBaseUrl(),
 });
 
 main.interceptors.response.use(

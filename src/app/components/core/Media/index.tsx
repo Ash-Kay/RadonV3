@@ -14,7 +14,7 @@ const Media = (props: Props) => {
             <Link href={`/posts/${props.id}`}>
                 <Image
                     sx={{ width: "100%", objectFit: "cover", maxHeight: `${!props.showFull ? "500px" : "auto"}` }}
-                    src={"http://localhost:3000/" + props.mediaUrl}
+                    src={props.mediaUrl}
                     alt=""
                 />
             </Link>
@@ -22,7 +22,7 @@ const Media = (props: Props) => {
     else
         return (
             <video width="100%" controls>
-                <source src={"http://localhost:3000/" + props.mediaUrl} type={props.mime} />
+                <source src={props.mediaUrl} type={props.mime} />
             </video>
         );
 };
