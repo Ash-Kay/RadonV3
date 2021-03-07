@@ -35,7 +35,7 @@ const NewPostButton = (props: Props) => {
     return (
         <>
             <Button variant="nav" onClick={() => setCreatePostModalOpen(true)}>
-                Create Post
+                + Post
             </Button>
             <Modal isOpen={isCreatePostModalOpen} onModalClose={closeCreatePostModal}>
                 <Box sx={{ color: "text" }}>
@@ -56,7 +56,7 @@ const NewPostButton = (props: Props) => {
                         sx={{
                             ".react-tagsinput-tag": {
                                 color: "text",
-                                backgroundColor: "actionBarIconHighlightBackground",
+                                backgroundColor: "secondaryLight",
                                 fontFamily: "body",
                                 fontSize: "inherit",
                             },

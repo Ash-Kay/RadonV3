@@ -38,7 +38,7 @@ const CUpvoteButton = (props: Props) => {
                 px: "1rem",
                 py: "0.2rem",
                 ":hover": {
-                    backgroundColor: "actionBarIconHighlightBackground",
+                    backgroundColor: "secondaryLight",
                 },
                 "> svg": { fill: getColor },
             }}

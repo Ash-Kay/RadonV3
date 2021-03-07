@@ -18,9 +18,9 @@ const Home = (props: Props) => {
     const mainFlexDivStyle = {
         display: "flex",
         justifyContent: "center",
-        paddingTop: "80px",
+        paddingTop: "54px",
         gridColumnGap: "1rem",
-        backgroundColor: "background",
+        backgroundColor: "secondaryDark",
     };
 
     return (

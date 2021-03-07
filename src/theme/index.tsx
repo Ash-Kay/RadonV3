@@ -2,40 +2,27 @@
 
 export const theme = {
     colors: {
-        text: "#000",
-        background: "#fff",
-        foreground: "#fff",
-        primary: "#07c",
-        secondary: "#30c",
-        muted: "#f6f6f9",
+        text: "#ccc",
+
+        primary: "#FFB077",
+
+        secondary: "#292D37",
+        secondaryDark: "#1b1d24",
+        secondaryLight: "#434a5b",
+
+        tertiary: "#9097A8",
+        textTertiary: "#3A3F4E",
+        highlightTertiary: "#737986",
+
         gray: "#dddddf",
-        highlight: "hsla(205, 100%, 40%, 0.125)",
-        card: "#fff",
         defaultIcon: "#8f8f8f",
         commentBoxBackground: "#ededed",
-        debugColorBackground: "rgba(255, 110, 110, 0.589)",
+        debugColorBackground: "rgba(255, 110, 110, 0)",
 
         //Vote
         voteDefault: "#8f8f8f",
         upvoteActive: "#347fe0",
         downvoteActive: "#9c1b1b",
-        actionBarIconHighlightBackground: "#cccccc",
-
-        modes: {
-            dark: {
-                text: "#fff",
-                background: "#12181b",
-                foreground: "#242e33",
-                primary: "#0cf",
-                commentBoxBackground: "#242e33",
-
-                //Vote
-                voteDefault: "#8f8f8f",
-                upvoteActive: "#347fe0",
-                downvoteActive: "#9c1b1b",
-                actionBarIconHighlightBackground: "#394950",
-            },
-        },
 
         upvote: {
             default: "#464646",
@@ -47,9 +34,9 @@ export const theme = {
         },
     },
     fonts: {
-        body: "system-ui, sans-serif",
-        heading: "inherit",
-        monospace: "Menlo, monospace",
+        body: "Montserrat, sans-serif",
+        heading: "Montserrat, inherit",
+        monospace: "Montserrat, Menlo, monospace",
     },
     fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
     fontWeights: {
@@ -58,7 +45,7 @@ export const theme = {
         bold: 700,
     },
     lineHeights: {
-        body: 1.5,
+        body: 1,
         heading: 1.25,
     },
     space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
@@ -74,6 +61,12 @@ export const theme = {
         card: "0 0 4px rgba(0, 0, 0, .125)",
     },
     breakpoints: ["30em", "45em", "64em"], // 480px, 720px, 1024px
+    zIndices: {
+        zero: "0",
+        nav: "100",
+        modal: "200",
+        auto: "auto",
+    },
 
     // rebass variants
     text: {
@@ -121,18 +114,17 @@ export const theme = {
     },
     buttons: {
         primary: {
+            fontFamily: "body",
             fontSize: 2,
             fontWeight: "bold",
-            color: "background",
+            color: "text",
             bg: "primary",
             borderRadius: "none",
-            ":focus": {
+            ":focus, :hover": {
                 outlineWidth: 0,
-                filter: "brightness(120%)",
+                filter: "brightness(110%)",
             },
-            ":hover": {
-                filter: "brightness(120%)",
-            },
+            cursor: "pointer",
         },
         outline: {
             variant: "buttons.primary",
@@ -157,6 +149,10 @@ export const theme = {
             p: "0.2rem 0.5rem",
             mx: "0.5rem",
             height: "30px",
+            borderRadius: "circle",
+            fontWeight: "body",
+            bg: "primary",
+            color: "black",
         },
         navOutline: {
             variant: "buttons.outline",
@@ -178,9 +174,17 @@ export const theme = {
             fontFamily: "body",
             fontWeight: "body",
             lineHeight: "body",
+            boxSizing: "border-box",
+            m: 0,
+            p: 0,
         },
-        button: {
-            cursor: "pointer",
+        img: {
+            maxWidth: "100%",
+            display: "block",
+        },
+        svg: {
+            maxWidth: "100%",
+            display: "block",
         },
     },
 };

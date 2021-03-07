@@ -1,9 +1,6 @@
 import React from "react";
-import theme from "../../../theme";
 
-interface Props {
-    color?: string;
-}
+interface Props {}
 
 const Logout = (props: Props) => {
     return (
@@ -11,7 +8,7 @@ const Logout = (props: Props) => {
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            stroke={props.color}
+            stroke="currentcolor"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             style={{ display: "block" }}
@@ -27,10 +24,6 @@ const Logout = (props: Props) => {
 };
 
 export default Logout;
-
-Logout.defaultProps = {
-    color: theme.colors.defaultIcon,
-};
 
 //https://heroicons.com/
 //PaperClip

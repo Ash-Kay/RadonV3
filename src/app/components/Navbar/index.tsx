@@ -3,13 +3,14 @@ import { authService } from "../../state/auth/auth.service";
 import CreatePostButton from "../CreatePostButton";
 import SignupModal from "../SignupModal";
 import LoginModal from "../LoginModal";
-import { Flex, Text, Box, Button, Link } from "theme-ui";
+import { Flex, Text, Box, Link } from "theme-ui";
 import Avatar from "../core/Avatar";
 import { AuthContext } from "../../context/auth.context";
 import { Logout, Cog, Globe } from "../Icons";
 import DropDownItem from "../core/DropDownItem";
 import { useColorMode } from "theme-ui";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
+import DropDown from "../core/DropDown";
 
 interface Props {}
 
@@ -22,53 +23,40 @@ const Navbar = (props: Props) => {
         <Flex
             sx={{
                 px: [1, 2, 3],
-                color: "white",
-                bg: "black",
+                bg: "tertiary",
                 alignItems: "center",
-                height: "70px",
+                height: "50px",
                 position: "fixed",
                 width: "100%",
                 top: 0,
-                zIndex: 100,
-                borderBottomWidth: "3px",
-                borderBottomStyle: "solid",
-                borderBottomColor: "white",
+                zIndex: "nav",
             }}
         >
             <Link
                 href="/"
                 sx={{
-                    border: "3px solid white",
                     textDecoration: "none",
-                    ":hover,:focus,:active": {
-                        color: "primary",
-                    },
                 }}
             >
                 <Text
                     sx={{
-                        color: "white",
-                        px: "6px",
-                        height: "40px",
-                        width: "40px",
-                        fontSize: "40px",
-                        lineHeight: "35px",
+                        fontSize: 4,
+                        color: "textTertiary",
+                        p: "6px",
+                        borderRadius: "5px",
                         fontWeight: "bold",
-                        borderRadius: "2px",
-                        ":hover": {
-                            backgroundColor: "#ffffff24",
-                        },
-                        ":focus": {
-                            backgroundColor: "#ffffff24",
+                        bg: "tertiary",
+                        ":hover, :focus, :active": {
+                            filter: "brightness(110%)",
                         },
                     }}
                 >
-                    R
+                    Radon
                 </Text>
             </Link>
             <Box mx="auto" />
             <>
-                <Box
+                {/* <Box
                     sx={{
                         mr: "0.5rem",
                         p: 1,
@@ -89,7 +77,7 @@ const Navbar = (props: Props) => {
                         sunColor="#fff"
                         moonColor="#fff"
                     />
-                </Box>
+                </Box> */}
 
                 {authState.isLoggedIn && <CreatePostButton authState={authState} />}
                 {!authState.isLoggedIn && <LoginModal />}
@@ -97,53 +85,39 @@ const Navbar = (props: Props) => {
                 {authState.isLoggedIn && (
                     <Box
                         sx={{
+                            height: "30px",
                             ml: "0.5rem",
                             borderRadius: "circle",
                             cursor: "pointer",
                             ":hover": {
-                                boxShadow: "0px 0px 0px 4px rgba(255,255,255,0.3)",
+                                boxShadow: (theme) => `0px 0px 0px 4px ${theme.colors.highlightTertiary}`,
                             },
                         }}
                         onClick={() => setDropdownOpen(!isDropdownOpen)}
                     >
-                        <Avatar avatarUrl={authState.avatarUrl} />
+                        <Avatar
+                            avatarUrl={authState.avatarUrl}
+                            sx={{
+                                transition: "all 0.3s ease-in-out",
+                                ":hover": {
+                                    transform: "scale(0.8, 0.8)",
+                                },
+                            }}
+                        />
                     </Box>
                 )}
                 {isDropdownOpen && authState.isLoggedIn && (
-                    <Box>
-                        <Box
-                            sx={{
-                                position: "fixed",
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                width: "100%",
-                                height: "100%",
-                                backgroundColor: "debugColorBackground",
-                            }}
-                            onClick={() => setDropdownOpen(false)}
-                        />
-
-                        <Box
-                            sx={{
-                                position: "fixed",
-                                color: "text",
-                                backgroundColor: "foreground",
-                                top: 50,
-                                right: 2,
-                                border: "1px solid rgba(0, 0, 0, 0.15)",
-                            }}
-                        >
-                            <DropDownItem text={"Settings"} icon={<Cog color="gray" />} />
-                            <DropDownItem text={"Privacy"} icon={<Globe color="gray" />} />
-                            <DropDownItem
-                                text={"Logout"}
-                                icon={<Logout color="gray" />}
-                                onClickCallback={authService.logout}
-                            />
-                        </Box>
-                    </Box>
+                    <DropDown
+                        sx={{
+                            top: 42,
+                            right: 2,
+                        }}
+                        onOutsideClick={() => setDropdownOpen(false)}
+                    >
+                        <DropDownItem text={"Settings"} icon={<Cog />} />
+                        <DropDownItem text={"Privacy"} icon={<Globe />} />
+                        <DropDownItem text={"Logout"} icon={<Logout />} onClickCallback={authService.logout} />
+                    </DropDown>
                 )}
             </>
         </Flex>

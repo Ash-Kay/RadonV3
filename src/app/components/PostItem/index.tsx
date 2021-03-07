@@ -10,6 +10,7 @@ import CommentButton from "../core/Buttons/CommentButton";
 import SeeFullPostButton from "../core/Buttons/SeeFullPostButton";
 import ChevronDownButton from "../core/Buttons/ChevronDownButton";
 import DropDownItem from "../core/DropDownItem";
+import DropDown from "../core/DropDown";
 
 interface Props {
     item: Post;
@@ -21,9 +22,10 @@ const PostItem = (props: Props) => {
 
     //#region Style
     const postItemStyle = {
-        backgroundColor: "foreground",
+        borderRadius: "default",
+        backgroundColor: "secondary",
         pt: "0.5rem",
-        marginBottom: "1rem",
+        marginBottom: "3px",
         border: "1px solid rgba(0, 0, 0, 0.15)",
     };
     //#endregion
@@ -34,7 +36,7 @@ const PostItem = (props: Props) => {
                 <Link
                     href={`/posts/${props.item.id}`}
                     sx={{
-                        color: "black",
+                        color: "text",
                         textDecoration: "none",
                         ":hover,:focus,:active": {
                             color: "primary",
@@ -51,33 +53,14 @@ const PostItem = (props: Props) => {
                             }}
                         />
 
-                        {isDropdownOpen && authState.isLoggedIn && (
-                            <Box
-                                sx={{
-                                    position: "fixed",
-                                    top: 0,
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    width: "100%",
-                                    height: "100%",
-                                    zIndex: 100,
-                                    backgroundColor: "debugColorBackground",
-                                }}
-                                onClick={() => setDropdownOpen(false)}
-                            />
-                        )}
-
                         {isDropdownOpen && (
-                            <Box
+                            <DropDown
                                 sx={{
                                     position: "absolute",
                                     right: 0,
-                                    color: "text",
-                                    backgroundColor: "foreground",
-                                    zIndex: 101,
-                                    border: "1px solid rgba(0, 0, 0, 0.15)",
+                                    zIndex: "modal",
                                 }}
+                                onOutsideClick={() => setDropdownOpen(false)}
                             >
                                 <DropDownItem text={"Report"} />
                                 {props.item.user.id === authState.id && (
@@ -88,7 +71,7 @@ const PostItem = (props: Props) => {
                                         }
                                     />
                                 )}
-                            </Box>
+                            </DropDown>
                         )}
                     </Box>
                 )}

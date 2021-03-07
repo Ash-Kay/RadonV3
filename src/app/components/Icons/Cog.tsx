@@ -1,9 +1,8 @@
 import React from "react";
+import {} from "theme-ui";
 import theme from "../../../theme";
 
-interface Props {
-    color?: string;
-}
+interface Props {}
 
 const Cog = (props: Props) => {
     return (
@@ -11,7 +10,7 @@ const Cog = (props: Props) => {
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            stroke={props.color}
+            stroke="currentcolor"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             style={{ display: "block" }}
@@ -28,10 +27,6 @@ const Cog = (props: Props) => {
 };
 
 export default Cog;
-
-Cog.defaultProps = {
-    color: theme.colors.defaultIcon,
-};
 
 //https://heroicons.com/
 //PaperClip

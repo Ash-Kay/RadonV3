@@ -17,7 +17,7 @@ const ChevronDownButton = (props: Props) => {
                 pt: "8px",
                 borderRadius: "circle",
                 ":hover": {
-                    backgroundColor: "actionBarIconHighlightBackground",
+                    backgroundColor: "secondaryLight",
                 },
             }}
             onClick={props.onClick}

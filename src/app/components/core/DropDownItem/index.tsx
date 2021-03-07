@@ -5,6 +5,7 @@ interface Props {
     text: string;
     icon?: JSX.Element;
     url?: string;
+    iconColor?: string;
     onClickCallback?: () => void;
 }
 
@@ -16,10 +17,11 @@ const DropDownItem = (props: Props) => {
                 lineHeight: "35px",
                 cursor: "pointer",
                 "&:not(:last-child)": {
-                    borderBottom: "1px solid rgba(1, 1, 1, 0.1)",
+                    borderBottom: (theme) => `1px solid ${theme.colors.secondaryLight}`,
                 },
                 ":hover": {
-                    backgroundColor: "rgba(1, 1, 1, 0.05)",
+                    backgroundColor: "secondaryLight",
+                    borderRadius: "default",
                 },
             }}
             onClick={props.onClickCallback}
@@ -32,6 +34,7 @@ const DropDownItem = (props: Props) => {
                         display: "flex",
                         alignSelf: "center",
                         justifyContent: "center",
+                        color: props.iconColor,
                     }}
                 >
                     {props.icon}
