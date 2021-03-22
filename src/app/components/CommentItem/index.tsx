@@ -22,10 +22,10 @@ const CommentItem = (props: Props) => {
     const disallowedTypes: NodeType[] = ["image", "link", "listItem", "list"];
 
     const commentBlock = {
-        padding: "5px",
-        backgroundColor: "commentBoxBackground",
+        p: 1,
+        backgroundColor: "secondary",
         marginLeft: "0.5rem",
-        width: "100%",
+        borderRadius: "default",
         ">p": {
             whiteSpace: "pre-line",
         },
@@ -33,7 +33,7 @@ const CommentItem = (props: Props) => {
 
     return (
         <Box>
-            <Flex sx={{ maxWidth: "80%" }}>
+            <Flex>
                 <Avatar avatarUrl={props.item.user.avatarUrl} sx={{ marginTop: "5px" }} />
                 <Box sx={commentBlock}>
                     <Flex>
@@ -72,7 +72,7 @@ const CommentItem = (props: Props) => {
                                             position: "absolute",
                                             right: 0,
                                             color: "text",
-                                            backgroundColor: "foreground",
+                                            backgroundColor: "secondary",
                                             zIndex: 101,
                                             border: "1px solid rgba(0, 0, 0, 0.15)",
                                         }}

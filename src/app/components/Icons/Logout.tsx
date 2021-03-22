@@ -5,8 +5,7 @@ interface Props {}
 const Logout = (props: Props) => {
     return (
         <svg
-            width="24"
-            height="24"
+            width="100%"
             viewBox="0 0 24 24"
             stroke="currentcolor"
             fill="none"

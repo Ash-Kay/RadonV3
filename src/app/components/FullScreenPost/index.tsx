@@ -1,13 +1,14 @@
 import React, { useEffect, useContext } from "react";
-import { Box } from "theme-ui";
+import { Box, Flex } from "theme-ui";
 import CommentItem from "../CommentItem";
 import { Comment, postService, postStore } from "../../state/posts";
-import { useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { postQuery } from "../../state/posts/post.query";
 import { AuthContext } from "../../context/auth.context";
 import { usePostHook } from "../../state/posts/post.hook";
 import FullScreenPostItem from "../FullScreenPostItem";
 import CommentInput from "../CommentInput";
+import Modal from "../core/Modal";
 
 interface Props {}
 
@@ -16,9 +17,13 @@ interface ParamTypes {
 }
 
 const FullScreenPost = (props: Props) => {
+    let location = useLocation();
+    let background = location.state && (location.state as any).background;
+    let history = useHistory();
     const id = +useParams<ParamTypes>().id;
     const authState = useContext(AuthContext);
     const [post] = usePostHook(id);
+    const [isCreatePostModalOpen, setCreatePostModalOpen] = React.useState(true);
 
     useEffect(() => {
         getPost();
@@ -64,12 +69,49 @@ const FullScreenPost = (props: Props) => {
         }
     };
 
+    const closeCreatePostModal = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        setCreatePostModalOpen(false);
+        e.stopPropagation();
+        history.goBack();
+    };
+
     return (
-        <Box sx={{ width: ["auto", "600px"], mx: "auto", mt: "66px" }}>
-            <Box>{post && <FullScreenPostItem item={post} />}</Box>
-            <Box sx={{ backgroundColor: "#d1d1d1", height: 1, my: "0.5rem" }} />
-            {post && <CommentInput postId={post.id} />}
-            <Box sx={{ mt: "1rem" }}>{post && getCommentList(post.comment)}</Box>
+        <Box
+            sx={{
+                position: "fixed",
+                top: "50px",
+                left: 0,
+                right: 0,
+                height: "calc(100vh - 50px)",
+                p: 3,
+                zIndex: 5,
+                backgroundColor: "secondaryDark",
+                overflowY: "hidden",
+                //TODO make 50px var
+                //TODO height??, zIndex
+            }}
+        >
+            {post && (
+                <Box
+                    sx={{
+                        display: "grid",
+                        gridTemplateColumns: "2fr 1fr",
+                        gridTemplateRows: "calc(100%  - 40px) auto",
+                        gridTemplateAreas: `"media     comms"
+                                            "bottomBar commInput"`,
+                        columnGap: 3,
+                        rowGap: 1,
+                        height: "100%",
+                        width: "100%",
+                    }}
+                >
+                    <FullScreenPostItem item={post} />
+                    <CommentInput postId={post.id} />
+                    <Box sx={{ mt: "1rem", gridArea: "comms", overflowY: "scroll" }}>
+                        {post && getCommentList(post.comment)}
+                    </Box>
+                </Box>
+            )}
         </Box>
     );
 };

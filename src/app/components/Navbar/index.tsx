@@ -6,11 +6,13 @@ import LoginModal from "../LoginModal";
 import { Flex, Text, Box, Link } from "theme-ui";
 import Avatar from "../core/Avatar";
 import { AuthContext } from "../../context/auth.context";
-import { Logout, Cog, Globe } from "../Icons";
 import DropDownItem from "../core/DropDownItem";
 import { useColorMode } from "theme-ui";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
 import DropDown from "../core/DropDown";
+import { HiCog } from "react-icons/hi";
+import { BsFillEyeFill } from "react-icons/bs";
+import { RiLogoutBoxRFill } from "react-icons/ri";
 
 interface Props {}
 
@@ -23,7 +25,7 @@ const Navbar = (props: Props) => {
         <Flex
             sx={{
                 px: [1, 2, 3],
-                bg: "tertiary",
+                bg: "secondary",
                 alignItems: "center",
                 height: "50px",
                 position: "fixed",
@@ -41,11 +43,11 @@ const Navbar = (props: Props) => {
                 <Text
                     sx={{
                         fontSize: 4,
-                        color: "textTertiary",
+                        color: "primary",
                         p: "6px",
                         borderRadius: "5px",
                         fontWeight: "bold",
-                        bg: "tertiary",
+                        bg: "secondary",
                         ":hover, :focus, :active": {
                             filter: "brightness(110%)",
                         },
@@ -90,7 +92,7 @@ const Navbar = (props: Props) => {
                             borderRadius: "circle",
                             cursor: "pointer",
                             ":hover": {
-                                boxShadow: (theme) => `0px 0px 0px 4px ${theme.colors.highlightTertiary}`,
+                                boxShadow: (theme) => `0px 0px 0px 4px ${theme.colors.secondaryLight}`,
                             },
                         }}
                         onClick={() => setDropdownOpen(!isDropdownOpen)}
@@ -114,9 +116,13 @@ const Navbar = (props: Props) => {
                         }}
                         onOutsideClick={() => setDropdownOpen(false)}
                     >
-                        <DropDownItem text={"Settings"} icon={<Cog />} />
-                        <DropDownItem text={"Privacy"} icon={<Globe />} />
-                        <DropDownItem text={"Logout"} icon={<Logout />} onClickCallback={authService.logout} />
+                        <DropDownItem text={"Settings"} icon={<HiCog size="iconSmall" />} />
+                        <DropDownItem text={"Privacy"} icon={<BsFillEyeFill />} />
+                        <DropDownItem
+                            text={"Logout"}
+                            icon={<RiLogoutBoxRFill />}
+                            onClickCallback={authService.logout}
+                        />
                     </DropDown>
                 )}
             </>

@@ -14,31 +14,16 @@ const FullScreenPostItem = (props: Props) => {
     const authState = useContext(AuthContext);
 
     //#region Style
-    const postItemStyle = {
-        background: "foreground",
-        pt: "0.5rem",
-        marginBottom: "1rem",
-    };
+    const postItemStyle = {};
     //#endregion
 
     return (
-        <Box sx={postItemStyle}>
-            <Link
-                href={`/posts/${props.item.id}`}
-                sx={{
-                    color: "black",
-                    textDecoration: "none",
-                    ":hover,:focus,.active": {
-                        color: "primary",
-                    },
-                }}
-            >
+        <>
+            <Box sx={{ gridArea: "media", overflowY: "hidden" }}>
                 <Text sx={{ fontSize: 3, fontWeight: "bold", color: "text" }}>{props.item.title}</Text>
-            </Link>
-            <Box sx={{ mt: "0.5rem", position: "relative" }}>
-                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} showFull id={props.item.id} />
+                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
             </Box>
-            <Flex sx={{ mx: "4px", height: "40px" }}>
+            <Flex sx={{ mx: "4px", height: "40px", gridArea: "bottomBar" }}>
                 <UpvoteButton
                     id={props.item.id}
                     checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.UPVOTED)}
@@ -51,7 +36,7 @@ const FullScreenPostItem = (props: Props) => {
                     checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.DOWNVOTED)}
                 />
             </Flex>
-        </Box>
+        </>
     );
 };
 

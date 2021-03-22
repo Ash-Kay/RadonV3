@@ -4,15 +4,12 @@ export const theme = {
     colors: {
         text: "#ccc",
 
-        primary: "#FFB077",
+        primary: "#67b094",
 
-        secondary: "#292D37",
-        secondaryDark: "#1b1d24",
+        secondary: "#202020",
+        secondaryDark: "#151515",
         secondaryLight: "#434a5b",
-
-        tertiary: "#9097A8",
-        textTertiary: "#3A3F4E",
-        highlightTertiary: "#737986",
+        secondaryText: "#000",
 
         gray: "#dddddf",
         defaultIcon: "#8f8f8f",
@@ -51,6 +48,8 @@ export const theme = {
     space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
     sizes: {
         avatar: 48,
+        iconSmall: 16,
+        iconLarge: 24,
     },
     radii: {
         none: 0,

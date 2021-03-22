@@ -28,7 +28,7 @@ const CommentInput = (props: Props) => {
 
     const commentStyle = {
         borderColor: "transparent",
-        backgroundColor: "commentBoxBackground",
+        backgroundColor: "secondary",
         fontSize: 3,
         "&::placeholder": {
             fontWeight: "bold",
@@ -36,10 +36,10 @@ const CommentInput = (props: Props) => {
     };
 
     return (
-        <Box>
+        <Box sx={{ gridArea: "commInput" }}>
             <Flex>
                 <Flex sx={{ position: "relative", flexGrow: 1 }}>
-                    <Textarea
+                    <Input
                         value={commentForm.comment}
                         onChange={(e) => setCommentForm({ ...commentForm, comment: e.currentTarget.value })}
                         placeholder="Commnet"
@@ -67,7 +67,7 @@ const CommentInput = (props: Props) => {
                         />
                     </Box>
                 </Flex>
-                <Button onClick={postComment} sx={{ ml: 1 }}>
+                <Button onClick={postComment} sx={{ ml: 1, color: "secondaryText", borderRadius: "default" }}>
                     Post
                 </Button>
             </Flex>

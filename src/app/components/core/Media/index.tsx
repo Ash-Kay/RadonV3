@@ -11,13 +11,13 @@ interface Props {
 const Media = (props: Props) => {
     if (props.mime.startsWith("image"))
         return (
-            <Link href={`/posts/${props.id}`}>
-                <Image
-                    sx={{ width: "100%", objectFit: "cover", maxHeight: `${!props.showFull ? "500px" : "auto"}` }}
-                    src={props.mediaUrl}
-                    alt=""
-                />
-            </Link>
+            <Image
+                sx={{
+                    objectFit: "cover",
+                }}
+                src={props.mediaUrl}
+                alt=""
+            />
         );
     else
         return (

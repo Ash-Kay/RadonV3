@@ -6,12 +6,12 @@ import { Box } from "theme-ui";
 interface Props {}
 
 const Home = (props: Props) => {
-    const sideNavStyle = {
-        width: "20rem",
-        backgroundColor: "#f1f1f1",
-        display: ["none", "none", "block"],
-        ml: "2rem",
-    };
+    // const sideNavStyle = {
+    //     width: "20rem",
+    //     backgroundColor: "#f1f1f1",
+    //     display: ["none", "none", "block"],
+    //     ml: "2rem",
+    // };
     const mainDivStyle = {
         maxWidth: "550px",
     };

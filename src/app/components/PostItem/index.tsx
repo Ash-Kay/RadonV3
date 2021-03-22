@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Post, postService, Vote } from "../../state/posts";
-import { Box, Text, Flex, Link } from "theme-ui";
+import { Box, Text, Flex } from "theme-ui";
 import Media from "../core/Media";
 import UpvoteButton from "../core/Buttons/UpvoteButton";
 import { AuthContext } from "../../context/auth.context";
@@ -11,12 +11,16 @@ import SeeFullPostButton from "../core/Buttons/SeeFullPostButton";
 import ChevronDownButton from "../core/Buttons/ChevronDownButton";
 import DropDownItem from "../core/DropDownItem";
 import DropDown from "../core/DropDown";
+import { Link, useLocation } from "react-router-dom";
+import { MdDelete } from "react-icons/md";
+import { GoAlert } from "react-icons/go";
 
 interface Props {
     item: Post;
 }
 
 const PostItem = (props: Props) => {
+    const location = useLocation();
     const authState = useContext(AuthContext);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -34,7 +38,7 @@ const PostItem = (props: Props) => {
         <Box sx={postItemStyle}>
             <Flex sx={{ px: "10px", justifyContent: "space-between" }}>
                 <Link
-                    href={`/posts/${props.item.id}`}
+                    to={{ pathname: `/posts/${props.item.id}`, state: { background: location } }}
                     sx={{
                         color: "text",
                         textDecoration: "none",
@@ -62,13 +66,16 @@ const PostItem = (props: Props) => {
                                 }}
                                 onOutsideClick={() => setDropdownOpen(false)}
                             >
-                                <DropDownItem text={"Report"} />
+                                <DropDownItem text={"Report"} icon={<GoAlert />} />
                                 {props.item.user.id === authState.id && (
                                     <DropDownItem
                                         text={"Delete"}
+                                        icon={<MdDelete size="iconSmall" />}
                                         onClickCallback={() =>
                                             postService.softDeletePost(props.item.id, authState.token)
                                         }
+                                        iconColor="#cc5e5e"
+                                        textColor="#cc5e5e"
                                     />
                                 )}
                             </DropDown>
@@ -80,7 +87,7 @@ const PostItem = (props: Props) => {
             <Box sx={{ mt: "0.5rem", position: "relative" }}>
                 <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
                 {props.item.height > props.item.width && (
-                    <Link href={`/posts/${props.item.id}`}>
+                    <Link to={{ pathname: `/posts/${props.item.id}`, state: { background: location } }}>
                         <SeeFullPostButton />
                     </Link>
                 )}
@@ -97,7 +104,7 @@ const PostItem = (props: Props) => {
                     id={props.item.id}
                     checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.DOWNVOTED)}
                 />
-                <Link href={`/posts/${props.item.id}`}>
+                <Link to={{ pathname: `/posts/${props.item.id}`, state: { background: location } }}>
                     <CommentButton />
                 </Link>
             </Flex>

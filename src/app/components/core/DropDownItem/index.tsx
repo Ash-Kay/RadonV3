@@ -6,6 +6,7 @@ interface Props {
     icon?: JSX.Element;
     url?: string;
     iconColor?: string;
+    textColor?: string;
     onClickCallback?: () => void;
 }
 
@@ -29,8 +30,9 @@ const DropDownItem = (props: Props) => {
             {props.icon && (
                 <Box
                     sx={{
-                        paddingLeft: "30px",
-                        paddingRight: "10px",
+                        width: "iconSmall",
+                        ml: "30px",
+                        mr: "10px",
                         display: "flex",
                         alignSelf: "center",
                         justifyContent: "center",
@@ -41,7 +43,7 @@ const DropDownItem = (props: Props) => {
                 </Box>
             )}
             {!props.icon && <Box sx={{ paddingLeft: "40px" }} />}
-            <Text sx={{ paddingRight: "40px" }}>{props.text}</Text>
+            <Text sx={{ paddingRight: "40px", lineHeight: "37px", color: props.textColor }}>{props.text}</Text>
         </Flex>
     );
 };

@@ -3,7 +3,7 @@ import { Box, SxStyleProp } from "theme-ui";
 
 interface Props {
     isOpen: boolean;
-    onModalClose: (param: any) => void;
+    onModalClose: (param: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     children: ReactNode;
     sx?: SxStyleProp;
 }
@@ -34,7 +34,7 @@ const Modal = (props: Props) => {
                     height: "100%",
                     backgroundColor: "rgba(0,0,0,0.5)",
                 }}
-                onClick={props.onModalClose}
+                onClick={(e) => props.onModalClose(e)}
             />
             <Box
                 sx={{
@@ -42,7 +42,7 @@ const Modal = (props: Props) => {
                     maxHeight: "80vh",
                     padding: 20,
                     boxSizing: "border-box",
-                    backgroundColor: "foreground",
+                    backgroundColor: "secondary",
                     margin: "40px auto",
                     borderRadius: 3,
                     zIndex: 2,
