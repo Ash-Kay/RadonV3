@@ -1,21 +1,21 @@
 import React, { ReactNode } from "react";
-import { Box, SxStyleProp } from "theme-ui";
+import { Box, ThemeUIStyleObject } from "theme-ui";
 
 interface Props {
     isOpen: boolean;
     onModalClose: (param: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     children: ReactNode;
-    sx?: SxStyleProp;
+    sx?: ThemeUIStyleObject;
 }
 
-const Modal = (props: Props) => {
+const Modal: React.FC<Props> = (props: Props) => {
     return (
         <Box
             sx={{
                 height: "100%",
                 width: "100%",
                 position: "fixed",
-                zIndex: 1,
+                zIndex: "modal",
                 display: `${props.isOpen ? "flex" : "none"}`,
                 alignItems: "center",
                 justifyContent: "center",
@@ -45,7 +45,7 @@ const Modal = (props: Props) => {
                     backgroundColor: "secondary",
                     margin: "40px auto",
                     borderRadius: 3,
-                    zIndex: 2,
+                    zIndex: "modal",
                     textAlign: "left",
                     boxShadow: "0 20px 30px rgba(0, 0, 0, 0.2)",
                     overflowY: "auto",

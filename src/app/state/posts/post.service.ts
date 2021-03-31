@@ -16,7 +16,7 @@ export class PostService {
     readonly homefeed$ = this.query.homefeed$;
 
     //TODO logout if 401 in any of call
-    public getPostPageAuth = (pageNo: number, token: string) => {
+    public getPostPageAuth = (pageNo: number, token: string): void => {
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
@@ -26,7 +26,7 @@ export class PostService {
             .catch((error) => handleResponseError(error, this.store));
     };
 
-    public getPostPage = (pageNo: number) => {
+    public getPostPage = (pageNo: number): void => {
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`)
             .then((response) => {
@@ -48,10 +48,10 @@ export class PostService {
         return main.get(`/posts/${postId}`, getHeader({ token }, HeaderType.AUTH_TOKEN));
     };
 
-    public upvote = (postId: number, token: string) => {
+    public upvote = (postId: number, token: string): void => {
         this.store.setLoading(true);
         main.post(`/posts/${postId}/upvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then((response) => {
+            .then(() => {
                 this.store.update(postId, { vote: 1 });
                 this.store.setLoading(false);
             })
@@ -60,10 +60,10 @@ export class PostService {
             });
     };
 
-    public downvote = (postId: number, token: string) => {
+    public downvote = (postId: number, token: string): void => {
         this.store.setLoading(true);
         main.post(`/posts/${postId}/downvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then((response) => {
+            .then(() => {
                 this.store.update(postId, { vote: -1 });
                 this.store.setLoading(false);
             })
@@ -72,10 +72,10 @@ export class PostService {
             });
     };
 
-    public removeVote = (postId: number, token: string) => {
+    public removeVote = (postId: number, token: string): void => {
         this.store.setLoading(true);
         main.delete(`/posts/${postId}/removevote`, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then((response) => {
+            .then(() => {
                 this.store.update(postId, { vote: 0 });
                 this.store.setLoading(false);
             })
@@ -84,7 +84,7 @@ export class PostService {
             });
     };
 
-    public getComments = (postId: number) => {
+    public getComments = (postId: number): void => {
         this.store.setLoading(true);
         main.get(`/posts/${postId}/comment`)
             .then((response) => {
@@ -96,7 +96,7 @@ export class PostService {
             });
     };
 
-    public getCommentsAuth = (postId: number, token: string) => {
+    public getCommentsAuth = (postId: number, token: string): void => {
         this.store.setLoading(true);
         main.get(`/posts/${postId}/comment`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
@@ -108,7 +108,7 @@ export class PostService {
             });
     };
 
-    public getVoteSum = (postId: number) => {
+    public getVoteSum = (postId: number): void => {
         this.store.setLoading(true);
         main.get(`/posts/${postId}/vote`)
             .then((response) => {
@@ -120,7 +120,7 @@ export class PostService {
             });
     };
 
-    public postComment = (postId: number, data: CommentForm, token: string) => {
+    public postComment = (postId: number, data: CommentForm, token: string): void => {
         const formData = new FormData();
         formData.append("message", data.comment);
         if (data.file !== null && data.file !== undefined) formData.append("file", data.file);
@@ -143,7 +143,7 @@ export class PostService {
             });
     };
 
-    public createNewPost = (data: NewPostForm, token: string) => {
+    public createNewPost = (data: NewPostForm, token: string): void => {
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("sensitive", data.sensitive.toString());
@@ -154,7 +154,7 @@ export class PostService {
 
         this.store.setLoading(true);
         main.post(`/posts/`, formData, getHeader({ token }, HeaderType.AUTH_TOKEN | HeaderType.MULTIPART))
-            .then((response) => {
+            .then(() => {
                 this.store.setLoading(false);
             })
             .catch((error) => {
@@ -163,12 +163,12 @@ export class PostService {
     };
 
     //TODO: Should be in comment services
-    public cupvote = (postId: number, commId: number, token: string) => {
+    public cupvote = (postId: number, commId: number, token: string): void => {
         this.store.setLoading(true);
         main.post(`/comments/${commId}/upvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then((response) => {
+            .then(() => {
                 this.store.update(postId, (post) => {
-                    let updatedPost = Object.assign({}, post);
+                    const updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.map((comm) => {
                         if (comm.id === commId) return { ...comm, vote: 1 };
                         else return comm;
@@ -182,12 +182,12 @@ export class PostService {
             });
     };
 
-    public cdownvote = (postId: number, commId: number, token: string) => {
+    public cdownvote = (postId: number, commId: number, token: string): void => {
         this.store.setLoading(true);
         main.post(`/comments/${commId}/downvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then((response) => {
+            .then(() => {
                 this.store.update(postId, (post) => {
-                    let updatedPost = Object.assign({}, post);
+                    const updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.map((comm) => {
                         if (comm.id === commId) return { ...comm, vote: -1 };
                         else return comm;
@@ -201,12 +201,12 @@ export class PostService {
             });
     };
 
-    public cremoveVote = (postId: number, commId: number, token: string) => {
+    public cremoveVote = (postId: number, commId: number, token: string): void => {
         this.store.setLoading(true);
         main.delete(`/comments/${commId}/removevote`, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then((response) => {
+            .then(() => {
                 this.store.update(postId, (post) => {
-                    let updatedPost = Object.assign({}, post);
+                    const updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.map((comm) => {
                         if (comm.id === commId) return { ...comm, vote: 0 };
                         else return comm;
@@ -220,10 +220,10 @@ export class PostService {
             });
     };
 
-    public softDeletePost = (postId: number, token: string) => {
+    public softDeletePost = (postId: number, token: string): void => {
         this.store.setLoading(true);
         main.delete(`/posts/${postId}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then((response) => {
+            .then(() => {
                 this.store.remove(postId);
                 this.store.setLoading(false);
             })
@@ -232,12 +232,12 @@ export class PostService {
             });
     };
 
-    public softDeleteComment = (postId: number, commId: number, token: string) => {
+    public softDeleteComment = (postId: number, commId: number, token: string): void => {
         this.store.setLoading(true);
         main.delete(`/comments/${commId}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then((response) => {
+            .then(() => {
                 this.store.update(postId, (post) => {
-                    let updatedPost = Object.assign({}, post);
+                    const updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.filter((comm) => {
                         if (comm.id !== commId) return comm;
                     });

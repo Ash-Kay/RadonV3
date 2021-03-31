@@ -1,12 +1,11 @@
 import React from "react";
-import theme from "../../../theme";
 
 interface Props {
     color?: string;
     size?: number;
 }
 
-const Comment = (props: Props) => {
+const Comment: React.FC<Props> = (props: Props) => {
     return (
         <svg
             width={props.size}
@@ -28,8 +27,9 @@ const Comment = (props: Props) => {
 
 export default Comment;
 
+//TODO FIX
 Comment.defaultProps = {
-    color: theme.colors.defaultIcon,
+    color: "#8f8f8f",
     size: 24,
 };
 

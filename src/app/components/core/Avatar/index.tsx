@@ -1,14 +1,14 @@
 import React from "react";
-import { Image, SxStyleProp, Link } from "theme-ui";
+import { Image, ThemeUIStyleObject, Link } from "theme-ui";
 
 interface Props {
     avatarUrl?: string | null;
     height?: number;
     width?: number;
-    sx?: SxStyleProp;
+    sx?: ThemeUIStyleObject;
 }
 
-const Avatar = (props: Props) => {
+const Avatar: React.FC<Props> = (props: Props) => {
     const getAvatarUrl = (avatarUrl: string | null | undefined): string => {
         if (avatarUrl === null || avatarUrl === undefined || avatarUrl === "")
             return `${process.env.PUBLIC_URL}/avatar.jpg`;
@@ -16,12 +16,12 @@ const Avatar = (props: Props) => {
     };
 
     return (
-        <Link sx={{ minWidth: `${props.width!}px` }}>
+        <Link sx={{ minWidth: `${props.width}px` }}>
             <Image
                 src={getAvatarUrl(props.avatarUrl)}
                 sx={{
-                    minWidth: `${props.width!}px`,
-                    height: `${props.height!}px`,
+                    minWidth: `${props.width}px`,
+                    height: `${props.height}px`,
                     borderRadius: "50%",
                     ...props.sx,
                 }}

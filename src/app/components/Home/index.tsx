@@ -1,17 +1,8 @@
 import React from "react";
 import HomeFeed from "../HomeFeed";
-import SideNavigation from "../SideNavigation";
 import { Box } from "theme-ui";
 
-interface Props {}
-
-const Home = (props: Props) => {
-    // const sideNavStyle = {
-    //     width: "20rem",
-    //     backgroundColor: "#f1f1f1",
-    //     display: ["none", "none", "block"],
-    //     ml: "2rem",
-    // };
+const Home: React.FC = () => {
     const mainDivStyle = {
         maxWidth: "550px",
     };
@@ -28,9 +19,6 @@ const Home = (props: Props) => {
             <Box sx={mainDivStyle}>
                 <HomeFeed />
             </Box>
-            {/* <Box sx={sideNavStyle}>
-                <SideNavigation />
-            </Box> */}
         </Box>
     );
 };

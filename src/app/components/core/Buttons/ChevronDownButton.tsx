@@ -6,7 +6,7 @@ interface Props {
     onClick: () => void;
 }
 
-const ChevronDownButton = (props: Props) => {
+const ChevronDownButton: React.FC<Props> = (props: Props) => {
     return (
         <Box
             sx={{

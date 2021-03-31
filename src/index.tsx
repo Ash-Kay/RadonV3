@@ -7,10 +7,10 @@ import App from "./app/App";
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
-    <ThemeProvider theme={theme}>
-        <BrowserRouter>
+    <BrowserRouter>
+        <ThemeProvider theme={theme}>
             <App />
-        </BrowserRouter>
-    </ThemeProvider>,
+        </ThemeProvider>
+    </BrowserRouter>,
     document.getElementById("root")
 );

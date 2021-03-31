@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { postService } from "../../state/posts/post.service";
 import { usePostFeedHook } from "../../state/posts/post.hook";
 import InfiniteScroll from "react-infinite-scroller";
@@ -6,9 +6,7 @@ import { Post } from "../../state/posts";
 import PostItem from "../PostItem";
 import { AuthContext } from "../../context/auth.context";
 
-interface Props {}
-
-const HomeFeed = (props: Props) => {
+const HomeFeed: React.FC = () => {
     const [posts] = usePostFeedHook();
     const authState = useContext(AuthContext);
 

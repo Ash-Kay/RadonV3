@@ -10,7 +10,7 @@ interface Props {
     onClickCallback?: () => void;
 }
 
-const DropDownItem = (props: Props) => {
+const DropDownItem: React.FC<Props> = (props: Props) => {
     return (
         <Flex
             sx={{
@@ -18,7 +18,8 @@ const DropDownItem = (props: Props) => {
                 lineHeight: "35px",
                 cursor: "pointer",
                 "&:not(:last-child)": {
-                    borderBottom: (theme) => `1px solid ${theme.colors.secondaryLight}`,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    borderBottom: (theme: any) => `1px solid ${theme.colors.secondaryLight}`,
                 },
                 ":hover": {
                     backgroundColor: "secondaryLight",

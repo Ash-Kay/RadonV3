@@ -1,4 +1,3 @@
-import axios from "axios";
 import { stringify } from "querystring";
 import { AuthStore, authStore } from "./auth.store";
 import { AuthQuery, authQuery } from "./auth.query";
@@ -13,7 +12,7 @@ export class AuthService {
     readonly authState$ = this.query.authState$;
     readonly isLoggedIn$ = this.query.isLoggedIn$;
 
-    public getTokenWithGoogleAuth = (idtoken: string) => {
+    public getTokenWithGoogleAuth = (idtoken: string): void => {
         this.store.setLoading(true);
         main.get("/users/auth/google", getIdTokenHeader(idtoken))
             .then((response) => {
@@ -31,6 +30,7 @@ export class AuthService {
                 localStorage.setItem("token", response.data.data.token);
 
                 //to refetch and get upvote/downvte state
+                //TODO Find a way to refetch current screen content
                 window.location.reload();
             })
             .catch(function (error) {
@@ -38,7 +38,7 @@ export class AuthService {
             });
     };
 
-    public loginWithUsernamePassword = (email: string, password: string) => {
+    public loginWithUsernamePassword = (email: string, password: string): void => {
         const data = stringify({ email, password });
 
         this.store.setLoading(true);
@@ -58,6 +58,7 @@ export class AuthService {
                 localStorage.setItem("token", response.data.data.token);
 
                 //to refetch and get upvote/downvte state
+                //TODO Find a way to refetch current screen content
                 window.location.reload();
             })
             .catch(function (error) {
@@ -65,12 +66,12 @@ export class AuthService {
             });
     };
 
-    public signupWithUsernamePassword = (username: string, password: string, email: string) => {
+    public signupWithUsernamePassword = (username: string, password: string, email: string): void => {
         const data = stringify({ email, password, username });
 
         this.store.setLoading(true);
         main.post("/users/signup", data)
-            .then((response) => {
+            .then(() => {
                 this.loginWithUsernamePassword(email, password);
                 this.store.setLoading(false);
             })
@@ -79,7 +80,7 @@ export class AuthService {
             });
     };
 
-    public logout = () => {
+    public logout = (): void => {
         this.store.update(() => AUTH_INITIAL_STATE);
         localStorage.removeItem("token");
     };

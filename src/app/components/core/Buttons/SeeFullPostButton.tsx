@@ -1,9 +1,7 @@
 import React from "react";
 import { Box, Text } from "theme-ui";
 
-interface Props {}
-
-const SeeFullPostButton = (props: Props) => {
+const SeeFullPostButton: React.FC = () => {
     return (
         <Box
             sx={{

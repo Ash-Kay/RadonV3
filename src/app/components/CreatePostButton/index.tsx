@@ -1,7 +1,7 @@
 import React from "react";
 import { postService } from "../../state/posts";
 import { AuthState } from "../../state/auth/auth.model";
-import { Box, Button, Text } from "theme-ui";
+import { Box, Button } from "theme-ui";
 import Modal from "../core/Modal";
 import { Input, Label, Checkbox } from "theme-ui";
 import TagsInput from "react-tagsinput";
@@ -17,7 +17,7 @@ export interface NewPostForm {
     file: File | null | undefined;
 }
 
-const NewPostButton = (props: Props) => {
+const NewPostButton: React.FC<Props> = (props: Props) => {
     const [isCreatePostModalOpen, setCreatePostModalOpen] = React.useState(false);
     const [createPostForm, setCreatePostForm] = React.useState(emtyForm);
 

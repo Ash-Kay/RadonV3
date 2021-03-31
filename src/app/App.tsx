@@ -1,19 +1,15 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import { akitaDevtools } from "@datorama/akita";
-import { Switch, Route, useLocation } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Home from "./components/Home";
 import FullScreenPost from "./components/FullScreenPost";
 import { useAuthStateHook } from "./state/auth/auth.hook";
 import { AuthContext } from "./context/auth.context";
 akitaDevtools();
 
-interface Props {}
-
-const App = (props: Props) => {
-    let location = useLocation();
+const App: React.FC = () => {
     const [authState] = useAuthStateHook();
-    let background = location.state && (location.state as any).background;
 
     const loadAfterAuth = () => {
         if (!authState) return <h1>LOADING...</h1>;

@@ -1,16 +1,19 @@
 // default theme preset form @rebass/preset
 
-export const theme = {
-    colors: {
-        text: "#ccc",
+import { Theme } from "theme-ui";
 
-        primary: "#67b094",
+export const theme: Theme = {
+    colors: {
+        text: "#CCC",
+
+        primary: "#67B094",
 
         secondary: "#202020",
         secondaryDark: "#151515",
-        secondaryLight: "#434a5b",
+        secondaryLight: "#434A5B",
         secondaryText: "#000",
 
+        error: "#CC5E5E",
         gray: "#dddddf",
         defaultIcon: "#8f8f8f",
         commentBoxBackground: "#ededed",
@@ -50,6 +53,7 @@ export const theme = {
         avatar: 48,
         iconSmall: 16,
         iconLarge: 24,
+        nav: 50,
     },
     radii: {
         none: 0,
@@ -61,9 +65,9 @@ export const theme = {
     },
     breakpoints: ["30em", "45em", "64em"], // 480px, 720px, 1024px
     zIndices: {
-        zero: "0",
-        nav: "100",
-        modal: "200",
+        zero: 0,
+        nav: 100,
+        modal: 200,
         auto: "auto",
     },
 
@@ -83,32 +87,6 @@ export const theme = {
         caps: {
             textTransform: "uppercase",
             letterSpacing: "0.1em",
-        },
-    },
-    variants: {
-        avatar: {
-            width: "avatar",
-            height: "avatar",
-            borderRadius: "circle",
-        },
-        card: {
-            p: 2,
-            bg: "background",
-            boxShadow: "card",
-        },
-        link: {
-            color: "primary",
-        },
-        nav: {
-            fontSize: 1,
-            fontWeight: "bold",
-            display: "inline-block",
-            p: 2,
-            color: "inherit",
-            textDecoration: "none",
-            ":hover,:focus,.active": {
-                color: "primary",
-            },
         },
     },
     buttons: {
@@ -160,14 +138,14 @@ export const theme = {
             height: "30px",
         },
     },
-    input: {
-        ":focus": {
-            outlineWidth: 0,
-            "::placeholder": {
-                opacity: 0.4,
-            },
-        },
-    },
+    // input: {
+    //     ":focus": {
+    //         outlineWidth: 0,
+    //         "::placeholder": {
+    //             opacity: 0.4,
+    //         },
+    //     },
+    // },
     styles: {
         root: {
             fontFamily: "body",

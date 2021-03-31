@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import ReactMarkdown, { NodeType } from "react-markdown";
 import { Comment, postService, Vote } from "../../state/posts";
-import { Box, Flex, Text } from "theme-ui";
+import { Box, Flex, Text, ThemeUIStyleObject } from "theme-ui";
 import Avatar from "../core/Avatar";
 import Media from "../core/Media";
 import { AuthContext } from "../../context/auth.context";
@@ -10,18 +10,21 @@ import { checkVoteState } from "../../../utils/checkVoteState";
 import CDownvoteButton from "../core/Buttons/CDownvoteButton";
 import ChevronDownButton from "../core/Buttons/ChevronDownButton";
 import DropDownItem from "../core/DropDownItem";
+import DropDown from "../core/DropDown";
+import { MdDelete } from "react-icons/md";
+import { GoAlert } from "react-icons/go";
 
 interface Props {
     postId: number;
     item: Comment;
 }
 
-const CommentItem = (props: Props) => {
+const CommentItem: React.FC<Props> = (props: Props) => {
     const authState = useContext(AuthContext);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const disallowedTypes: NodeType[] = ["image", "link", "listItem", "list"];
 
-    const commentBlock = {
+    const commentBlock: ThemeUIStyleObject = {
         p: 1,
         backgroundColor: "secondary",
         marginLeft: "0.5rem",
@@ -37,8 +40,8 @@ const CommentItem = (props: Props) => {
                 <Avatar avatarUrl={props.item.user.avatarUrl} sx={{ marginTop: "5px" }} />
                 <Box sx={commentBlock}>
                     <Flex>
-                        <Text sx={{ fontSize: 3, fontWeight: "bold" }}>{props.item.user.username}</Text>
-                        <Text paddingLeft="0.5rem" color="#5c5c5c" sx={{ fontSize: 3 }}>
+                        <Text sx={{ fontWeight: "bold" }}>{props.item.user.username}</Text>
+                        <Text paddingLeft="0.5rem" color="#5c5c5c">
                             {props.item.timeago}
                         </Text>
                         {authState.isLoggedIn && (
@@ -48,39 +51,20 @@ const CommentItem = (props: Props) => {
                                         setDropdownOpen(true);
                                     }}
                                 />
-
-                                {isDropdownOpen && authState.isLoggedIn && (
-                                    <Box
-                                        sx={{
-                                            position: "fixed",
-                                            top: 0,
-                                            bottom: 0,
-                                            left: 0,
-                                            right: 0,
-                                            width: "100%",
-                                            height: "100%",
-                                            zIndex: 100,
-                                            backgroundColor: "debugColorBackground",
-                                        }}
-                                        onClick={() => setDropdownOpen(false)}
-                                    />
-                                )}
-
                                 {isDropdownOpen && (
-                                    <Box
+                                    <DropDown
                                         sx={{
                                             position: "absolute",
                                             right: 0,
-                                            color: "text",
-                                            backgroundColor: "secondary",
-                                            zIndex: 101,
-                                            border: "1px solid rgba(0, 0, 0, 0.15)",
+                                            zIndex: "modal",
                                         }}
+                                        onOutsideClick={() => setDropdownOpen(false)}
                                     >
-                                        <DropDownItem text={"Report"} />
+                                        <DropDownItem text={"Report"} icon={<GoAlert />} />
                                         {props.item.user.id === authState.id && (
                                             <DropDownItem
                                                 text={"Delete"}
+                                                icon={<MdDelete />}
                                                 onClickCallback={() =>
                                                     postService.softDeleteComment(
                                                         props.postId,
@@ -88,9 +72,11 @@ const CommentItem = (props: Props) => {
                                                         authState.token
                                                     )
                                                 }
+                                                iconColor="error"
+                                                textColor="error"
                                             />
                                         )}
-                                    </Box>
+                                    </DropDown>
                                 )}
                             </Box>
                         )}
@@ -98,7 +84,7 @@ const CommentItem = (props: Props) => {
                     {props.item.mediaUrl && (
                         <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
                     )}
-                    <ReactMarkdown children={props.item.message} disallowedTypes={disallowedTypes} />
+                    <ReactMarkdown disallowedTypes={disallowedTypes}>{props.item.message}</ReactMarkdown>
                 </Box>
             </Flex>
             <Flex sx={{ justifyContent: "flex-start", mb: "0.5rem", ml: "2.5rem" }}>

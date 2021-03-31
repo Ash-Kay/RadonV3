@@ -7,19 +7,17 @@ import { Flex, Text, Box, Link } from "theme-ui";
 import Avatar from "../core/Avatar";
 import { AuthContext } from "../../context/auth.context";
 import DropDownItem from "../core/DropDownItem";
-import { useColorMode } from "theme-ui";
-import { DarkModeSwitch } from "react-toggle-dark-mode";
+// import { useColorMode } from "theme-ui";
+// import { DarkModeSwitch } from "react-toggle-dark-mode";
 import DropDown from "../core/DropDown";
 import { HiCog } from "react-icons/hi";
 import { BsFillEyeFill } from "react-icons/bs";
 import { RiLogoutBoxRFill } from "react-icons/ri";
 
-interface Props {}
-
-const Navbar = (props: Props) => {
+const Navbar: React.FC = () => {
     const authState = useContext(AuthContext);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
-    const [colorMode, setColorMode] = useColorMode();
+    // const [colorMode, setColorMode] = useColorMode();
 
     return (
         <Flex
@@ -27,7 +25,7 @@ const Navbar = (props: Props) => {
                 px: [1, 2, 3],
                 bg: "secondary",
                 alignItems: "center",
-                height: "50px",
+                height: "nav",
                 position: "fixed",
                 width: "100%",
                 top: 0,
@@ -92,7 +90,7 @@ const Navbar = (props: Props) => {
                             borderRadius: "circle",
                             cursor: "pointer",
                             ":hover": {
-                                boxShadow: (theme) => `0px 0px 0px 4px ${theme.colors.secondaryLight}`,
+                                boxShadow: (theme: any) => `0px 0px 0px 4px ${theme.colors.secondaryLight}`,
                             },
                         }}
                         onClick={() => setDropdownOpen(!isDropdownOpen)}
@@ -116,7 +114,7 @@ const Navbar = (props: Props) => {
                         }}
                         onOutsideClick={() => setDropdownOpen(false)}
                     >
-                        <DropDownItem text={"Settings"} icon={<HiCog size="iconSmall" />} />
+                        <DropDownItem text={"Settings"} icon={<HiCog />} />
                         <DropDownItem text={"Privacy"} icon={<BsFillEyeFill />} />
                         <DropDownItem
                             text={"Logout"}

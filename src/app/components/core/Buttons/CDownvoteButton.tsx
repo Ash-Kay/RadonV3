@@ -8,11 +8,11 @@ interface Props {
     commId: number;
     postId: number;
     checked: boolean;
-    activeColor: string;
-    color: string;
+    activeColor?: string;
+    color?: string;
 }
 
-const CDownvoteButton = (props: Props) => {
+const CDownvoteButton: React.FC<Props> = (props: Props) => {
     const authState = useContext(AuthContext);
     const downvote = () => {
         //TODO show login modal

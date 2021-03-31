@@ -1,13 +1,12 @@
 import React, { useContext, useState } from "react";
 import { Post, postService, Vote } from "../../state/posts";
-import { Box, Text, Flex } from "theme-ui";
+import { Box, Text, Flex, ThemeUIStyleObject } from "theme-ui";
 import Media from "../core/Media";
 import UpvoteButton from "../core/Buttons/UpvoteButton";
 import { AuthContext } from "../../context/auth.context";
 import { checkVoteState } from "../../../utils/checkVoteState";
 import DownvoteButton from "../core/Buttons/DownvoteButton";
 import CommentButton from "../core/Buttons/CommentButton";
-import SeeFullPostButton from "../core/Buttons/SeeFullPostButton";
 import ChevronDownButton from "../core/Buttons/ChevronDownButton";
 import DropDownItem from "../core/DropDownItem";
 import DropDown from "../core/DropDown";
@@ -19,26 +18,25 @@ interface Props {
     item: Post;
 }
 
-const PostItem = (props: Props) => {
+const PostItem: React.FC<Props> = (props: Props) => {
     const location = useLocation();
     const authState = useContext(AuthContext);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     //#region Style
-    const postItemStyle = {
+    const postItemStyle: ThemeUIStyleObject = {
         borderRadius: "default",
         backgroundColor: "secondary",
         pt: "0.5rem",
-        marginBottom: "3px",
-        border: "1px solid rgba(0, 0, 0, 0.15)",
+        marginBottom: 1,
     };
     //#endregion
 
     return (
         <Box sx={postItemStyle}>
-            <Flex sx={{ px: "10px", justifyContent: "space-between" }}>
+            <Flex sx={{ px: "10px", pb: 1, justifyContent: "space-between" }}>
                 <Link
-                    to={{ pathname: `/posts/${props.item.id}`, state: { background: location } }}
+                    to={{ pathname: `/posts/${props.item.id}` }}
                     sx={{
                         color: "text",
                         textDecoration: "none",
@@ -50,7 +48,7 @@ const PostItem = (props: Props) => {
                     <Text sx={{ fontSize: 3, fontWeight: "bold", color: "text" }}>{props.item.title}</Text>
                 </Link>
                 {authState.isLoggedIn && (
-                    <Box sx={{ position: "relative" }}>
+                    <Box sx={{ position: "relative", minWidth: 22 }}>
                         <ChevronDownButton
                             onClick={() => {
                                 setDropdownOpen(true);
@@ -70,12 +68,12 @@ const PostItem = (props: Props) => {
                                 {props.item.user.id === authState.id && (
                                     <DropDownItem
                                         text={"Delete"}
-                                        icon={<MdDelete size="iconSmall" />}
+                                        icon={<MdDelete />}
                                         onClickCallback={() =>
                                             postService.softDeletePost(props.item.id, authState.token)
                                         }
-                                        iconColor="#cc5e5e"
-                                        textColor="#cc5e5e"
+                                        iconColor="error"
+                                        textColor="error"
                                     />
                                 )}
                             </DropDown>
@@ -84,14 +82,7 @@ const PostItem = (props: Props) => {
                 )}
             </Flex>
 
-            <Box sx={{ mt: "0.5rem", position: "relative" }}>
-                <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
-                {props.item.height > props.item.width && (
-                    <Link to={{ pathname: `/posts/${props.item.id}`, state: { background: location } }}>
-                        <SeeFullPostButton />
-                    </Link>
-                )}
-            </Box>
+            <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
             <Flex sx={{ mx: "4px", height: "40px" }}>
                 <UpvoteButton
                     id={props.item.id}

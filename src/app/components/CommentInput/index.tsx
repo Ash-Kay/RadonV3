@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { postService } from "../../state/posts";
-import { Box, Flex, Text, Textarea, Input, Button } from "theme-ui";
-import { CloseRound, PaperClip } from "../Icons";
+import { Box, Flex, Text, Textarea, Input, Button, ThemeUIStyleObject } from "theme-ui";
 import { AuthContext } from "../../context/auth.context";
+import { MdAddAPhoto } from "react-icons/md";
+import { RiCloseCircleFill } from "react-icons/ri";
 
 interface Props {
     postId: number;
@@ -13,7 +14,7 @@ export interface CommentForm {
     //tagTo: number;
 }
 
-const CommentInput = (props: Props) => {
+const CommentInput: React.FC<Props> = (props: Props) => {
     const authState = useContext(AuthContext);
     const [commentForm, setCommentForm] = React.useState(emptyCommentForm);
     const hiddenCommentFileInput = React.useRef<HTMLInputElement>(null);
@@ -26,20 +27,21 @@ const CommentInput = (props: Props) => {
         setCommentForm(emptyCommentForm);
     };
 
-    const commentStyle = {
+    const commentStyle: ThemeUIStyleObject = {
         borderColor: "transparent",
         backgroundColor: "secondary",
-        fontSize: 3,
+        resize: "none",
+        fontSize: 2,
         "&::placeholder": {
             fontWeight: "bold",
         },
     };
 
     return (
-        <Box sx={{ gridArea: "commInput" }}>
+        <Box sx={{ mt: 1 }}>
             <Flex>
                 <Flex sx={{ position: "relative", flexGrow: 1 }}>
-                    <Input
+                    <Textarea
                         value={commentForm.comment}
                         onChange={(e) => setCommentForm({ ...commentForm, comment: e.currentTarget.value })}
                         placeholder="Commnet"
@@ -58,7 +60,7 @@ const CommentInput = (props: Props) => {
                             hiddenCommentFileInput.current?.click();
                         }}
                     >
-                        <PaperClip color={commentForm.file !== null ? "#2ce" : undefined} />
+                        <MdAddAPhoto color={commentForm.file !== null ? "#2ce" : undefined} size={16} />
                         <Input
                             onChange={(e) => setCommentForm({ ...commentForm, file: e.currentTarget.files?.item(0) })}
                             ref={hiddenCommentFileInput}
@@ -73,11 +75,11 @@ const CommentInput = (props: Props) => {
             </Flex>
             {commentForm.file && (
                 <Flex>
-                    <Text sx={{ ml: "2.5rem", mr: "0.5rem", fontSize: 1, fontWeight: "bold" }}>
+                    <Text sx={{ mr: "0.5rem", fontSize: 1, fontWeight: "bold", lineHeight: 1.5 }}>
                         {commentForm.file?.name}
                     </Text>
-                    <Box onClick={(e) => setCommentForm({ ...commentForm, file: null })}>
-                        <CloseRound width={12} />
+                    <Box onClick={() => setCommentForm({ ...commentForm, file: null })} sx={{ mt: "auto" }}>
+                        <RiCloseCircleFill size={16} />
                     </Box>
                 </Flex>
             )}

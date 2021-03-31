@@ -4,9 +4,7 @@ import { authService } from "../../state/auth/auth.service";
 import { Box, Button, Text, Input } from "theme-ui";
 import Modal from "../core/Modal";
 
-interface Props {}
-
-const SignupModal = (props: Props) => {
+const SignupModal: React.FC = () => {
     const [isSignInModalOpen, setSignInModalOpen] = React.useState(false);
     const [signupFormData, setSignupFormData] = useState({ username: "", password: "", email: "" }); //for debug
 

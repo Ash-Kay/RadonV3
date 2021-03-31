@@ -1,8 +1,7 @@
 import React from "react";
 import { Box } from "theme-ui";
-interface Props {}
 
-const SideNavigation = (props: Props) => {
+const SideNavigation: React.FC = () => {
     return <Box> SIDE MENU</Box>;
 };
 

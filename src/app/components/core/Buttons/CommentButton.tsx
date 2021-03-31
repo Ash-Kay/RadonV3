@@ -2,9 +2,7 @@ import React from "react";
 import { Box } from "theme-ui";
 import { Comment } from "../../Icons";
 
-interface Props {}
-
-const CommentButton = (props: Props) => {
+const CommentButton: React.FC = () => {
     return (
         <Box
             sx={{

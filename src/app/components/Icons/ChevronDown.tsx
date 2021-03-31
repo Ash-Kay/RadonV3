@@ -1,5 +1,4 @@
 import React from "react";
-import theme from "../../../theme";
 
 interface Props {
     size?: string;
@@ -7,7 +6,7 @@ interface Props {
     activeColor?: string;
 }
 
-const ChevronDown = (props: Props) => {
+const ChevronDown: React.FC<Props> = (props: Props) => {
     return (
         <svg width={props.size} viewBox="0 0 24 24" fill={props.color} xmlns="http://www.w3.org/2000/svg">
             <path
@@ -22,10 +21,11 @@ const ChevronDown = (props: Props) => {
 
 export default ChevronDown;
 
+//TODO: FIX
 ChevronDown.defaultProps = {
     size: "24",
-    color: theme.colors.upvote.default,
-    activeColor: theme.colors.upvote.active,
+    color: "#464646",
+    activeColor: "#9c1b1b",
 };
 
 //https://uxwing.com/arrow-top-icon/

@@ -1,13 +1,13 @@
 import React from "react";
-import { Box, SxStyleProp } from "theme-ui";
+import { Box, ThemeUIStyleObject } from "theme-ui";
 
 interface Props {
     children: React.ReactNode;
-    sx?: SxStyleProp;
+    sx?: ThemeUIStyleObject;
     onOutsideClick: () => void;
 }
 
-const DropDown = (props: Props) => {
+const DropDown: React.FC<Props> = (props: Props) => {
     return (
         <>
             <Box
@@ -30,7 +30,8 @@ const DropDown = (props: Props) => {
                     color: "text",
                     backgroundColor: "secondary",
                     borderRadius: "default",
-                    border: (theme) => `1px solid ${theme.colors.secondaryLight}`,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    border: (theme: any) => `1px solid ${theme.colors.secondaryLight}`,
                     zIndex: "modal",
                     ...props.sx,
                 }}

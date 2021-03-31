@@ -3,7 +3,7 @@ import { authService } from "./auth.service";
 import { AuthState } from "./auth.model";
 
 export type IsLoggedInHook = [boolean];
-export type AuthStateHook = [AuthState];
+export type AuthStateHook = [AuthState | undefined];
 
 export function useIsLoggedInHook(): IsLoggedInHook {
     const [isLoggedIn] = useObservable(authService.isLoggedIn$, false);
@@ -12,5 +12,5 @@ export function useIsLoggedInHook(): IsLoggedInHook {
 
 export function useAuthStateHook(): AuthStateHook {
     const [authState] = useObservable(authService.authState$);
-    return [authState!];
+    return [authState];
 }

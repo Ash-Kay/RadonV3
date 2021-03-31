@@ -9,9 +9,4 @@ module.exports = {
         "plugin:react/recommended",
         "prettier",
     ],
-    rules: {
-        "baseui/deprecated-theme-api": "warn",
-        "baseui/deprecated-component-api": "warn",
-        "baseui/no-deep-imports": "warn",
-    },
 };

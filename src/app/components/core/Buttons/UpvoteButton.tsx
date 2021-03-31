@@ -7,11 +7,11 @@ import { Upvote } from "../../Icons";
 interface Props {
     id: number;
     checked: boolean;
-    activeColor: string;
-    color: string;
+    activeColor?: string;
+    color?: string;
 }
 
-const UpvoteButton = (props: Props) => {
+const UpvoteButton: React.FC<Props> = (props: Props) => {
     const authState = useContext(AuthContext);
 
     const upvote = () => {

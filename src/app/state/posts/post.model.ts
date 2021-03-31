@@ -6,9 +6,6 @@ export interface Post {
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;
-    width: number;
-    height: number;
-    aspectRatio: string;
     mime: string;
     user: User;
     timeago: string;
@@ -31,8 +28,6 @@ export interface Comment {
     timeago: string;
     tagTo?: User;
     user: User;
-    width: number;
-    height: number;
     mime: string;
     vote?: number;
     voteSum: number;
@@ -55,9 +50,6 @@ export const POST_INITIAL_STATE: Post = {
     createdAt: new Date(),
     updatedAt: new Date(),
     deletedAt: new Date(),
-    width: 0,
-    height: 0,
-    aspectRatio: "n/a",
     mime: "n/a",
     user: {
         id: 0,
