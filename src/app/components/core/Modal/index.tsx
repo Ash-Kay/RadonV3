@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import { Box, ThemeUIStyleObject } from "theme-ui";
+import { RiCloseCircleFill } from "react-icons/ri";
 
 interface Props {
     isOpen: boolean;
@@ -19,6 +20,7 @@ const Modal: React.FC<Props> = (props: Props) => {
                 display: `${props.isOpen ? "flex" : "none"}`,
                 alignItems: "center",
                 justifyContent: "center",
+                backgroundColor: "debugColorBackground",
                 top: 0,
                 left: 0,
             }}
@@ -40,7 +42,7 @@ const Modal: React.FC<Props> = (props: Props) => {
                 sx={{
                     position: "relative",
                     maxHeight: "80vh",
-                    padding: 20,
+                    padding: 3,
                     boxSizing: "border-box",
                     backgroundColor: "secondary",
                     margin: "40px auto",
@@ -52,6 +54,12 @@ const Modal: React.FC<Props> = (props: Props) => {
                     ...props.sx,
                 }}
             >
+                <Box
+                    sx={{ position: "absolute", top: 1, right: 1, cursor: "pointer" }}
+                    onClick={(e) => props.onModalClose(e)}
+                >
+                    <RiCloseCircleFill size={30} />
+                </Box>
                 {props.children}
             </Box>
         </Box>

@@ -1,1 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap");
+
+@media only screen and (max-width: 45rem) {
+    html,
+    body,
+    #root,
+    .App {
+        /* height: 100%; */
+    }
+}

@@ -249,6 +249,19 @@ export class PostService {
                 handleResponseError(error, this.store);
             });
     };
+
+    public getTags = (postId: number): void => {
+        this.store.setLoading(true);
+        main.get(`/posts/${postId}/tags`)
+            .then((response) => {
+                console.log(response);
+                this.store.update(postId, { tag: response.data.data });
+                this.store.setLoading(false);
+            })
+            .catch((error) => {
+                handleResponseError(error, this.store);
+            });
+    };
 }
 
 export const postService = new PostService(postStore, postQuery);

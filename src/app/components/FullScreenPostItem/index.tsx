@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/auth.context";
 import { checkVoteState } from "../../../utils/checkVoteState";
 import DownvoteButton from "../core/Buttons/DownvoteButton";
 import Modal from "../core/Modal";
+import TagsBar from "../TagsBar";
 
 interface Props {
     item: Post;
@@ -20,7 +21,7 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
     };
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", width: "65%", mr: 3 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", width: ["100%", "100%", "65%"], mr: 3 }}>
             {props.item.mime.startsWith("image") && (
                 <Modal
                     isOpen={isZoomImageModalOpen}
@@ -39,12 +40,17 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
             )}
 
             <Box sx={{ height: "calc(100% - 40px)", display: "flex", flexDirection: "column" }}>
-                <Text sx={{ fontSize: 3, fontWeight: "bold", color: "text" }} as={"p"}>
+                <Text sx={{ fontSize: 2, fontWeight: "bold", color: "text", mb: 1 }} as={"p"}>
                     {props.item.title}
                 </Text>
                 <Box
-                    sx={{ maxHeight: "100%", textAlign: "center", overflowY: "hidden" }}
-                    onClick={() => console.log("clicked")}
+                    sx={{
+                        height: "100%",
+                        textAlign: "center",
+                        overflowY: "hidden",
+                        width: "100%",
+                        backgroundColor: "secondary",
+                    }}
                 >
                     <Media
                         mediaUrl={props.item.mediaUrl}
@@ -55,6 +61,7 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                         isFullPostScreen
                     />
                 </Box>
+                {props.item.tag && <TagsBar tags={props.item.tag} />}
             </Box>
             <Flex sx={{ mx: "4px", height: "40px" }}>
                 <UpvoteButton

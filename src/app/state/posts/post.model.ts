@@ -12,6 +12,7 @@ export interface Post {
     vote?: number;
     voteSum: number;
     comment: Comment[];
+    tag: Tag[] | null;
 }
 export interface User {
     id: number;
@@ -31,6 +32,12 @@ export interface Comment {
     mime: string;
     vote?: number;
     voteSum: number;
+}
+export interface Tag {
+    id: number;
+    tagText: string;
+    createdAt: Date;
+    deletedAt?: Date;
 }
 export enum Vote {
     DEFAULT = 0,
@@ -60,4 +67,5 @@ export const POST_INITIAL_STATE: Post = {
     vote: 0,
     voteSum: 0,
     comment: [],
+    tag: null,
 };

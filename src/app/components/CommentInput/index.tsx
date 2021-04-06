@@ -69,7 +69,7 @@ const CommentInput: React.FC<Props> = (props: Props) => {
                         />
                     </Box>
                 </Flex>
-                <Button onClick={postComment} sx={{ ml: 1, color: "secondaryText", borderRadius: "default" }}>
+                <Button onClick={postComment} sx={{ ml: 1 }}>
                     Post
                 </Button>
             </Flex>

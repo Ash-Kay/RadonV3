@@ -1,9 +1,8 @@
 import React from "react";
 import { postService } from "../../state/posts";
 import { AuthState } from "../../state/auth/auth.model";
-import { Box, Button } from "theme-ui";
+import { Box, Button, Input, Label, Checkbox, Text } from "theme-ui";
 import Modal from "../core/Modal";
-import { Input, Label, Checkbox } from "theme-ui";
 import TagsInput from "react-tagsinput";
 import "./tagsInputStyle.css";
 
@@ -39,7 +38,8 @@ const NewPostButton: React.FC<Props> = (props: Props) => {
             </Button>
             <Modal isOpen={isCreatePostModalOpen} onModalClose={closeCreatePostModal}>
                 <Box sx={{ color: "text" }}>
-                    <h2>Create New Post</h2>
+                    <Text sx={{ fontSize: 4, fontWeight: "bold", color: "primary" }}>Create New Post</Text>
+                    {/* <h2>Create New Post</h2> */}
                     <Input
                         onChange={(e) => setCreatePostForm({ ...createPostForm, file: e.currentTarget.files?.item(0) })}
                         placeholder="Upload File"
@@ -85,7 +85,7 @@ const NewPostButton: React.FC<Props> = (props: Props) => {
                                 setCreatePostForm({ ...createPostForm, sensitive: e.currentTarget.checked })
                             }
                         />
-                        Sensitive Media
+                        <Text sx={{ my: "auto" }}>Sensitive Media</Text>
                     </Label>
                     <Button onClick={submitNewPostForm} sx={{ width: "100%" }}>
                         Submit

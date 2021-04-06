@@ -7,11 +7,11 @@ export const theme: Theme = {
         text: "#CCC",
 
         primary: "#67B094",
+        primaryText: "#000",
 
         secondary: "#202020",
         secondaryDark: "#151515",
         secondaryLight: "#434A5B",
-        secondaryText: "#000",
 
         error: "#CC5E5E",
         gray: "#dddddf",
@@ -63,7 +63,7 @@ export const theme: Theme = {
     shadows: {
         card: "0 0 4px rgba(0, 0, 0, .125)",
     },
-    breakpoints: ["30em", "45em", "64em"], // 480px, 720px, 1024px
+    breakpoints: ["600px", "900px", "1200px"], // 480px, 720px, 1024px
     zIndices: {
         zero: 0,
         nav: 100,
@@ -94,9 +94,9 @@ export const theme: Theme = {
             fontFamily: "body",
             fontSize: 2,
             fontWeight: "bold",
-            color: "text",
+            color: "primaryText",
             bg: "primary",
-            borderRadius: "none",
+            borderRadius: "default",
             ":focus, :hover": {
                 outlineWidth: 0,
                 filter: "brightness(110%)",
@@ -107,7 +107,9 @@ export const theme: Theme = {
             variant: "buttons.primary",
             color: "primary",
             bg: "transparent",
-            boxShadow: "inset 0 0 2px",
+            borderWidth: "1px",
+            borderColor: "primary",
+            borderStyle: "solid",
         },
         secondary: {
             variant: "buttons.primary",
@@ -129,23 +131,19 @@ export const theme: Theme = {
             borderRadius: "circle",
             fontWeight: "body",
             bg: "primary",
-            color: "black",
+            color: "primaryText",
         },
         navOutline: {
             variant: "buttons.outline",
+            borderRadius: "circle",
             p: "0.2rem 0.5rem",
             mx: "0.5rem",
             height: "30px",
         },
+        login: {
+            variant: "buttons.nav",
+        },
     },
-    // input: {
-    //     ":focus": {
-    //         outlineWidth: 0,
-    //         "::placeholder": {
-    //             opacity: 0.4,
-    //         },
-    //     },
-    // },
     styles: {
         root: {
             fontFamily: "body",
@@ -154,14 +152,9 @@ export const theme: Theme = {
             boxSizing: "border-box",
             m: 0,
             p: 0,
-        },
-        img: {
-            maxWidth: "100%",
-            display: "block",
-        },
-        svg: {
-            maxWidth: "100%",
-            display: "block",
+            "img, video": {
+                display: "block",
+            },
         },
     },
 };
