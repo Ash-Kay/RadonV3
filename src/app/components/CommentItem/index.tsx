@@ -82,9 +82,16 @@ const CommentItem: React.FC<Props> = (props: Props) => {
                         )}
                     </Flex>
                     {props.item.mediaUrl && (
-                        <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} />
+                        <Media
+                            mediaUrl={props.item.mediaUrl}
+                            mime={props.item.mime}
+                            id={props.item.id}
+                            imageSx={{ width: "auto" }}
+                        />
                     )}
-                    <ReactMarkdown disallowedTypes={disallowedTypes}>{props.item.message}</ReactMarkdown>
+                    <Box sx={{ pt: 2, pb: 1 }}>
+                        <ReactMarkdown disallowedTypes={disallowedTypes}>{props.item.message}</ReactMarkdown>
+                    </Box>
                 </Box>
             </Flex>
             <Flex sx={{ justifyContent: "flex-start", mb: "0.5rem", ml: "2.5rem" }}>

@@ -150,8 +150,10 @@ export const theme: Theme = {
             fontWeight: "body",
             lineHeight: "body",
             boxSizing: "border-box",
-            m: 0,
-            p: 0,
+            "*": {
+                m: 0,
+                p: 0,
+            },
             "img, video": {
                 display: "block",
             },

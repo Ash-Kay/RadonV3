@@ -8,6 +8,7 @@ import { AuthContext } from "../../context/auth.context";
 import { usePostHook } from "../../state/posts/post.hook";
 import FullScreenPostItem from "../FullScreenPostItem";
 import CommentInput from "../CommentInput";
+import { handleResponseError } from "../../../utils/handleResponseError";
 
 interface ParamTypes {
     id: string;
@@ -48,7 +49,7 @@ const FullScreenPost: React.FC = () => {
                         postService.getTags(id);
                     })
                     .catch(function (error) {
-                        console.error(error);
+                        handleResponseError(error, postStore);
                         //TODO 404 page
                     });
             } else {
@@ -60,7 +61,7 @@ const FullScreenPost: React.FC = () => {
                         postService.getTags(id);
                     })
                     .catch(function (error) {
-                        console.error(error);
+                        handleResponseError(error, postStore);
                         //TODO 404 page
                     });
             }

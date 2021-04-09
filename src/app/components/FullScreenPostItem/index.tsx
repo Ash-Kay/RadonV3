@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Post, Vote } from "../../state/posts";
+import React, { useContext, useState } from "react";
+import { Post, Vote, postService } from "../../state/posts";
 import { Box, Text, Flex } from "theme-ui";
 import Media from "../core/Media";
 import UpvoteButton from "../core/Buttons/UpvoteButton";
@@ -8,13 +8,20 @@ import { checkVoteState } from "../../../utils/checkVoteState";
 import DownvoteButton from "../core/Buttons/DownvoteButton";
 import Modal from "../core/Modal";
 import TagsBar from "../TagsBar";
+import ChevronDownButton from "../core/Buttons/ChevronDownButton";
+import DropDownItem from "../core/DropDownItem";
+import DropDown from "../core/DropDown";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { MdDelete } from "react-icons/md";
+import { GoAlert } from "react-icons/go";
 
-interface Props {
+interface Props extends RouteComponentProps {
     item: Post;
 }
 const FullScreenPostItem: React.FC<Props> = (props: Props) => {
     const authState = useContext(AuthContext);
     const [isZoomImageModalOpen, setZoomImageModalOpen] = React.useState(false);
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     const closeZoomImageModal = () => {
         setZoomImageModalOpen(false);
@@ -34,15 +41,52 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                         id={props.item.id}
                         cursor="zoom-out"
                         onMediaClick={() => setZoomImageModalOpen(false)}
-                        isFullPostScreen
                     />
                 </Modal>
             )}
 
             <Box sx={{ height: "calc(100% - 40px)", display: "flex", flexDirection: "column" }}>
-                <Text sx={{ fontSize: 2, fontWeight: "bold", color: "text", mb: 1 }} as={"p"}>
-                    {props.item.title}
-                </Text>
+                <Flex sx={{ justifyContent: "space-between" }}>
+                    <Text sx={{ fontSize: 2, fontWeight: "bold", color: "text", mb: 1 }} as={"p"}>
+                        {props.item.title}
+                    </Text>
+
+                    {authState.isLoggedIn && (
+                        <Box sx={{ position: "relative", minWidth: 22 }}>
+                            <ChevronDownButton
+                                onClick={() => {
+                                    setDropdownOpen(true);
+                                }}
+                            />
+
+                            {isDropdownOpen && (
+                                <DropDown
+                                    sx={{
+                                        position: "absolute",
+                                        right: 0,
+                                        zIndex: "modal",
+                                    }}
+                                    onOutsideClick={() => setDropdownOpen(false)}
+                                >
+                                    <DropDownItem text={"Report"} icon={<GoAlert />} />
+                                    {props.item.user.id === authState.id && (
+                                        <DropDownItem
+                                            text={"Delete"}
+                                            icon={<MdDelete />}
+                                            onClickCallback={() =>
+                                                postService.softDeletePost(props.item.id, authState.token, () => {
+                                                    props.history.push("/");
+                                                })
+                                            }
+                                            iconColor="error"
+                                            textColor="error"
+                                        />
+                                    )}
+                                </DropDown>
+                            )}
+                        </Box>
+                    )}
+                </Flex>
                 <Box
                     sx={{
                         height: "100%",
@@ -80,4 +124,4 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
     );
 };
 
-export default FullScreenPostItem;
+export default withRouter(FullScreenPostItem);

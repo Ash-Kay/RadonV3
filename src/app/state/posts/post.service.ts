@@ -14,24 +14,35 @@ enum HeaderType {
 export class PostService {
     constructor(private store: PostStore, private query: PostQuery) {}
     readonly homefeed$ = this.query.homefeed$;
+    readonly error$ = this.query.error$;
 
     //TODO logout if 401 in any of call
-    public getPostPageAuth = (pageNo: number, token: string): void => {
+    public getPostPageAuth = (pageNo: number, token: string, setHasMore: (hasMore: boolean) => void): void => {
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
-                this.store.add(response.data.data, { prepend: true });
-                this.store.setLoading(false);
+                if (response.data.data.length === 0) {
+                    setHasMore(false);
+                } else {
+                    setHasMore(true);
+                    this.store.add(response.data.data, { prepend: true });
+                    this.store.setLoading(false);
+                }
             })
             .catch((error) => handleResponseError(error, this.store));
     };
 
-    public getPostPage = (pageNo: number): void => {
+    public getPostPage = (pageNo: number, setHasMore: (hasMore: boolean) => void): void => {
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`)
             .then((response) => {
-                this.store.add(response.data.data, { prepend: true });
-                this.store.setLoading(false);
+                if (response.data.data.length === 0) {
+                    setHasMore(false);
+                } else {
+                    setHasMore(true);
+                    this.store.add(response.data.data, { prepend: true });
+                    this.store.setLoading(false);
+                }
             })
             .catch((error) => {
                 handleResponseError(error, this.store);
@@ -220,12 +231,13 @@ export class PostService {
             });
     };
 
-    public softDeletePost = (postId: number, token: string): void => {
+    public softDeletePost = (postId: number, token: string, cb?: () => void): void => {
         this.store.setLoading(true);
         main.delete(`/posts/${postId}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then(() => {
                 this.store.remove(postId);
                 this.store.setLoading(false);
+                cb?.();
             })
             .catch((error) => {
                 handleResponseError(error, this.store);

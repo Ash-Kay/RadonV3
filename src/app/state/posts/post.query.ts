@@ -9,6 +9,7 @@ import { PostState, PostStore, postStore } from "./post.store";
 })
 export class PostQuery extends QueryEntity<PostState> {
     homefeed$ = this.selectAll();
+    error$ = this.selectError();
 
     selectPost(id: number): Observable<Post | undefined> {
         return this.selectEntity(id);

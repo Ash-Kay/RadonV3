@@ -1,7 +1,8 @@
 import { Store } from "@datorama/akita";
+import { AxiosError } from "axios";
 
-export const handleResponseError = (error: Error, store: Store): void => {
+export const handleResponseError = (error: AxiosError, store: Store): void => {
     store.setLoading(false);
-    store.setError(error);
+    store.setError(error.response);
     console.error(error);
 };

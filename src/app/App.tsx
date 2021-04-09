@@ -6,17 +6,35 @@ import Home from "./components/Home";
 import FullScreenPost from "./components/FullScreenPost";
 import { useAuthStateHook } from "./state/auth/auth.hook";
 import { AuthContext } from "./context/auth.context";
+import { Alert, Close, Spinner, Text } from "theme-ui";
+import { usePostFeedErrorHook } from "./state/posts/post.hook";
 akitaDevtools();
 
 const App: React.FC = () => {
+    const [error] = usePostFeedErrorHook();
     const [authState] = useAuthStateHook();
 
     const loadAfterAuth = () => {
-        if (!authState) return <h1>LOADING...</h1>;
+        if (!authState) return <Spinner sx={{ display: "block", m: "auto" }} />;
         else
             return (
+                //TODO: make a error component, find better way to handle error
                 <AuthContext.Provider value={authState}>
                     <Navbar />
+                    {error && false && (
+                        <Alert
+                            sx={{
+                                position: "absolute",
+                                top: "25px",
+                                left: 3,
+                                right: 3,
+                                zIndex: "modal",
+                            }}
+                        >
+                            <Text>{error.data.message}</Text>
+                            <Close sx={{ ml: "auto" }} />
+                        </Alert>
+                    )}
                     <Switch>
                         <Route exact path="/" component={Home} />
                         <Route path="/posts/:id" component={FullScreenPost} />

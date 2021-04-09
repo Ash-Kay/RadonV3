@@ -3,7 +3,8 @@ import { authService } from "../../state/auth/auth.service";
 import CreatePostButton from "../CreatePostButton";
 import SignupModal from "../SignupModal";
 import LoginModal from "../LoginModal";
-import { Flex, Text, Box, Link } from "theme-ui";
+import { Flex, Text, Box } from "theme-ui";
+import { Link } from "react-router-dom";
 import Avatar from "../core/Avatar";
 import { AuthContext } from "../../context/auth.context";
 import DropDownItem from "../core/DropDownItem";
@@ -33,8 +34,8 @@ const Navbar: React.FC = () => {
             }}
         >
             <Link
-                href="/"
-                sx={{
+                to={{ pathname: "/" }}
+                style={{
                     textDecoration: "none",
                 }}
             >
@@ -95,15 +96,7 @@ const Navbar: React.FC = () => {
                         }}
                         onClick={() => setDropdownOpen(!isDropdownOpen)}
                     >
-                        <Avatar
-                            avatarUrl={authState.avatarUrl}
-                            sx={{
-                                transition: "all 0.3s ease-in-out",
-                                ":hover": {
-                                    transform: "scale(0.8, 0.8)",
-                                },
-                            }}
-                        />
+                        <Avatar avatarUrl={authState.avatarUrl} />
                     </Box>
                 )}
                 {isDropdownOpen && authState.isLoggedIn && (
