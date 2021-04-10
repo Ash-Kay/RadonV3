@@ -12,6 +12,7 @@ import ChevronDownButton from "../core/Buttons/ChevronDownButton";
 import DropDownItem from "../core/DropDownItem";
 import DropDown from "../core/DropDown";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+import { isDesktop } from "react-device-detect";
 import { MdDelete } from "react-icons/md";
 import { GoAlert } from "react-icons/go";
 
@@ -27,6 +28,10 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
         setZoomImageModalOpen(false);
     };
 
+    const openZoomImageModalIfDesktop = () => {
+        if (isDesktop) setZoomImageModalOpen(true);
+    };
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: ["100%", "100%", "65%"], mr: 3 }}>
             {props.item.mime.startsWith("image") && (
@@ -40,7 +45,7 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                         mime={props.item.mime}
                         id={props.item.id}
                         cursor="zoom-out"
-                        onMediaClick={() => setZoomImageModalOpen(false)}
+                        onMediaClick={closeZoomImageModal}
                     />
                 </Modal>
             )}
@@ -100,8 +105,8 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                         mediaUrl={props.item.mediaUrl}
                         mime={props.item.mime}
                         id={props.item.id}
-                        cursor="zoom-in"
-                        onMediaClick={() => setZoomImageModalOpen(true)}
+                        cursor={isDesktop ? "zoom-in" : "auto"}
+                        onMediaClick={openZoomImageModalIfDesktop}
                         isFullPostScreen
                     />
                 </Box>
