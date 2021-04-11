@@ -72,9 +72,9 @@ const FullScreenPost: React.FC = () => {
     const fullScreenPostStyle: ThemeUIStyleObject = {
         mt: "50px",
         height: ["100%", "100%", "calc(100vh - 50px)"],
+        minHeight: "calc(100vh - 50px)",
         p: 3,
         backgroundColor: "secondaryDark",
-        // overflowY: "hidden",
     };
     //#endregion
 
