@@ -266,7 +266,6 @@ export class PostService {
         this.store.setLoading(true);
         main.get(`/posts/${postId}/tags`)
             .then((response) => {
-                console.log(response);
                 this.store.update(postId, { tag: response.data.data });
                 this.store.setLoading(false);
             })

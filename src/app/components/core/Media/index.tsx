@@ -31,7 +31,12 @@ const Media: React.FC<Props> = (props: Props) => {
         );
     else
         return (
-            <video width="100%" controls onClick={(e) => props.onMediaClick && props.onMediaClick(e)}>
+            <video
+                width="100%"
+                controls
+                style={{ height: props.isFullPostScreen ? "100%" : "auto" }}
+                onClick={(e) => props.onMediaClick && props.onMediaClick(e)}
+            >
                 <source src={props.mediaUrl} type={props.mime} />
             </video>
         );

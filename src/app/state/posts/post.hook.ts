@@ -1,5 +1,5 @@
 import { Post } from "./post.model";
-import { useObservable } from "../../../utils/useObservable";
+import { ResetStreamSource, useObservable } from "../../../utils/useObservable";
 import { postService } from "./post.service";
 import { postQuery } from "./post.query";
 
@@ -10,9 +10,9 @@ export function usePostFeedHook(): PostFeedHook {
     return [postFeed];
 }
 
-export function usePostHook(id: number): [Post | undefined] {
-    const [post] = useObservable(postQuery.selectPost(id));
-    return [post];
+export function usePostHook(id: number): [Post | undefined, ResetStreamSource<Post | undefined>] {
+    const [post, setPost] = useObservable(postQuery.selectPost(id));
+    return [post, setPost];
 }
 
 export function usePostFeedErrorHook(): any {

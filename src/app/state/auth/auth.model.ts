@@ -35,7 +35,6 @@ export const createInitialState = (): AuthState => {
 
         return AUTH_INITIAL_LOGGED_IN_STATE;
     } catch (error) {
-        console.log("INITIAL_NO AUTH");
         return AUTH_INITIAL_STATE;
     }
 };
