@@ -20,7 +20,6 @@ const NewPostButton: React.FC<Props> = (props: Props) => {
     const [isCreatePostModalOpen, setCreatePostModalOpen] = React.useState(false);
     const [createPostForm, setCreatePostForm] = React.useState(emtyForm);
 
-    //Todo Tags!
     const submitNewPostForm = () => {
         if (createPostForm.file !== null && createPostForm.title !== "" && createPostForm.file !== undefined) {
             postService.createNewPost(createPostForm, props.authState.token);

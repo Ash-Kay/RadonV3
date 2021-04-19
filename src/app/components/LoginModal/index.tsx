@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GoogleLogin from "react-google-login";
 import { authService } from "../../state/auth/auth.service";
 import { Box, Button, Text, Input, Flex } from "theme-ui";
 import Modal from "../core/Modal";
 import { FaGoogle } from "react-icons/fa";
+import { globalService } from "../../state/global/global.service";
+import { useIsSignInModalOpenHook } from "../../state/global/global.hook";
 
 const LoginModal: React.FC = () => {
-    const [isSignInModalOpen, setSignInModalOpen] = React.useState(false);
+    const [isSignInModalOpen] = useIsSignInModalOpenHook();
     const [loginFormData, setLoginFormData] = useState({ email: "", password: "" }); //for debug
 
     const closeSignInModal = () => {
-        setSignInModalOpen(false);
+        globalService.setIsSignInModalOpen(false);
     };
     const successResponse = (response: any) => {
         authService.getTokenWithGoogleAuth(response.tokenId);
@@ -29,7 +31,7 @@ const LoginModal: React.FC = () => {
 
     return (
         <>
-            <Button onClick={() => setSignInModalOpen(true)} variant="nav">
+            <Button onClick={() => globalService.setIsSignInModalOpen(true)} variant="nav">
                 Log In
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal} sx={modalStyle}>

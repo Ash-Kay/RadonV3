@@ -4,6 +4,7 @@ import { Box, Flex, Text, Textarea, Input, Button, ThemeUIStyleObject } from "th
 import { AuthContext } from "../../context/auth.context";
 import { MdAddAPhoto } from "react-icons/md";
 import { RiCloseCircleFill } from "react-icons/ri";
+import { globalService } from "../../state/global/global.service";
 
 interface Props {
     postId: number;
@@ -20,8 +21,10 @@ const CommentInput: React.FC<Props> = (props: Props) => {
     const hiddenCommentFileInput = React.useRef<HTMLInputElement>(null);
 
     const postComment = () => {
-        //TODO show login modal
-        if (!authState.isLoggedIn) return;
+        if (!authState.isLoggedIn) {
+            globalService.setIsSignInModalOpen(true);
+            return;
+        }
         postService.postComment(props.postId, commentForm, authState.token);
         //TODO only clear if success
         setCommentForm(emptyCommentForm);

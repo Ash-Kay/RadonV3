@@ -8,8 +8,6 @@ import { Link } from "react-router-dom";
 import Avatar from "../core/Avatar";
 import { AuthContext } from "../../context/auth.context";
 import DropDownItem from "../core/DropDownItem";
-// import { useColorMode } from "theme-ui";
-// import { DarkModeSwitch } from "react-toggle-dark-mode";
 import DropDown from "../core/DropDown";
 import { HiCog } from "react-icons/hi";
 import { BsFillEyeFill } from "react-icons/bs";
@@ -18,7 +16,6 @@ import { RiLogoutBoxRFill } from "react-icons/ri";
 const Navbar: React.FC = () => {
     const authState = useContext(AuthContext);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
-    // const [colorMode, setColorMode] = useColorMode();
 
     return (
         <Flex
@@ -57,29 +54,6 @@ const Navbar: React.FC = () => {
             </Link>
             <Box mx="auto" />
             <>
-                {/* <Box
-                    sx={{
-                        mr: "0.5rem",
-                        p: 1,
-                        borderRadius: "circle",
-                        cursor: "pointer",
-                        ":hover": {
-                            background: "rgba(255, 255, 255, 0.15)",
-                        },
-                    }}
-                >
-                    <DarkModeSwitch
-                        style={{}}
-                        checked={colorMode === "dark"}
-                        onChange={() => {
-                            setColorMode(colorMode === "default" ? "dark" : "default");
-                        }}
-                        size={25}
-                        sunColor="#fff"
-                        moonColor="#fff"
-                    />
-                </Box> */}
-
                 {authState.isLoggedIn && <CreatePostButton authState={authState} />}
                 {!authState.isLoggedIn && <LoginModal />}
                 {!authState.isLoggedIn && false && <SignupModal />}

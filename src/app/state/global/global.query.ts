@@ -5,6 +5,7 @@ import { globalStore, GlobalStore } from "./global.store";
 export class GlobalQuery extends Query<GlobalState> {
     hasMorePages$ = this.select((state) => state.hasMorePages);
     currentLoadedPage$ = this.select((state) => state.currentLoadedPage);
+    isSignInModalOpen$ = this.select((state) => state.isSignInModalOpen);
 
     constructor(protected store: GlobalStore) {
         super(store);

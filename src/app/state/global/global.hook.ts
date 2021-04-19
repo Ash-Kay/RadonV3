@@ -10,3 +10,8 @@ export function useCurrentLoadedPageHook(): [number] {
     const [globalFeed] = useObservable(globalService.currentLoadedPage$);
     return [globalFeed];
 }
+
+export function useIsSignInModalOpenHook(): [boolean] {
+    const [isSignInModalOpen] = useObservable(globalService.isSignInModalOpen$);
+    return [isSignInModalOpen];
+}

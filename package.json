@@ -37,7 +37,6 @@
         "react-scripts": "4.0.3",
         "react-swipeable": "^6.1.0",
         "react-tagsinput": "^3.19.0",
-        "react-toggle-dark-mode": "^1.0.3",
         "rxjs": "^6.6.7",
         "theme-ui": "^0.6.0",
         "typescript": "~4.2.3"

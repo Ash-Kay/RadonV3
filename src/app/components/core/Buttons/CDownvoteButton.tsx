@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Box } from "theme-ui";
 import { AuthContext } from "../../../context/auth.context";
+import { globalService } from "../../../state/global/global.service";
 import { postService } from "../../../state/posts";
 import { Downvote } from "../../Icons";
 
@@ -15,8 +16,10 @@ interface Props {
 const CDownvoteButton: React.FC<Props> = (props: Props) => {
     const authState = useContext(AuthContext);
     const downvote = () => {
-        //TODO show login modal
-        if (!authState.isLoggedIn) return;
+        if (!authState.isLoggedIn) {
+            globalService.setIsSignInModalOpen(true);
+            return;
+        }
         if (!props.checked) {
             postService.cdownvote(props.postId, props.commId, authState.token);
         } else postService.cremoveVote(props.postId, props.commId, authState.token);
