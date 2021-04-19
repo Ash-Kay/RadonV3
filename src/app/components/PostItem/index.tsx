@@ -38,6 +38,9 @@ const PostItem: React.FC<Props> = (props: Props) => {
                             textDecoration: "none",
                             display: "flex",
                         }}
+                        onClick={() => {
+                            sessionStorage.setItem("scrollPosition", window.pageYOffset.toString());
+                        }}
                     >
                         <Text
                             sx={{

@@ -5,7 +5,6 @@ import jwtDecode from "jwt-decode";
 import { Role, AUTH_INITIAL_STATE } from "./auth.model";
 import { AuthToken } from "../../../interface/authtoken.interface";
 import { main } from "../../../utils/axios";
-
 export class AuthService {
     constructor(private store: AuthStore, private query: AuthQuery) {}
 

@@ -5,6 +5,7 @@ import { authQuery } from "../auth/auth.query";
 import { main } from "../../../utils/axios";
 import { handleResponseError } from "../../../utils/handleResponseError";
 import { CommentForm } from "../../components/CommentInput";
+import { globalService } from "../global/global.service";
 
 enum HeaderType {
     AUTH_TOKEN = 1,
@@ -15,12 +16,13 @@ export class PostService {
     constructor(private store: PostStore, private query: PostQuery) {}
     readonly homefeed$ = this.query.homefeed$;
     readonly error$ = this.query.error$;
+    readonly activePost$ = this.query.activePost$;
 
-    //TODO logout if 401 in any of call
     public getPostPageAuth = (pageNo: number, token: string, setHasMore: (hasMore: boolean) => void): void => {
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
+                globalService.setCurrentLoadedPage(pageNo);
                 if (response.data.data.length === 0) {
                     setHasMore(false);
                 } else {
@@ -36,6 +38,7 @@ export class PostService {
         this.store.setLoading(true);
         main.get(`/posts/?page=${pageNo}`)
             .then((response) => {
+                globalService.setCurrentLoadedPage(pageNo);
                 if (response.data.data.length === 0) {
                     setHasMore(false);
                 } else {

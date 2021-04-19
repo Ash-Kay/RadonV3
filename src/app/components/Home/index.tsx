@@ -1,6 +1,7 @@
 import React from "react";
 import HomeFeed from "../HomeFeed";
 import { Box } from "theme-ui";
+import { withRouter } from "react-router-dom";
 
 const Home: React.FC = () => {
     const mainDivStyle = {
@@ -23,4 +24,4 @@ const Home: React.FC = () => {
     );
 };
 
-export default Home;
+export default withRouter(Home);

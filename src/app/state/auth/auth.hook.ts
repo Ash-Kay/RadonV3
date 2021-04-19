@@ -1,6 +1,6 @@
-import { useObservable } from "../../../utils/useObservable";
 import { authService } from "./auth.service";
 import { AuthState } from "./auth.model";
+import { useObservable } from "@libreact/use-observable";
 
 export type IsLoggedInHook = [boolean];
 export type AuthStateHook = [AuthState | undefined];

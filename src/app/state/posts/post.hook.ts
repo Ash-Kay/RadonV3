@@ -1,5 +1,5 @@
 import { Post } from "./post.model";
-import { ResetStreamSource, useObservable } from "../../../utils/useObservable";
+import { useObservable } from "@libreact/use-observable";
 import { postService } from "./post.service";
 import { postQuery } from "./post.query";
 
@@ -10,12 +10,17 @@ export function usePostFeedHook(): PostFeedHook {
     return [postFeed];
 }
 
-export function usePostHook(id: number): [Post | undefined, ResetStreamSource<Post | undefined>] {
-    const [post, setPost] = useObservable(postQuery.selectPost(id));
-    return [post, setPost];
+export function usePostHook(id: number): [Post | undefined] {
+    const [post] = useObservable(postQuery.selectPost(id));
+    return [post];
 }
 
 export function usePostFeedErrorHook(): any {
     const [postFeedError] = useObservable(postService.error$, null);
     return [postFeedError];
+}
+
+export function useActivePostHook(): [Post | undefined] {
+    const [activePost] = useObservable(postService.activePost$);
+    return [activePost];
 }

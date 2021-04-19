@@ -1,7 +1,7 @@
-import { QueryEntity, QueryConfig, Order } from "@datorama/akita";
-import { Observable } from "../../../utils/useObservable";
+import { Observable } from "rxjs";
 import { Post, Comment } from "./post.model";
 import { PostState, PostStore, postStore } from "./post.store";
+import { QueryEntity, QueryConfig, Order } from "@datorama/akita";
 
 @QueryConfig({
     sortBy: "createdAt",
@@ -10,6 +10,7 @@ import { PostState, PostStore, postStore } from "./post.store";
 export class PostQuery extends QueryEntity<PostState> {
     homefeed$ = this.selectAll();
     error$ = this.selectError();
+    activePost$ = this.selectActive();
 
     selectPost(id: number): Observable<Post | undefined> {
         return this.selectEntity(id);

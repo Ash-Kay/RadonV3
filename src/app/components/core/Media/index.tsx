@@ -20,7 +20,7 @@ const Media: React.FC<Props> = (props: Props) => {
                     mx: "auto",
                     width: ["100%", "100%", props.isFullPostScreen ? "auto" : "100%"],
                     height: props.isFullPostScreen ? "100%" : "auto",
-                    maxHeight: props.isFullPostScreen ? "100%" : "800px",
+                    maxHeight: props.isFullPostScreen ? "100%" : "60vh",
                     cursor: props.cursor,
                     ...props.imageSx,
                 }}
@@ -34,7 +34,10 @@ const Media: React.FC<Props> = (props: Props) => {
             <video
                 width="100%"
                 controls
-                style={{ height: props.isFullPostScreen ? "100%" : "auto" }}
+                style={{
+                    height: props.isFullPostScreen ? "100%" : "auto",
+                    maxHeight: props.isFullPostScreen ? "100%" : "60vh",
+                }}
                 onClick={(e) => props.onMediaClick && props.onMediaClick(e)}
             >
                 <source src={props.mediaUrl} type={props.mime} />

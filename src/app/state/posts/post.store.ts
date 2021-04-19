@@ -1,8 +1,7 @@
-import { EntityState, EntityStore, StoreConfig } from "@datorama/akita";
+import { EntityState, EntityStore, StoreConfig, ActiveState } from "@datorama/akita";
 import { Post } from "./post.model";
 
-export type PostState = EntityState<Post, number>;
-
+export interface PostState extends EntityState<Post, number>, ActiveState {}
 @StoreConfig({ name: "posts" })
 export class PostStore extends EntityStore<PostState> {
     constructor() {
