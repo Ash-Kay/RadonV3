@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { postService } from "../../state/posts/post.service";
 import { usePostFeedHook } from "../../state/posts/post.hook";
 import InfiniteScroll from "react-infinite-scroller";
-import { Post } from "../../state/posts";
+import { Post, postStore } from "../../state/posts";
 import PostItem from "../PostItem";
 import { AuthContext } from "../../context/auth.context";
 import { Spinner } from "theme-ui";
@@ -26,6 +26,7 @@ const HomeFeed: React.FC = () => {
     };
 
     useEffect(() => {
+        postStore.setActive(null);
         handleScrollPosition();
     }, []);
 
@@ -46,7 +47,7 @@ const HomeFeed: React.FC = () => {
                 pageStart={0}
                 loadMore={fetchData}
                 hasMore={hasMore}
-                loader={<Spinner sx={{ display: "block", mx: "auto" }} />}
+                loader={<Spinner sx={{ display: "block", mx: "auto" }} key={0} />}
             >
                 {getPostList(posts)}
             </InfiniteScroll>

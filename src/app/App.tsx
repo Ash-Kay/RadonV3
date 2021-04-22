@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import { akitaDevtools } from "@datorama/akita";
 import { Switch, Route } from "react-router-dom";
@@ -8,11 +8,17 @@ import { useAuthStateHook } from "./state/auth/auth.hook";
 import { AuthContext } from "./context/auth.context";
 import { Alert, Close, Spinner, Text } from "theme-ui";
 import { usePostFeedErrorHook } from "./state/posts/post.hook";
+import ReactGA from "react-ga";
 akitaDevtools();
 
 const App: React.FC = () => {
     const [error] = usePostFeedErrorHook();
     const [authState] = useAuthStateHook();
+
+    useEffect(() => {
+        ReactGA.initialize("UA-194977580-1");
+        ReactGA.pageview("/");
+    }, []);
 
     const loadAfterAuth = () => {
         if (!authState) return <Spinner sx={{ display: "block", m: "auto" }} />;

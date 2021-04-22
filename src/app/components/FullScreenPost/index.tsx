@@ -1,34 +1,55 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { Box, Spinner, ThemeUIStyleObject } from "theme-ui";
 import CommentItem from "../CommentItem";
 import { Comment, postService, postStore } from "../../state/posts";
 import { RouteComponentProps, useParams, withRouter } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
-import { usePostHook } from "../../state/posts/post.hook";
+import { useActivePostHook } from "../../state/posts/post.hook";
 import FullScreenPostItem from "../FullScreenPostItem";
 import CommentInput from "../CommentInput";
-import { handleResponseError } from "../../../utils/handleResponseError";
 import { SwipeEventData, useSwipeable } from "react-swipeable";
+import ReactGA from "react-ga";
+import { postQuery } from "../../state/posts/post.query";
 
 interface ParamTypes {
     id: string;
 }
 
+enum ApiStatus {
+    INITIAL,
+    LOADING,
+    LOADED,
+    ERROR,
+}
+
 const FullScreenPost: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
     const id = +useParams<ParamTypes>().id;
     const authState = useContext(AuthContext);
-    const [post] = usePostHook(id);
+    const [post] = useActivePostHook();
+    const [postApiStatus, setPostApiStatus] = useState<ApiStatus>(ApiStatus.INITIAL);
+    const [commentApiStatus, setCommentApiStatus] = useState<ApiStatus>(ApiStatus.INITIAL);
+    const [tagApiStatus, setTagApiStatus] = useState<ApiStatus>(ApiStatus.INITIAL);
 
     useEffect(() => {
         window.scrollTo(0, 0);
         window.addEventListener("keydown", keyPressHandler);
 
-        getPost();
+        if (!postQuery.hasActive()) {
+            postStore.setActive(id);
+            getPost(id);
+        } else {
+            if (post && post.id !== id) {
+                props.history.push(`/posts/${post.id}`);
+                getPost(post.id);
+            }
+        }
+
+        ReactGA.pageview("/posts/" + id);
 
         return () => {
             window.removeEventListener("keydown", keyPressHandler);
         };
-    }, [id]);
+    }, [id, post]);
 
     const keyPressHandler = (e: KeyboardEvent) => {
         switch (e.key) {
@@ -47,12 +68,12 @@ const FullScreenPost: React.FC<RouteComponentProps> = (props: RouteComponentProp
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const navigatePrevPost = (e: SwipeEventData | KeyboardEvent) => {
-        // postStore.setActive({ prev: true });
+        postStore.setActive({ prev: true });
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const navigateNextPost = (e: SwipeEventData | KeyboardEvent) => {
-        // postStore.setActive({ next: true });
+        postStore.setActive({ next: true });
     };
 
     const getCommentList = (comments: Comment[]) => {
@@ -62,40 +83,60 @@ const FullScreenPost: React.FC<RouteComponentProps> = (props: RouteComponentProp
         return comments.map((item) => <CommentItem item={item} postId={post.id} key={item.id} />);
     };
 
-    const getPost = () => {
-        if (post) {
-            if (!post?.comment) {
-                if (authState.isLoggedIn) postService.getCommentsAuth(id, authState.token);
-                else postService.getComments(id);
+    const getPost = (id: number) => {
+        if (postQuery.hasEntity(id)) {
+            if (!post?.comment && commentApiStatus != ApiStatus.LOADING) {
+                if (authState.isLoggedIn) {
+                    setCommentApiStatus(ApiStatus.LOADING);
+                    postService.getCommentsAuth(id, authState.token, (isSuccess: boolean) => {
+                        if (isSuccess) {
+                            setCommentApiStatus(ApiStatus.LOADED);
+                        } else {
+                            setCommentApiStatus(ApiStatus.ERROR);
+                        }
+                    });
+                } else {
+                    setCommentApiStatus(ApiStatus.LOADING);
+                    postService.getComments(id, (isSuccess: boolean) => {
+                        if (isSuccess) {
+                            setCommentApiStatus(ApiStatus.LOADED);
+                        } else {
+                            setCommentApiStatus(ApiStatus.ERROR);
+                        }
+                    });
+                }
             }
-            if (!post?.tag) {
-                postService.getTags(id);
+            if (!post?.tag && tagApiStatus != ApiStatus.LOADING) {
+                setTagApiStatus(ApiStatus.LOADING);
+                postService.getTags(id, (isSuccess: boolean) => {
+                    if (isSuccess) {
+                        setTagApiStatus(ApiStatus.LOADED);
+                    } else {
+                        setTagApiStatus(ApiStatus.ERROR);
+                    }
+                });
             }
         } else {
-            if (authState.isLoggedIn) {
-                postService
-                    .getPostAuthPromise(id, authState.token)
-                    .then((response) => {
-                        postStore.add(response.data.data, { prepend: true });
-                        postService.getCommentsAuth(id, authState.token);
-                        postService.getTags(id);
-                    })
-                    .catch(function (error) {
-                        handleResponseError(error, postStore);
-                        //TODO 404 page
+            if (postApiStatus != ApiStatus.LOADING) {
+                if (authState.isLoggedIn) {
+                    setPostApiStatus(ApiStatus.LOADING);
+                    postService.getPostAuth(id, authState.token, (isSuccess: boolean) => {
+                        if (isSuccess) {
+                            setPostApiStatus(ApiStatus.LOADED);
+                        } else {
+                            setPostApiStatus(ApiStatus.ERROR);
+                        }
                     });
-            } else {
-                postService
-                    .getPostPromise(id)
-                    .then((response) => {
-                        postStore.add(response.data.data, { prepend: true });
-                        postService.getComments(id);
-                        postService.getTags(id);
-                    })
-                    .catch(function (error) {
-                        handleResponseError(error, postStore);
-                        //TODO 404 page
+                } else {
+                    setPostApiStatus(ApiStatus.LOADING);
+                    postService.getPost(id, (isSuccess: boolean) => {
+                        if (isSuccess) {
+                            setPostApiStatus(ApiStatus.LOADED);
+                        } else {
+                            setPostApiStatus(ApiStatus.ERROR);
+                        }
                     });
+                }
             }
         }
     };
@@ -138,4 +179,4 @@ const FullScreenPost: React.FC<RouteComponentProps> = (props: RouteComponentProp
     );
 };
 
-export default withRouter(FullScreenPost);
+export default withRouter(React.memo(FullScreenPost));

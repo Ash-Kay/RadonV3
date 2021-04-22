@@ -52,14 +52,36 @@ export class PostService {
             });
     };
 
-    public getPostPromise = (postId: number): Promise<any> => {
+    public getPost = (postId: number, cb?: (isSuccess: boolean) => void): void => {
         this.store.setLoading(true);
-        return main.get(`/posts/${postId}`);
+        main.get(`/posts/${postId}`)
+            .then((response) => {
+                postStore.add(response.data.data, { prepend: true });
+                postService.getComments(postId);
+                postService.getTags(postId);
+                cb?.(true);
+            })
+            .catch((error) => {
+                handleResponseError(error, this.store);
+                cb?.(false);
+                //TODO 404 page
+            });
     };
 
-    public getPostAuthPromise = (postId: number, token: string): Promise<any> => {
+    public getPostAuth = (postId: number, token: string, cb?: (isSuccess: boolean) => void): void => {
         this.store.setLoading(true);
-        return main.get(`/posts/${postId}`, getHeader({ token }, HeaderType.AUTH_TOKEN));
+        main.get(`/posts/${postId}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
+            .then((response) => {
+                postStore.add(response.data.data, { prepend: true });
+                postService.getCommentsAuth(postId, token);
+                postService.getTags(postId);
+                cb?.(true);
+            })
+            .catch((error) => {
+                handleResponseError(error, this.store);
+                cb?.(false);
+                //TODO 404 page
+            });
     };
 
     public upvote = (postId: number, token: string): void => {
@@ -98,27 +120,31 @@ export class PostService {
             });
     };
 
-    public getComments = (postId: number): void => {
+    public getComments = (postId: number, cb?: (isSuccess: boolean) => void): void => {
         this.store.setLoading(true);
         main.get(`/posts/${postId}/comment`)
             .then((response) => {
                 this.store.update(postId, { comment: response.data.data });
                 this.store.setLoading(false);
+                cb?.(true);
             })
             .catch((error) => {
                 handleResponseError(error, this.store);
+                cb?.(false);
             });
     };
 
-    public getCommentsAuth = (postId: number, token: string): void => {
+    public getCommentsAuth = (postId: number, token: string, cb?: (isSuccess: boolean) => void): void => {
         this.store.setLoading(true);
         main.get(`/posts/${postId}/comment`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then((response) => {
                 this.store.update(postId, { comment: response.data.data });
                 this.store.setLoading(false);
+                cb?.(true);
             })
             .catch((error) => {
                 handleResponseError(error, this.store);
+                cb?.(false);
             });
     };
 
@@ -234,16 +260,17 @@ export class PostService {
             });
     };
 
-    public softDeletePost = (postId: number, token: string, cb?: () => void): void => {
+    public softDeletePost = (postId: number, token: string, cb?: (isSuccess: boolean) => void): void => {
         this.store.setLoading(true);
         main.delete(`/posts/${postId}`, getHeader({ token }, HeaderType.AUTH_TOKEN))
             .then(() => {
                 this.store.remove(postId);
                 this.store.setLoading(false);
-                cb?.();
+                cb?.(true);
             })
             .catch((error) => {
                 handleResponseError(error, this.store);
+                cb?.(false);
             });
     };
 
@@ -265,15 +292,17 @@ export class PostService {
             });
     };
 
-    public getTags = (postId: number): void => {
+    public getTags = (postId: number, cb?: (isSuccess: boolean) => void): void => {
         this.store.setLoading(true);
         main.get(`/posts/${postId}/tags`)
             .then((response) => {
                 this.store.update(postId, { tag: response.data.data });
                 this.store.setLoading(false);
+                cb?.(true);
             })
             .catch((error) => {
                 handleResponseError(error, this.store);
+                cb?.(false);
             });
     };
 }
