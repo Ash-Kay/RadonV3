@@ -5,6 +5,7 @@ import { Box, Button, Input, Label, Checkbox, Text } from "theme-ui";
 import Modal from "../core/Modal";
 import TagsInput from "react-tagsinput";
 import "./tagsInputStyle.css";
+import { Event } from "../../../analytics/Events";
 
 interface Props {
     authState: AuthState;
@@ -21,24 +22,31 @@ const NewPostButton: React.FC<Props> = (props: Props) => {
     const [createPostForm, setCreatePostForm] = React.useState(emtyForm);
 
     const submitNewPostForm = () => {
-        if (createPostForm.file !== null && createPostForm.title !== "" && createPostForm.file !== undefined) {
+        if (createPostForm.file && createPostForm.title && createPostForm.file) {
             postService.createNewPost(createPostForm, props.authState.token);
             setCreatePostModalOpen(false);
+            Event.CREATE_POST_BUTTON_VALID_SUBMIT(createPostForm);
         }
     };
     const closeCreatePostModal = () => {
         setCreatePostModalOpen(false);
     };
-    //TODO: Make modal bigger, show chosen image (maybe)
+    const createPostButtonClick = () => {
+        setCreatePostModalOpen(true);
+        Event.CREATE_POST_BUTTON_CLICK();
+    };
+    const modalStyle = {
+        width: "500px",
+    };
+
     return (
         <>
-            <Button variant="nav" onClick={() => setCreatePostModalOpen(true)}>
+            <Button variant="nav" onClick={createPostButtonClick}>
                 + Post
             </Button>
-            <Modal isOpen={isCreatePostModalOpen} onModalClose={closeCreatePostModal}>
+            <Modal isOpen={isCreatePostModalOpen} onModalClose={closeCreatePostModal} sx={modalStyle}>
                 <Box sx={{ color: "text" }}>
                     <Text sx={{ fontSize: 4, fontWeight: "bold", color: "primary" }}>Create New Post</Text>
-                    {/* <h2>Create New Post</h2> */}
                     <Input
                         onChange={(e) => setCreatePostForm({ ...createPostForm, file: e.currentTarget.files?.item(0) })}
                         placeholder="Upload File"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
 import { authService } from "../../state/auth/auth.service";
 import { Box, Button, Text, Input, Flex } from "theme-ui";
@@ -6,6 +6,7 @@ import Modal from "../core/Modal";
 import { FaGoogle } from "react-icons/fa";
 import { globalService } from "../../state/global/global.service";
 import { useIsSignInModalOpenHook } from "../../state/global/global.hook";
+import { Event, LoginType } from "../../../analytics/Events";
 
 const LoginModal: React.FC = () => {
     const [isSignInModalOpen] = useIsSignInModalOpenHook();
@@ -16,6 +17,7 @@ const LoginModal: React.FC = () => {
     };
     const successResponse = (response: any) => {
         authService.getTokenWithGoogleAuth(response.tokenId);
+        Event.LOGIN_SUCCESSFUL(LoginType.GOOGLE);
         closeSignInModal();
     };
     const failureResponse = (response: any) => {
@@ -25,13 +27,22 @@ const LoginModal: React.FC = () => {
         authService.loginWithUsernamePassword(loginFormData.email, loginFormData.password);
     };
 
+    const onLoginButtonClick = () => {
+        globalService.setIsSignInModalOpen(true);
+        Event.LOGIN_BUTTON_CLICK();
+    };
+
+    const onLoginWithGoogleButtonClick = () => {
+        Event.LOGIN_WITH_X_BUTTON_CLICK(LoginType.GOOGLE);
+    };
+
     const modalStyle = {
         width: "500px",
     };
 
     return (
         <>
-            <Button onClick={() => globalService.setIsSignInModalOpen(true)} variant="nav">
+            <Button id="login-button" onClick={onLoginButtonClick} variant="nav">
                 Log In
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal} sx={modalStyle}>
@@ -46,7 +57,10 @@ const LoginModal: React.FC = () => {
                             <Box>
                                 <Button
                                     variant="login"
-                                    onClick={renderProps.onClick}
+                                    onClick={() => {
+                                        renderProps.onClick();
+                                        onLoginWithGoogleButtonClick();
+                                    }}
                                     disabled={renderProps.disabled}
                                     sx={{ backgroundColor: "#c94932", color: "white", height: "35px" }}
                                 >

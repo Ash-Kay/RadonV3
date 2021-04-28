@@ -8,7 +8,6 @@ import { useActivePostHook } from "../../state/posts/post.hook";
 import FullScreenPostItem from "../FullScreenPostItem";
 import CommentInput from "../CommentInput";
 import { SwipeEventData, useSwipeable } from "react-swipeable";
-import ReactGA from "react-ga";
 import { postQuery } from "../../state/posts/post.query";
 
 interface ParamTypes {
@@ -39,12 +38,15 @@ const FullScreenPost: React.FC<RouteComponentProps> = (props: RouteComponentProp
             getPost(id);
         } else {
             if (post && post.id !== id) {
-                props.history.push(`/posts/${post.id}`);
-                getPost(post.id);
+                if (props.history.action === "POP") {
+                    props.history.action = "REPLACE";
+                    postStore.setActive(id);
+                } else {
+                    props.history.push(`/posts/${post.id}`);
+                    getPost(post.id);
+                }
             }
         }
-
-        ReactGA.pageview("/posts/" + id);
 
         return () => {
             window.removeEventListener("keydown", keyPressHandler);
@@ -54,11 +56,11 @@ const FullScreenPost: React.FC<RouteComponentProps> = (props: RouteComponentProp
     const keyPressHandler = (e: KeyboardEvent) => {
         switch (e.key) {
             case "ArrowLeft":
-                navigatePrevPost(e);
+                navigateNextPost(e);
                 break;
 
             case "ArrowRight":
-                navigateNextPost(e);
+                navigatePrevPost(e);
                 break;
 
             default:

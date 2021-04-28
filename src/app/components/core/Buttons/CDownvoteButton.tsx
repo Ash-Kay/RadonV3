@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Box } from "theme-ui";
+import { EntityType, Event } from "../../../../analytics/Events";
 import { AuthContext } from "../../../context/auth.context";
 import { globalService } from "../../../state/global/global.service";
 import { postService } from "../../../state/posts";
@@ -22,7 +23,11 @@ const CDownvoteButton: React.FC<Props> = (props: Props) => {
         }
         if (!props.checked) {
             postService.cdownvote(props.postId, props.commId, authState.token);
-        } else postService.cremoveVote(props.postId, props.commId, authState.token);
+            Event.DOWNVOTE_BUTTON_CLICKED(props.commId, EntityType.COMMENT);
+        } else {
+            postService.cremoveVote(props.postId, props.commId, authState.token);
+            Event.VOTE_REMOVED_BUTTON_CLICKED(props.commId, EntityType.COMMENT);
+        }
     };
 
     const getColor = () => {

@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Box } from "theme-ui";
+import { EntityType, Event } from "../../../../analytics/Events";
 import { AuthContext } from "../../../context/auth.context";
 import { globalService } from "../../../state/global/global.service";
 import { postService } from "../../../state/posts";
@@ -22,7 +23,11 @@ const DownvoteButton: React.FC<Props> = (props: Props) => {
         }
         if (!props.checked) {
             postService.downvote(props.id, authState.token);
-        } else postService.removeVote(props.id, authState.token);
+            Event.DOWNVOTE_BUTTON_CLICKED(props.id, EntityType.POST);
+        } else {
+            postService.removeVote(props.id, authState.token);
+            Event.VOTE_REMOVED_BUTTON_CLICKED(props.id, EntityType.POST);
+        }
     };
 
     const getColor = () => {

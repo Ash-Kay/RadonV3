@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/auth.context";
 import { MdAddAPhoto } from "react-icons/md";
 import { RiCloseCircleFill } from "react-icons/ri";
 import { globalService } from "../../state/global/global.service";
+import { Event } from "../../../analytics/Events";
 
 interface Props {
     postId: number;
@@ -25,9 +26,12 @@ const CommentInput: React.FC<Props> = (props: Props) => {
             globalService.setIsSignInModalOpen(true);
             return;
         }
-        postService.postComment(props.postId, commentForm, authState.token);
-        //TODO only clear if success
-        setCommentForm(emptyCommentForm);
+        if (commentForm.file && commentForm.comment) {
+            postService.postComment(props.postId, commentForm, authState.token);
+            Event.COMMENT_BUTTON_VALID_SUBMIT(commentForm);
+            //TODO only clear if success
+            setCommentForm(emptyCommentForm);
+        }
     };
 
     const commentStyle: ThemeUIStyleObject = {
