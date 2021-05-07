@@ -31,7 +31,10 @@ export class PostService {
                     this.store.setLoading(false);
                 }
             })
-            .catch((error) => handleResponseError(error, this.store));
+            .catch((error) => {
+                setHasMore(false);
+                handleResponseError(error, this.store);
+            });
     };
 
     public getPostPage = (pageNo: number, setHasMore: (hasMore: boolean) => void): void => {
@@ -48,6 +51,7 @@ export class PostService {
                 }
             })
             .catch((error) => {
+                setHasMore(false);
                 handleResponseError(error, this.store);
             });
     };

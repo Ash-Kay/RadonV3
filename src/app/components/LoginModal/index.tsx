@@ -54,7 +54,7 @@ const LoginModal: React.FC = () => {
                         onSuccess={successResponse}
                         onFailure={failureResponse}
                         render={(renderProps) => (
-                            <Box>
+                            <Box sx={{mx: "auto"}}>
                                 <Button
                                     variant="login"
                                     onClick={() => {
@@ -69,8 +69,6 @@ const LoginModal: React.FC = () => {
                             </Box>
                         )}
                     />
-
-                    {/* <Text>Continue with Facebook</Text> */}
 
                     <Box sx={{ display: "none" }}>
                         <Text sx={{ fontSize: 3, fontWeight: "bold", my: "2rem" }}>Or</Text>

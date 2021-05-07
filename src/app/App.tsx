@@ -16,7 +16,7 @@ const App: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
     const [authState] = useAuthStateHook();
 
     useEffect(() => {
-        ReactGA.initialize("UA-194977580-1", { debug: true });
+        ReactGA.initialize("UA-194977580-1", { debug: process.env.NODE_ENV === "development" });
         if (authState?.isLoggedIn) {
             ReactGA.set(authState);
         }

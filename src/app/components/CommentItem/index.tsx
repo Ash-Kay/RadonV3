@@ -60,7 +60,7 @@ const CommentItem: React.FC<Props> = (props: Props) => {
                                         }}
                                         onOutsideClick={() => setDropdownOpen(false)}
                                     >
-                                        <DropDownItem text={"Report"} icon={<GoAlert />} />
+                                        {/* <DropDownItem text={"Report"} icon={<GoAlert />} /> */}
                                         {props.item.user.id === authState.id && (
                                             <DropDownItem
                                                 text={"Delete"}

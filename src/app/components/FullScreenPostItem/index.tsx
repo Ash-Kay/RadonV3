@@ -13,6 +13,7 @@ import DropDownItem from "../core/DropDownItem";
 import DropDown from "../core/DropDown";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { isDesktop } from "react-device-detect";
+import Avatar from "../core/Avatar";
 import { MdDelete } from "react-icons/md";
 import { GoAlert } from "react-icons/go";
 
@@ -73,7 +74,7 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                                     }}
                                     onOutsideClick={() => setDropdownOpen(false)}
                                 >
-                                    <DropDownItem text={"Report"} icon={<GoAlert />} />
+                                    {/* <DropDownItem text={"Report"} icon={<GoAlert />} /> */}
                                     {props.item.user.id === authState.id && (
                                         <DropDownItem
                                             text={"Delete"}
@@ -112,18 +113,27 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                 </Box>
                 {props.item.tag && <TagsBar tags={props.item.tag} />}
             </Box>
-            <Flex sx={{ mx: "4px", height: "40px" }}>
-                <UpvoteButton
-                    id={props.item.id}
-                    checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.UPVOTED)}
-                />
-                <Text sx={{ fontSize: 3, px: "0.5rem", py: "6px" }}>
-                    {props.item.voteSum ? props.item.voteSum : "0"}
-                </Text>
-                <DownvoteButton
-                    id={props.item.id}
-                    checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.DOWNVOTED)}
-                />
+            <Flex sx={{ mx: "4px", height: "40px", justifyContent: "space-between" }}>
+                <Flex>
+                    <UpvoteButton
+                        id={props.item.id}
+                        checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.UPVOTED)}
+                    />
+                    <Text sx={{ fontSize: 3, px: "0.5rem", py: "6px" }}>
+                        {props.item.voteSum ? props.item.voteSum : "0"}
+                    </Text>
+                    <DownvoteButton
+                        id={props.item.id}
+                        checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.DOWNVOTED)}
+                    />
+                </Flex>
+
+                <Flex sx={{ fontSize: 1, fontWeight: "bold", lineHeight: "1.8", my: "auto" }}>
+                    <Text as="div" sx={{ mr: 2 }}>
+                        {props.item.user.username}
+                    </Text>
+                    <Avatar avatarUrl={props.item.user.avatarUrl} height={30} width={30} />
+                </Flex>
             </Flex>
         </Box>
     );

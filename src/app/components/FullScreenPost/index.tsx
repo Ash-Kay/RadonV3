@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Box, Spinner, ThemeUIStyleObject } from "theme-ui";
+import { Box, Spinner, ThemeUIStyleObject, Text, Flex } from "theme-ui";
 import CommentItem from "../CommentItem";
 import { Comment, postService, postStore } from "../../state/posts";
 import { RouteComponentProps, useParams, withRouter } from "react-router-dom";
@@ -160,6 +160,12 @@ const FullScreenPost: React.FC<RouteComponentProps> = (props: RouteComponentProp
 
     return (
         <Box sx={fullScreenPostStyle} {...swipeHandlers}>
+            {postApiStatus === ApiStatus.ERROR && (
+                <Flex sx={{ flexDirection: "column" }}>
+                    <Text sx={{ fontSize: ["100px", "200px", "200px"], mx: "auto" }}>404</Text>
+                    <Text sx={{ fontSize: 5, fontWeight: "bold", mx: "auto" }}>Post not found!</Text>
+                </Flex>
+            )}
             {post && (
                 <Box sx={{ display: "flex", height: "100%", flexDirection: ["column", "column", "row"] }}>
                     <FullScreenPostItem item={post} />

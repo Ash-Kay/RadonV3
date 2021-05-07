@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
                         fontWeight: "bold",
                         bg: "secondary",
                         ":hover, :focus, :active": {
-                            filter: "brightness(110%)",
+                            bg: "secondaryLight",
                         },
                     }}
                 >
@@ -81,12 +81,14 @@ const Navbar: React.FC = () => {
                         }}
                         onOutsideClick={() => setDropdownOpen(false)}
                     >
-                        <DropDownItem text={"Settings"} icon={<HiCog />} />
-                        <DropDownItem text={"Privacy"} icon={<BsFillEyeFill />} />
+                        {/* <DropDownItem text={"Settings"} icon={<HiCog />} /> */}
+                        {/* <DropDownItem text={"Privacy"} icon={<BsFillEyeFill />} /> */}
                         <DropDownItem
                             text={"Logout"}
                             icon={<RiLogoutBoxRFill />}
                             onClickCallback={authService.logout}
+                            iconColor="error"
+                            textColor="error"
                         />
                     </DropDown>
                 )}
