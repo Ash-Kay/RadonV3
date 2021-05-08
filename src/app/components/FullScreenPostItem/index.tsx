@@ -128,10 +128,15 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                     />
                 </Flex>
 
-                <Flex sx={{ fontSize: 1, fontWeight: "bold", lineHeight: "1.8", my: "auto" }}>
-                    <Text as="div" sx={{ mr: 2 }}>
-                        {props.item.user.username}
-                    </Text>
+                <Flex sx={{ fontSize: 1, fontWeight: "bold", my: "auto" }}>
+                    <Flex sx={{ flexDirection: "column", alignItems: "flex-end" }}>
+                        <Text as="div" sx={{ mr: 2 }}>
+                            {props.item.user.username}
+                        </Text>
+                        <Text as="div" sx={{ mr: 2, color: "rgba(255, 255, 255, 0.4)" }}>
+                            {props.item.timeago}
+                        </Text>
+                    </Flex>
                     <Avatar avatarUrl={props.item.user.avatarUrl} height={30} width={30} />
                 </Flex>
             </Flex>

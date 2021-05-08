@@ -23,7 +23,9 @@ const NewPostButton: React.FC<Props> = (props: Props) => {
 
     const submitNewPostForm = () => {
         if (createPostForm.file && createPostForm.title && createPostForm.file) {
-            postService.createNewPost(createPostForm, props.authState.token);
+            postService.createNewPost(createPostForm, props.authState.token, (isSuccess) => {
+                if (isSuccess) setCreatePostForm(emtyForm);
+            });
             setCreatePostModalOpen(false);
             Event.CREATE_POST_BUTTON_VALID_SUBMIT(createPostForm);
         }

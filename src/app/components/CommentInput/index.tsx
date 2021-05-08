@@ -26,11 +26,11 @@ const CommentInput: React.FC<Props> = (props: Props) => {
             globalService.setIsSignInModalOpen(true);
             return;
         }
-        if (commentForm.file && commentForm.comment) {
-            postService.postComment(props.postId, commentForm, authState.token);
+        if (commentForm.comment) {
+            postService.postComment(props.postId, commentForm, authState.token, (isSuccess) => {
+                if (isSuccess) setCommentForm(emptyCommentForm);
+            });
             Event.COMMENT_BUTTON_VALID_SUBMIT(commentForm);
-            //TODO only clear if success
-            setCommentForm(emptyCommentForm);
         }
     };
 

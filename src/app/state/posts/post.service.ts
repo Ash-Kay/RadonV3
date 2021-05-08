@@ -68,7 +68,6 @@ export class PostService {
             .catch((error) => {
                 handleResponseError(error, this.store);
                 cb?.(false);
-                //TODO 404 page
             });
     };
 
@@ -84,15 +83,14 @@ export class PostService {
             .catch((error) => {
                 handleResponseError(error, this.store);
                 cb?.(false);
-                //TODO 404 page
             });
     };
 
     public upvote = (postId: number, token: string): void => {
         this.store.setLoading(true);
         main.post(`/posts/${postId}/upvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then(() => {
-                this.store.update(postId, { vote: 1 });
+            .then((response) => {
+                this.store.update(postId, { vote: +1, voteSum: response.data.data.voteSum });
                 this.store.setLoading(false);
             })
             .catch((error) => {
@@ -103,8 +101,8 @@ export class PostService {
     public downvote = (postId: number, token: string): void => {
         this.store.setLoading(true);
         main.post(`/posts/${postId}/downvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then(() => {
-                this.store.update(postId, { vote: -1 });
+            .then((response) => {
+                this.store.update(postId, { vote: -1, voteSum: response.data.data.voteSum });
                 this.store.setLoading(false);
             })
             .catch((error) => {
@@ -115,8 +113,8 @@ export class PostService {
     public removeVote = (postId: number, token: string): void => {
         this.store.setLoading(true);
         main.delete(`/posts/${postId}/removevote`, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then(() => {
-                this.store.update(postId, { vote: 0 });
+            .then((response) => {
+                this.store.update(postId, { vote: 0, voteSum: response.data.data.voteSum });
                 this.store.setLoading(false);
             })
             .catch((error) => {
@@ -164,7 +162,12 @@ export class PostService {
             });
     };
 
-    public postComment = (postId: number, data: CommentForm, token: string): void => {
+    public postComment = (
+        postId: number,
+        data: CommentForm,
+        token: string,
+        cb?: (isSuccess: boolean) => void
+    ): void => {
         const formData = new FormData();
         formData.append("message", data.comment);
         if (data.file !== null && data.file !== undefined) formData.append("file", data.file);
@@ -180,14 +183,16 @@ export class PostService {
                 this.store.update(postId, {
                     comment: updatedComments,
                 });
+                cb?.(true);
                 this.store.setLoading(false);
             })
             .catch((error) => {
+                cb?.(false);
                 handleResponseError(error, this.store);
             });
     };
 
-    public createNewPost = (data: NewPostForm, token: string): void => {
+    public createNewPost = (data: NewPostForm, token: string, cb?: (isSuccess: boolean) => void): void => {
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("sensitive", data.sensitive.toString());
@@ -198,10 +203,13 @@ export class PostService {
 
         this.store.setLoading(true);
         main.post(`/posts/`, formData, getHeader({ token }, HeaderType.AUTH_TOKEN | HeaderType.MULTIPART))
-            .then(() => {
+            .then((response) => {
+                cb?.(true);
+                this.store.add({ ...response.data.data });
                 this.store.setLoading(false);
             })
             .catch((error) => {
+                cb?.(false);
                 handleResponseError(error, this.store);
             });
     };
@@ -210,11 +218,11 @@ export class PostService {
     public cupvote = (postId: number, commId: number, token: string): void => {
         this.store.setLoading(true);
         main.post(`/comments/${commId}/upvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then(() => {
+            .then((response) => {
                 this.store.update(postId, (post) => {
                     const updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.map((comm) => {
-                        if (comm.id === commId) return { ...comm, vote: 1 };
+                        if (comm.id === commId) return { ...comm, vote: 1, voteSum: response.data.data.voteSum };
                         else return comm;
                     });
                     return updatedPost;
@@ -229,11 +237,11 @@ export class PostService {
     public cdownvote = (postId: number, commId: number, token: string): void => {
         this.store.setLoading(true);
         main.post(`/comments/${commId}/downvote`, null, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then(() => {
+            .then((response) => {
                 this.store.update(postId, (post) => {
                     const updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.map((comm) => {
-                        if (comm.id === commId) return { ...comm, vote: -1 };
+                        if (comm.id === commId) return { ...comm, vote: -1, voteSum: response.data.data.voteSum };
                         else return comm;
                     });
                     return updatedPost;
@@ -248,11 +256,11 @@ export class PostService {
     public cremoveVote = (postId: number, commId: number, token: string): void => {
         this.store.setLoading(true);
         main.delete(`/comments/${commId}/removevote`, getHeader({ token }, HeaderType.AUTH_TOKEN))
-            .then(() => {
+            .then((response) => {
                 this.store.update(postId, (post) => {
                     const updatedPost = Object.assign({}, post);
                     updatedPost.comment = post.comment.map((comm) => {
-                        if (comm.id === commId) return { ...comm, vote: 0 };
+                        if (comm.id === commId) return { ...comm, vote: 0, voteSum: response.data.data.voteSum };
                         else return comm;
                     });
                     return updatedPost;
