@@ -33,7 +33,7 @@ const SignupModal: React.FC = () => {
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal} sx={modalStyle}>
                 <Box sx={{ color: "text" }}>
-                    <Text sx={{ fontSize: 5, fontWeight: "bold", mb: "2rem" }}>Welcome to RadonV3!</Text>
+                    <Text sx={{ fontSize: 5, fontWeight: "bold", mb: "2rem" }}>Welcome to Memenese!</Text>
                     <GoogleLogin
                         clientId="946380795317-321u8sasdpeqe6uuja0cs5c071bs8vqb.apps.googleusercontent.com"
                         buttonText="Sign up with Google"

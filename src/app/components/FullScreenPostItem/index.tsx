@@ -47,6 +47,7 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                         id={props.item.id}
                         cursor="zoom-out"
                         onMediaClick={closeZoomImageModal}
+                        imageSx={{ minHeight: "100vh" }}
                     />
                 </Modal>
             )}

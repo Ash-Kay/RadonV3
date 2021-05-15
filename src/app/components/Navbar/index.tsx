@@ -49,7 +49,7 @@ const Navbar: React.FC = () => {
                         },
                     }}
                 >
-                    Radon
+                    Memenese
                 </Text>
             </Link>
             <Box mx="auto" />

@@ -47,14 +47,14 @@ const LoginModal: React.FC = () => {
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal} sx={modalStyle}>
                 <Flex sx={{ color: "text", flexDirection: "column", pb: 4 }}>
-                    <Text sx={{ fontSize: 5, fontWeight: "bold", mb: 4, color: "primary" }}>Welcome to R</Text>
+                    <Text sx={{ fontSize: 5, fontWeight: "bold", mb: 4, color: "primary" }}>Welcome to Memenese!</Text>
                     <GoogleLogin
                         clientId="946380795317-321u8sasdpeqe6uuja0cs5c071bs8vqb.apps.googleusercontent.com"
                         buttonText="Continue with Google"
                         onSuccess={successResponse}
                         onFailure={failureResponse}
                         render={(renderProps) => (
-                            <Box sx={{mx: "auto"}}>
+                            <Box sx={{ mx: "auto" }}>
                                 <Button
                                     variant="login"
                                     onClick={() => {
