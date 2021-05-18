@@ -39,7 +39,7 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                 <Modal
                     isOpen={isZoomImageModalOpen}
                     onModalClose={closeZoomImageModal}
-                    sx={{ p: 0, maxHeight: "100vh", maxWidth: "75vw" }}
+                    sx={{ p: 0, height: "90vh", width: "90vw" }}
                 >
                     <Media
                         mediaUrl={props.item.mediaUrl}
@@ -47,7 +47,7 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                         id={props.item.id}
                         cursor="zoom-out"
                         onMediaClick={closeZoomImageModal}
-                        imageSx={{ minHeight: "100vh" }}
+                        imageSx={{ width: "100%" }}
                     />
                 </Modal>
             )}
@@ -110,6 +110,11 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
                         cursor={isDesktop ? "zoom-in" : "auto"}
                         onMediaClick={openZoomImageModalIfDesktop}
                         isFullPostScreen
+                        imageSx={{
+                            objectFit: "contain",
+                            width: "100%",
+                            height: "100%",
+                        }}
                     />
                 </Box>
                 {props.item.tag && <TagsBar tags={props.item.tag} />}

@@ -16,11 +16,6 @@ const Media: React.FC<Props> = (props: Props) => {
         return (
             <Image
                 sx={{
-                    objectFit: "cover",
-                    mx: "auto",
-                    width: ["100%", "100%", props.isFullPostScreen ? "auto" : "100%"],
-                    height: props.isFullPostScreen ? "100%" : "auto",
-                    maxHeight: props.isFullPostScreen ? "100%" : "60vh",
                     cursor: props.cursor,
                     ...props.imageSx,
                 }}

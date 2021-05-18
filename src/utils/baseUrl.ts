@@ -12,7 +12,6 @@
 // };
 
 export const getBaseUrl = (): string => {
-    return "https://memenese.com/api/v1";
     switch (process.env.NODE_ENV) {
         case "development":
             return "http://localhost:3000/api/v1";

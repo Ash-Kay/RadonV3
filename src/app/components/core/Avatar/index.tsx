@@ -10,8 +10,7 @@ interface Props {
 
 const Avatar: React.FC<Props> = (props: Props) => {
     const getAvatarUrl = (avatarUrl: string | null | undefined): string => {
-        if (avatarUrl === null || avatarUrl === undefined || avatarUrl === "")
-            return `${process.env.PUBLIC_URL}/avatar.jpg`;
+        if (!avatarUrl) return `${process.env.PUBLIC_URL}/avatar.webp`;
         else return avatarUrl;
     };
 
@@ -31,7 +30,7 @@ const Avatar: React.FC<Props> = (props: Props) => {
 };
 
 Avatar.defaultProps = {
-    avatarUrl: `${process.env.PUBLIC_URL}/avatar.jpg`,
+    avatarUrl: `${process.env.PUBLIC_URL}/avatar.webp`,
     height: 30,
     width: 30,
 };

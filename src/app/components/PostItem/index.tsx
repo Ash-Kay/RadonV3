@@ -62,7 +62,16 @@ const PostItem: React.FC<Props> = (props: Props) => {
 
             <Box sx={{ borderRadius: "default", overflow: "hidden", border: "1px solid #1f1f1f" }}>
                 <Link to={{ pathname: `/posts/${props.item.id}` }}>
-                    <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} cursor="pointer" />
+                    <Media
+                        mediaUrl={props.item.mediaUrl}
+                        mime={props.item.mime}
+                        id={props.item.id}
+                        cursor="pointer"
+                        imageSx={{
+                            mx: "auto",
+                            maxHeight: "60vh",
+                        }}
+                    />
                 </Link>
             </Box>
 

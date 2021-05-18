@@ -36,21 +36,40 @@ const Navbar: React.FC = () => {
                     textDecoration: "none",
                 }}
             >
-                <Text
+                <Box
                     sx={{
-                        fontSize: 4,
-                        color: "primary",
-                        p: "6px",
-                        borderRadius: "5px",
-                        fontWeight: "bold",
-                        bg: "secondary",
+                        display: "flex",
                         ":hover, :focus, :active": {
-                            bg: "secondaryLight",
+                            ".logoLong": {
+                                color: "primary",
+                                display: "inherit",
+                            },
                         },
                     }}
                 >
-                    Memenese
-                </Text>
+                    <Text
+                        sx={{
+                            fontFamily: "Pirata One",
+                            fontSize: "45px",
+                            color: "primary",
+                            bg: "secondary",
+                        }}
+                    >
+                        M
+                    </Text>
+
+                    <Text
+                        className={"logoLong"}
+                        sx={{
+                            fontFamily: "Pirata One",
+                            fontSize: "45px",
+                            transition: "color 0.2s ease-in",
+                            color: "transparent",
+                        }}
+                    >
+                        emenese
+                    </Text>
+                </Box>
             </Link>
             <Box mx="auto" />
             <>
