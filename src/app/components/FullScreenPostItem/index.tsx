@@ -14,6 +14,7 @@ import DropDown from "../core/DropDown";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { isDesktop } from "react-device-detect";
 import Avatar from "../core/Avatar";
+import { Helmet } from "react-helmet";
 import { MdDelete } from "react-icons/md";
 import { GoAlert } from "react-icons/go";
 
@@ -35,6 +36,29 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: ["100%", "100%", "65%"], mr: 3 }}>
+            <Helmet>
+                {/* <!-- Google / Search Engine Tags --> */}
+                <meta charSet="utf-8" />
+                <title>{props.item.title}</title>
+                <meta itemProp="name" content={props.item.title} />
+                <meta itemProp="description" content={props.item.title} />
+                <meta itemProp="image" content={props.item.mediaUrl} />
+                <link rel="canonical" href={window.location.href} />
+
+                {/* <!-- Facebook Meta Tags --> */}
+                <meta property="og:url" content={window.location.href} />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content={props.item.title} />
+                <meta property="og:description" content={props.item.title} />
+                <meta property="og:image" content={props.item.mediaUrl} />
+
+                {/* <!-- Twitter Meta Tags --/> */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={props.item.title} />
+                <meta name="twitter:description" content={props.item.title} />
+                <meta name="twitter:image" content={props.item.mediaUrl} />
+            </Helmet>
+
             {props.item.mime.startsWith("image") && (
                 <Modal
                     isOpen={isZoomImageModalOpen}
@@ -54,7 +78,7 @@ const FullScreenPostItem: React.FC<Props> = (props: Props) => {
 
             <Box sx={{ height: "calc(100% - 40px)", display: "flex", flexDirection: "column" }}>
                 <Flex sx={{ justifyContent: "space-between" }}>
-                    <Text sx={{ fontSize: 2, fontWeight: "bold", color: "text", mb: 1 }} as={"p"}>
+                    <Text sx={{ fontSize: 2, fontWeight: "bold", color: "text", mb: 1 }} as={"h1"}>
                         {props.item.title}
                     </Text>
 

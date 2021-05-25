@@ -50,7 +50,7 @@ const LoginModal: React.FC = () => {
             </Button>
             <Modal isOpen={isSignInModalOpen} onModalClose={closeSignInModal} sx={modalStyle}>
                 <Flex sx={{ color: "text", flexDirection: "column", pb: 4 }}>
-                    <Box sx={{ mb: 4, color: "primary", fontWeight: "bold", fontSize: 5 }}>
+                    <Box sx={{ mb: 4, color: "primary", fontWeight: "bold", fontSize: 4 }}>
                         <Text>Welcome to Memenese!</Text>
                     </Box>
                     <GoogleLogin
@@ -76,7 +76,7 @@ const LoginModal: React.FC = () => {
                     />
 
                     {process.env.NODE_ENV === "development" && (
-                        <Box sx={{ display: "none" }}>
+                        <Box sx={{ display: "block" }}>
                             <Box sx={{ width: "100%", height: "3px", bg: "white", mt: 4 }} />
 
                             <Text sx={{ fontSize: 4, fontWeight: "bold", mt: 3, display: "block" }}>

@@ -39,6 +39,8 @@ const Navbar: React.FC = () => {
                 <Box
                     sx={{
                         display: "flex",
+                        fontFamily: "Pirata One",
+                        fontSize: "30px",
                         ":hover, :focus, :active": {
                             ".logoLong": {
                                 color: "primary",
@@ -49,8 +51,6 @@ const Navbar: React.FC = () => {
                 >
                     <Text
                         sx={{
-                            fontFamily: "Pirata One",
-                            fontSize: "45px",
                             color: "primary",
                             bg: "secondary",
                         }}
@@ -61,8 +61,6 @@ const Navbar: React.FC = () => {
                     <Text
                         className={"logoLong"}
                         sx={{
-                            fontFamily: "Pirata One",
-                            fontSize: "45px",
                             transition: "color 0.2s ease-in",
                             color: "transparent",
                         }}
