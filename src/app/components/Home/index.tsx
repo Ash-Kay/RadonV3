@@ -25,7 +25,7 @@ const Home: React.FC = () => {
         <Box sx={mainFlexDivStyle}>
             <Helmet>
                 <meta charSet="utf-8" />
-                <title>Memenese</title>
+                <title>{title}</title>
 
                 {/* <!-- Google / Search Engine Tags --> */}
                 <meta itemProp="name" content={title} />
@@ -39,6 +39,7 @@ const Home: React.FC = () => {
                 <meta property="og:title" content={title} />
                 <meta property="og:description" content={description} />
                 <meta property="og:image" content={imageUrl} />
+                <meta property="og:site_name" content="Memenese" />
 
                 {/* <!-- Twitter Meta Tags --/> */}
                 <meta name="twitter:card" content="summary_large_image" />
