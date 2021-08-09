@@ -1,99 +1,226 @@
-import React, { useContext } from "react";
-import { Post, Vote } from "../../state/posts";
-import { Box, Text, Flex, ThemeUIStyleObject } from "theme-ui";
+import React, { MouseEventHandler, useContext, useEffect, useState } from "react";
+import { Post, Vote, Comment } from "../../state/posts/post.model";
 import Media from "../core/Media";
 import UpvoteButton from "../core/Buttons/UpvoteButton";
 import { AuthContext } from "../../context/auth.context";
 import { checkVoteState } from "../../../utils/checkVoteState";
 import DownvoteButton from "../core/Buttons/DownvoteButton";
-import CommentButton from "../core/Buttons/CommentButton";
-import { Link, useLocation } from "react-router-dom";
-import Avatar from "../core/Avatar";
+import DeleteIcon from "@material-ui/icons/Delete";
+import ReportIcon from "@material-ui/icons/Report";
+import {
+    Box,
+    Card,
+    CardHeader,
+    IconButton,
+    makeStyles,
+    Avatar,
+    CardActions,
+    Typography,
+    Collapse,
+    CardContent,
+    Menu,
+    MenuItem,
+} from "@material-ui/core";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { VscComment } from "react-icons/vsc";
+import CommentInput from "../CommentInput";
+import CommentItem from "../CommentItem";
+import postService from "../../state/posts/post.service";
+import { useQuery } from "react-query";
+import { AxiosResponse } from "axios";
+import ConditionalComponent from "../ConditionalComponent";
 
 interface Props {
     item: Post;
+    fullScreenPost?: boolean;
 }
 
-const PostItem: React.FC<Props> = (props: Props) => {
-    const location = useLocation();
-    const authState = useContext(AuthContext);
-
-    //#region Style
-    const postItemStyle: ThemeUIStyleObject = {
+const usePostItemStyles = makeStyles((theme) => ({
+    postItem: {
         borderRadius: "default",
         backgroundColor: "secondary",
-        marginBottom: 2,
+        marginBottom: theme.spacing(2),
+    },
+    upvote: {
+        marginLeft: theme.spacing(2),
+    },
+    voteCount: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+    },
+    downvote: {},
+    comment: {
+        marginLeft: theme.spacing(1),
+    },
+    commentInput: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+    },
+    commentListCardContent: {
+        "&>div:not(:first-child)": {
+            marginTop: theme.spacing(1),
+        },
+    },
+    menuOptionLabel: {
+        marginLeft: theme.spacing(1),
+    },
+}));
+
+const PostItem: React.FC<Props> = (props: Props) => {
+    const classes = usePostItemStyles();
+    const authState = useContext(AuthContext);
+    const [expanded, setExpanded] = useState(false || props.fullScreenPost);
+    const [vote, setVote] = useState<number>(props.item.vote ? props.item.vote : 0);
+    const [voteSum, setVoteSum] = useState<number>(props.item.voteSum ? props.item.voteSum : 0);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event: any) => {
+        setAnchorEl(event.currentTarget);
     };
-    //#endregion
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handlePostDelete = async () => {
+        const { data } = await postService.softDeletePost(props.item.id);
+
+        setAnchorEl(null);
+    };
+
+    const {
+        isIdle: isCommentsFetchingIdle,
+        isLoading: isCommentsLoading,
+        isFetched: isCommetsFetched,
+        error: commentsFetchError,
+        data: commentsResponse,
+        refetch: refetchComments,
+    } = useQuery<AxiosResponse<Comment[]>>(
+        ["comments", props.item.id],
+        () => postService.getComments(props.item.id).then((response) => response.data),
+        { enabled: false }
+    );
+
+    const getCommentList = () => {
+        if (isCommetsFetched && commentsResponse?.data.length) {
+            return (
+                <CardContent className={classes.commentListCardContent}>
+                    {commentsResponse?.data.map((comment) => (
+                        <CommentItem
+                            postId={props.item.id}
+                            item={comment}
+                            refetchComments={refetchComments}
+                            key={comment.id}
+                        />
+                    ))}
+                </CardContent>
+            );
+        }
+    };
+
+    const handleCommentActionClicked = () => {
+        if (props.fullScreenPost) return;
+
+        if (!expanded && isCommentsFetchingIdle) {
+            refetchComments();
+        }
+
+        setExpanded(!expanded);
+    };
+
+    const updateVoteState = (vote: number, voteSum: number) => {
+        setVote(vote);
+        setVoteSum(voteSum);
+    };
+
+    useEffect(() => {
+        if (props.fullScreenPost) refetchComments();
+    }, []);
 
     return (
-        <Box sx={postItemStyle}>
-            <Flex sx={{ p: 1, justifyContent: "space-between" }}>
-                <Flex>
-                    <Avatar avatarUrl={props.item.user.avatarUrl} height={30} width={30} />
-                    <Link
-                        to={{ pathname: `/posts/${props.item.id}` }}
-                        style={{
-                            color: "text",
-                            textDecoration: "none",
-                            display: "flex",
-                        }}
-                        onClick={() => {
-                            sessionStorage.setItem("scrollPosition", window.pageYOffset.toString());
-                        }}
-                    >
-                        <Text
-                            sx={{
-                                fontSize: 1,
-                                color: "text",
-                                fontWeight: "bold",
-                                ml: 2,
-                                my: "auto",
-                                ":hover,:focus,:active": {
-                                    color: "primary",
-                                },
+        <Card className={classes.postItem}>
+            <CardHeader
+                avatar={<Avatar src={props.item.user.avatarUrl} alt={props.item.user.username} />}
+                action={
+                    <ConditionalComponent shouldShow={authState.isLoggedIn}>
+                        <IconButton aria-label="settings" onClick={handleClick}>
+                            <MoreVertIcon />
+                        </IconButton>
+                        <Menu
+                            id="menu-earning-card"
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                            variant="selectedMenu"
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "right",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
                             }}
                         >
-                            {props.item.title}
-                        </Text>
-                    </Link>
-                </Flex>
-            </Flex>
+                            <ConditionalComponent shouldShow={authState.id === props.item.user.id}>
+                                <MenuItem onClick={handlePostDelete}>
+                                    <DeleteIcon color="error" />
+                                    <Typography variant="body2" className={classes.menuOptionLabel} color="error">
+                                        Delete Post
+                                    </Typography>
+                                </MenuItem>
+                            </ConditionalComponent>
 
-            <Box sx={{ borderRadius: "default", overflow: "hidden", border: "1px solid #1f1f1f" }}>
-                <Link to={{ pathname: `/posts/${props.item.id}` }}>
-                    <Media
-                        mediaUrl={props.item.mediaUrl}
-                        mime={props.item.mime}
-                        id={props.item.id}
-                        cursor="pointer"
-                        imageSx={{
-                            mx: "auto",
-                            maxHeight: "60vh",
-                        }}
-                    />
-                </Link>
-            </Box>
+                            <MenuItem onClick={handleClose}>
+                                <ReportIcon />
+                                <Typography variant="body2" className={classes.menuOptionLabel}>
+                                    Report
+                                </Typography>
+                            </MenuItem>
+                        </Menu>
+                    </ConditionalComponent>
+                }
+                title={props.item.title}
+                subheader={props.item.timeago}
+            />
 
-            <Flex sx={{ mx: "4px", height: "40px", justifyContent: "space-between" }}>
-                <Flex>
+            <Media
+                mediaUrl={props.item.mediaUrl}
+                mime={props.item.mime}
+                id={props.item.id}
+                cursor="pointer"
+                fullScreenPost={props.fullScreenPost}
+            />
+
+            <CardActions disableSpacing>
+                <IconButton aria-label="upvote" className={classes.upvote}>
                     <UpvoteButton
                         id={props.item.id}
-                        checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.UPVOTED)}
+                        checked={checkVoteState(vote, authState.isLoggedIn, Vote.UPVOTED)}
+                        updateVoteState={updateVoteState}
                     />
-                    <Text sx={{ fontSize: 3, px: "0.5rem", lineHeight: "38px" }}>
-                        {props.item.voteSum ? props.item.voteSum : "0"}
-                    </Text>
+                </IconButton>
+                <Typography className={classes.voteCount}>{voteSum ? voteSum : "0"}</Typography>
+                <IconButton aria-label="downvote" className={classes.downvote}>
                     <DownvoteButton
                         id={props.item.id}
-                        checked={checkVoteState(props.item.vote, authState.isLoggedIn, Vote.DOWNVOTED)}
+                        checked={checkVoteState(vote, authState.isLoggedIn, Vote.DOWNVOTED)}
+                        updateVoteState={updateVoteState}
                     />
-                    <Link to={{ pathname: `/posts/${props.item.id}`, state: { background: location } }}>
-                        <CommentButton />
-                    </Link>
-                </Flex>
-            </Flex>
-        </Box>
+                </IconButton>
+                <IconButton aria-label="downvote" className={classes.comment} onClick={handleCommentActionClicked}>
+                    <VscComment />
+                </IconButton>
+            </CardActions>
+
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <CardActions className={classes.commentInput}>
+                    <CommentInput postId={props.item.id} refetchComments={refetchComments} />
+                </CardActions>
+                {getCommentList()}
+            </Collapse>
+        </Card>
     );
 };
 

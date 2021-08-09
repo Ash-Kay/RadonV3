@@ -1,15 +1,16 @@
 import axios from "axios";
-import { authService } from "../app/state/auth/auth.service";
+import authService from "../app/state/auth/auth.service";
 import { getBaseUrl } from "./baseUrl";
 
 const main = axios.create({
     baseURL: getBaseUrl(),
+    withCredentials: true,
 });
 
 main.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
             authService.logout();
         }
         throw error;

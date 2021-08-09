@@ -1,91 +1,98 @@
 import { stringify } from "querystring";
-import { AuthStore, authStore } from "./auth.store";
-import { AuthQuery, authQuery } from "./auth.query";
-import jwtDecode from "jwt-decode";
-import { Role, AUTH_INITIAL_STATE } from "./auth.model";
-import { AuthToken } from "../../../interface/authtoken.interface";
+import { AUTH_INITIAL_STATE, Role } from "./auth.model";
 import { main } from "../../../utils/axios";
-export class AuthService {
-    constructor(private store: AuthStore, private query: AuthQuery) {}
+import useAuthStore from "./auth.store";
 
-    readonly authState$ = this.query.authState$;
-    readonly isLoggedIn$ = this.query.isLoggedIn$;
+// const updateState = useAuthStore((state) => state.updateState);
 
-    public getTokenWithGoogleAuth = (idtoken: string): void => {
-        this.store.setLoading(true);
-        main.get("/users/auth/google", getIdTokenHeader(idtoken))
-            .then((response) => {
-                const decodedUser: AuthToken = jwtDecode(response.data.data.token);
-                this.store.update(() => ({
-                    id: decodedUser.id,
-                    email: decodedUser.email,
-                    googleId: decodedUser.googleId,
-                    username: decodedUser.username,
-                    role: Role[decodedUser.role as keyof typeof Role],
-                    token: response.data.data.token,
-                    isLoggedIn: true,
-                }));
-                this.store.setLoading(false);
-                localStorage.setItem("token", response.data.data.token);
+const getTokenWithGoogleAuth = (idtoken: string) => {
+    return main.get("/users/auth/google", getIdTokenHeader(idtoken));
+    // .then((response) => {
+    //     main.get("/users/me")
+    //         .then((response) => {
+    //             const user = response.data;
 
-                //to refetch and get upvote/downvte state
-                //TODO Find a way to refetch current screen content
-                window.location.reload();
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
-    };
+    //             // updateState({
+    //             //     id: user.id,
+    //             //     email: user.email,
+    //             //     googleId: user.googleId,
+    //             //     username: user.username,
+    //             //     role: Role[user.role as keyof typeof Role],
+    //             //     isLoggedIn: true,
+    //             // });
+    //         })
+    //         .catch(function (error) {
+    //             console.error(error);
+    //         });
 
-    public loginWithUsernamePassword = (email: string, password: string): void => {
-        const data = stringify({ email, password });
+    //     //to refetch and get upvote/downvte state
+    //     // //TODO Find a way to refetch current screen content
+    //     // window.location.reload();
+    // })
+    // .catch(function (error) {
+    //     console.error(error);
+    // });
+};
 
-        this.store.setLoading(true);
-        main.post("/users/login", data)
-            .then((response) => {
-                const decodedUser: AuthToken = jwtDecode(response.data.data.token);
-                this.store.update(() => ({
-                    id: decodedUser.id,
-                    email: decodedUser.email,
-                    googleId: decodedUser.googleId,
-                    username: decodedUser.username,
-                    role: Role[decodedUser.role as keyof typeof Role],
-                    token: response.data.data.token,
-                    isLoggedIn: true,
-                }));
-                this.store.setLoading(false);
-                localStorage.setItem("token", response.data.data.token);
+const getUserData = () => {
+    return main.get("/users/me");
+};
 
-                //to refetch and get upvote/downvte state
-                //TODO Find a way to refetch current screen content
-                window.location.reload();
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
-    };
+const loginWithUsernamePassword = (email: string, password: string): void => {
+    const data = stringify({ email, password });
 
-    public signupWithUsernamePassword = (username: string, password: string, email: string): void => {
-        const data = stringify({ email, password, username });
+    main.post("/users/login", data)
+        .then((response) => {
+            main.get("/users/me")
+                .then((response) => {
+                    const user = response.data;
 
-        this.store.setLoading(true);
-        main.post("/users/signup", data)
-            .then(() => {
-                this.loginWithUsernamePassword(email, password);
-                this.store.setLoading(false);
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
-    };
+                    // updateState({
+                    //     id: user.id,
+                    //     email: user.email,
+                    //     googleId: user.googleId,
+                    //     username: user.username,
+                    //     role: Role[user.role as keyof typeof Role],
+                    //     isLoggedIn: true,
+                    // });
+                })
+                .catch(function (error) {
+                    console.error(error);
+                });
 
-    public logout = (): void => {
-        this.store.update(() => AUTH_INITIAL_STATE);
-        localStorage.removeItem("token");
-    };
-}
+            //to refetch and get upvote/downvte state
+            // //TODO Find a way to refetch current screen content
+            // window.location.reload();
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+};
 
-export const authService = new AuthService(authStore, authQuery);
+const signupWithUsernamePassword = (username: string, password: string, email: string): void => {
+    const data = stringify({ email, password, username });
+
+    main.post("/users/signup", data)
+        .then(() => {
+            loginWithUsernamePassword(email, password);
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+};
+
+const logout = (): void => {
+    main.post("/users/logout")
+        .then(() => {
+            console.log("Logged Out");
+            useAuthStore.setState({ data: AUTH_INITIAL_STATE });
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+};
+
+export default { getTokenWithGoogleAuth, signupWithUsernamePassword, loginWithUsernamePassword, logout, getUserData };
 
 const getIdTokenHeader = (idtoken: string) => {
     return {

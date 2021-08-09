@@ -1,63 +1,44 @@
 import React, { useContext } from "react";
-import { Box } from "theme-ui";
 import { EntityType, Event } from "../../../../analytics/Events";
 import { AuthContext } from "../../../context/auth.context";
-import { globalService } from "../../../state/global/global.service";
-import { postService } from "../../../state/posts";
-import { Downvote } from "../../Icons";
+import useGlobalStore from "../../../state/global/global.store";
+import postService from "../../../state/posts/post.service";
+import { ImArrowDown } from "react-icons/im";
 
 interface Props {
     id: number;
     checked: boolean;
-    activeColor?: string;
-    color?: string;
+    updateVoteState: (vote: number, voteSum: number) => void;
 }
 
 const DownvoteButton: React.FC<Props> = (props: Props) => {
     const authState = useContext(AuthContext);
+    const updateGlobalStore = useGlobalStore((store) => store.updateState);
 
-    const downvote = () => {
+    const downvote = async () => {
         if (!authState.isLoggedIn) {
-            globalService.setIsSignInModalOpen(true);
+            updateGlobalStore({ isLoginModalOpen: true });
             return;
         }
         if (!props.checked) {
-            postService.downvote(props.id, authState.token);
+            const { data } = await postService.downvote(props.id);
+            props.updateVoteState(data.data.vote, data.data.voteSum);
+
             Event.DOWNVOTE_BUTTON_CLICKED(props.id, EntityType.POST);
         } else {
-            postService.removeVote(props.id, authState.token);
+            const { data } = await postService.removeVote(props.id);
+            props.updateVoteState(data.data.vote, data.data.voteSum);
+
             Event.VOTE_REMOVED_BUTTON_CLICKED(props.id, EntityType.POST);
         }
     };
 
     const getColor = () => {
-        if (props.checked) return props.activeColor;
-        else return props.color;
+        if (props.checked) return "#9c1b1b";
+        else return "#c4c4c4";
     };
 
-    return (
-        <Box
-            onClick={() => downvote()}
-            sx={{
-                cursor: "pointer",
-                height: "32px",
-                my: "4px",
-                px: "1rem",
-                py: "0.2rem",
-                ":hover": {
-                    backgroundColor: "secondaryLight",
-                },
-                "> svg": { fill: getColor },
-            }}
-        >
-            <Downvote />
-        </Box>
-    );
+    return <ImArrowDown onClick={downvote} color={getColor()} />;
 };
 
 export default DownvoteButton;
-
-DownvoteButton.defaultProps = {
-    color: "voteDefault",
-    activeColor: "downvoteActive",
-};

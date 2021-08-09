@@ -1,11 +1,16 @@
-import { StoreConfig, Store } from "@datorama/akita";
-import { GlobalState, createInitialState } from "./global.model";
+import { GlobalState, GlobalStateData, GLOBAL_INITIAL_STATE } from "./global.model";
+import create, { SetState, GetState } from "zustand";
+import { devtools } from "zustand/middleware";
 
-@StoreConfig({ name: "global" })
-export class GlobalStore extends Store<GlobalState> {
-    constructor() {
-        super(createInitialState());
-    }
-}
+const useGlobalStore = create<GlobalState>(
+    devtools((set: SetState<GlobalState>, get: GetState<GlobalState>) => {
+        return {
+            data: GLOBAL_INITIAL_STATE,
+            updateState: (newState: Partial<GlobalStateData>) => {
+                set((state) => ({ data: { ...state.data, ...newState } }));
+            },
+        };
+    }, "GlobalStore")
+);
 
-export const globalStore = new GlobalStore();
+export default useGlobalStore;

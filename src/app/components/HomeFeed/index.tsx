@@ -1,40 +1,33 @@
-import React, { useContext, useEffect } from "react";
-import { postService } from "../../state/posts/post.service";
-import { usePostFeedHook } from "../../state/posts/post.hook";
+import React, { useState } from "react";
+import postService from "../../state/posts/post.service";
 import InfiniteScroll from "react-infinite-scroller";
-import { Post, postStore } from "../../state/posts";
+import { Post } from "../../state/posts/post.model";
 import PostItem from "../PostItem";
-import { AuthContext } from "../../context/auth.context";
-import { Spinner } from "theme-ui";
-import { useCurrentLoadedPageHook, useGlobalMorePageHook } from "../../state/global/global.hook";
-import { globalService } from "../../state/global/global.service";
+import { Box, CircularProgress, makeStyles } from "@material-ui/core";
 
-const HomeFeed: React.FC = () => {
-    const [posts] = usePostFeedHook();
-    const authState = useContext(AuthContext);
-    const [hasMore] = useGlobalMorePageHook();
-    const [currPageNo] = useCurrentLoadedPageHook();
+interface Props {
+    posts: Post[];
+    updatePosts: (newPosts: Post[]) => void;
+}
 
-    const handleScrollPosition = () => {
-        const scrollPosition = sessionStorage.getItem("scrollPosition");
-        if (scrollPosition) {
-            setTimeout(() => {
-                window.scrollTo(0, parseInt(scrollPosition));
-                sessionStorage.removeItem("scrollPosition");
-            }, 2000);
+const useHomeFeedStyles = makeStyles((theme) => ({
+    main: {
+        width: "600px",
+    },
+}));
+
+const HomeFeed: React.FC<Props> = (props: Props) => {
+    const classes = useHomeFeedStyles();
+    const [hasMore, setHasMore] = useState(true);
+
+    const fetchPage = async (page: number) => {
+        const { data } = await postService.getPostPage(page);
+        if (data.data.length == 0) {
+            setHasMore(false);
+        } else {
+            props.updatePosts(data.data);
         }
-    };
-
-    useEffect(() => {
-        postStore.setActive(null);
-        handleScrollPosition();
-    }, []);
-
-    const fetchData = (pageNo: number) => {
-        if (pageNo > currPageNo || hasMore) {
-            if (authState.token) postService.getPostPageAuth(pageNo, authState.token, globalService.setHasMorePages);
-            else postService.getPostPage(pageNo, globalService.setHasMorePages);
-        }
+        return data;
     };
 
     const getPostList = (post: Post[]) => {
@@ -42,16 +35,11 @@ const HomeFeed: React.FC = () => {
     };
 
     return (
-        <main>
-            <InfiniteScroll
-                pageStart={0}
-                loadMore={fetchData}
-                hasMore={hasMore}
-                loader={<Spinner sx={{ display: "block", mx: "auto" }} key={0} />}
-            >
-                {getPostList(posts)}
+        <Box className={classes.main}>
+            <InfiniteScroll pageStart={1} loadMore={fetchPage} hasMore={hasMore} loader={<CircularProgress key={0} />}>
+                {props.posts && getPostList(props.posts)}
             </InfiniteScroll>
-        </main>
+        </Box>
     );
 };
 

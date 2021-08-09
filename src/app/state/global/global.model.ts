@@ -1,16 +1,16 @@
 export interface GlobalState {
+    data: GlobalStateData;
+    updateState: (newState: Partial<GlobalStateData>) => void;
+}
+
+export interface GlobalStateData {
     hasMorePages: boolean;
     currentLoadedPage: number;
-    isSignInModalOpen: boolean;
-    //showlogin, can be used to propt to login when click on auth related button, also private route can be used for this
+    isLoginModalOpen: boolean;
 }
 
-export function createInitialState(): GlobalState {
-    return GLOBAL_INITIAL_STATE;
-}
-
-export const GLOBAL_INITIAL_STATE: GlobalState = {
+export const GLOBAL_INITIAL_STATE: GlobalStateData = {
     hasMorePages: true,
     currentLoadedPage: 0,
-    isSignInModalOpen: false,
+    isLoginModalOpen: false,
 };

@@ -1,64 +1,46 @@
 import React, { useContext } from "react";
-import { Box } from "theme-ui";
+import { ImArrowUp } from "react-icons/im";
 import { EntityType, Event } from "../../../../analytics/Events";
 import { AuthContext } from "../../../context/auth.context";
-import { globalService } from "../../../state/global/global.service";
-import { postService } from "../../../state/posts";
-import { Upvote } from "../../Icons";
+import useGlobalStore from "../../../state/global/global.store";
+import postService from "../../../state/posts/post.service";
 
 interface Props {
     commId: number;
     postId: number;
     checked: boolean;
-    activeColor?: string;
-    color?: string;
+    updateVoteState: (vote: number, voteSum: number) => void;
 }
 
 const CUpvoteButton: React.FC<Props> = (props: Props) => {
     const authState = useContext(AuthContext);
+    const updateGlobalState = useGlobalStore((state) => state.updateState);
 
-    const upvote = () => {
+    const upvote = async () => {
         if (!authState.isLoggedIn) {
-            globalService.setIsSignInModalOpen(true);
+            updateGlobalState({ isLoginModalOpen: true });
+
             return;
         }
         if (!props.checked) {
-            postService.cupvote(props.postId, props.commId, authState.token);
+            const { data } = await postService.cupvote(props.postId, props.commId);
+            props.updateVoteState(data.data.vote, data.data.voteSum);
+
             Event.UPVOTE_BUTTON_CLICKED(props.commId, EntityType.COMMENT);
         } else {
-            postService.cremoveVote(props.postId, props.commId, authState.token);
+            const { data } = await postService.cremoveVote(props.postId, props.commId);
+            props.updateVoteState(data.data.vote, data.data.voteSum);
+
             Event.VOTE_REMOVED_BUTTON_CLICKED(props.commId, EntityType.COMMENT);
         }
     };
 
-    const getColor = () => {
-        if (props.checked) return props.activeColor;
-        else return props.color;
+    const getColor = (): string => {
+        if (props.checked) return "#347fe0";
+        else return "#c4c4c4";
     };
 
-    return (
-        <Box
-            onClick={upvote}
-            sx={{
-                cursor: "pointer",
-                height: "32px",
-                my: "4px",
-                px: "1rem",
-                py: "0.2rem",
-                ":hover": {
-                    backgroundColor: "secondaryLight",
-                },
-                "> svg": { fill: getColor },
-            }}
-        >
-            <Upvote />
-        </Box>
-    );
+    return <ImArrowUp onClick={upvote} color={getColor()} />;
 };
 
 export default CUpvoteButton;
-
-CUpvoteButton.defaultProps = {
-    color: "voteDefault",
-    activeColor: "upvoteActive",
-};

@@ -1,23 +1,22 @@
-import React from "react";
-import { Image, ThemeUIStyleObject } from "theme-ui";
-
 interface Props {
     mediaUrl: string;
     mime: string;
     id: number;
-    imageSx?: ThemeUIStyleObject;
     isFullPostScreen?: boolean;
     cursor?: string;
     onMediaClick?: (param: React.MouseEvent<HTMLImageElement | HTMLVideoElement, MouseEvent>) => void;
+    fullScreenPost?: boolean;
 }
 
 const Media: React.FC<Props> = (props: Props) => {
     if (props.mime.startsWith("image"))
         return (
-            <Image
-                sx={{
-                    cursor: props.cursor,
-                    ...props.imageSx,
+            <img
+                style={{
+                    width: "100%",
+                    maxHeight: props.fullScreenPost ? "unset" : "800px",
+                    objectFit: "cover",
+                    display: "block",
                 }}
                 src={props.mediaUrl}
                 onClick={(e) => props.onMediaClick && props.onMediaClick(e)}
@@ -30,8 +29,7 @@ const Media: React.FC<Props> = (props: Props) => {
                 width="100%"
                 controls
                 style={{
-                    height: props.isFullPostScreen ? "100%" : "auto",
-                    maxHeight: props.isFullPostScreen ? "100%" : "60vh",
+                    display: "block",
                 }}
                 onClick={(e) => props.onMediaClick && props.onMediaClick(e)}
             >

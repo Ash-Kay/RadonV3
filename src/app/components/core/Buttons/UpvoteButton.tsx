@@ -1,63 +1,43 @@
-import React, { useContext } from "react";
-import { Box } from "theme-ui";
+import React, { useContext, useEffect } from "react";
 import { EntityType, Event } from "../../../../analytics/Events";
 import { AuthContext } from "../../../context/auth.context";
-import { globalService } from "../../../state/global/global.service";
-import { postService } from "../../../state/posts";
-import { Upvote } from "../../Icons";
-
+import postService from "../../../state/posts/post.service";
+import useGlobalStore from "../../../state/global/global.store";
+import { ImArrowUp } from "react-icons/im";
 interface Props {
     id: number;
     checked: boolean;
-    activeColor?: string;
-    color?: string;
+    updateVoteState: (vote: number, voteSum: number) => void;
 }
 
 const UpvoteButton: React.FC<Props> = (props: Props) => {
     const authState = useContext(AuthContext);
+    const updateGlobalStore = useGlobalStore((store) => store.updateState);
 
-    const upvote = () => {
+    const upvote = async () => {
         if (!authState.isLoggedIn) {
-            globalService.setIsSignInModalOpen(true);
+            updateGlobalStore({ isLoginModalOpen: true });
             return;
         }
         if (!props.checked) {
-            postService.upvote(props.id, authState.token);
+            const { data } = await postService.upvote(props.id);
+            props.updateVoteState(data.data.vote, data.data.voteSum);
+
             Event.UPVOTE_BUTTON_CLICKED(props.id, EntityType.POST);
         } else {
-            postService.removeVote(props.id, authState.token);
+            const { data } = await postService.removeVote(props.id);
+            props.updateVoteState(data.data.vote, data.data.voteSum);
+
             Event.VOTE_REMOVED_BUTTON_CLICKED(props.id, EntityType.POST);
         }
     };
 
-    const getColor = () => {
-        if (props.checked) return props.activeColor;
-        else return props.color;
+    const getColor = (): string => {
+        if (props.checked) return "#347fe0";
+        else return "#c4c4c4";
     };
 
-    return (
-        <Box
-            onClick={upvote}
-            sx={{
-                cursor: "pointer",
-                height: "32px",
-                my: "4px",
-                px: "1rem",
-                py: "0.2rem",
-                ":hover": {
-                    backgroundColor: "secondaryLight",
-                },
-                "> svg": { fill: getColor },
-            }}
-        >
-            <Upvote />
-        </Box>
-    );
+    return <ImArrowUp onClick={upvote} color={getColor()} />;
 };
 
 export default UpvoteButton;
-
-UpvoteButton.defaultProps = {
-    color: "voteDefault",
-    activeColor: "upvoteActive",
-};

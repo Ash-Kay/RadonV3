@@ -1,14 +1,16 @@
 import React, { useContext } from "react";
-import { postService } from "../../state/posts";
-import { Box, Flex, Text, Textarea, Input, Button, ThemeUIStyleObject } from "theme-ui";
+import postService from "../../state/posts/post.service";
 import { AuthContext } from "../../context/auth.context";
-import { MdAddAPhoto } from "react-icons/md";
-import { RiCloseCircleFill } from "react-icons/ri";
-import { globalService } from "../../state/global/global.service";
+import { IoMdSend } from "react-icons/io";
 import { Event } from "../../../analytics/Events";
+import useGlobalStore from "../../state/global/global.store";
+import { Box, IconButton, InputBase, makeStyles, TextField } from "@material-ui/core";
+import { ImAttachment } from "react-icons/im";
+import { DropzoneDialog } from "material-ui-dropzone";
 
 interface Props {
     postId: number;
+    refetchComments: () => void;
 }
 export interface CommentForm {
     comment: string;
@@ -16,80 +18,83 @@ export interface CommentForm {
     //tagTo: number;
 }
 
+const useCommentInputStyles = makeStyles((theme) => ({
+    root: {
+        width: "100%",
+    },
+    inputBox: {
+        backgroundColor: theme.palette.background.default,
+        display: "flex",
+        padding: theme.spacing(1),
+        borderRadius: theme.shape.borderRadius,
+    },
+    inputIconButton: {
+        height: "100%",
+    },
+}));
+
 const CommentInput: React.FC<Props> = (props: Props) => {
+    const classes = useCommentInputStyles();
+    const [dropzoneOpen, setDropzoneOpen] = React.useState(false);
     const authState = useContext(AuthContext);
     const [commentForm, setCommentForm] = React.useState(emptyCommentForm);
-    const hiddenCommentFileInput = React.useRef<HTMLInputElement>(null);
+    const updateGlobalState = useGlobalStore((state) => state.updateState);
 
     const postComment = () => {
         if (!authState.isLoggedIn) {
-            globalService.setIsSignInModalOpen(true);
+            updateGlobalState({ isLoginModalOpen: true });
             return;
         }
         if (commentForm.comment) {
-            postService.postComment(props.postId, commentForm, authState.token, (isSuccess) => {
+            postService.postComment(props.postId, commentForm, (isSuccess) => {
                 if (isSuccess) setCommentForm(emptyCommentForm);
             });
+
+            props.refetchComments();
+
             Event.COMMENT_BUTTON_VALID_SUBMIT(commentForm);
         }
     };
 
-    const commentStyle: ThemeUIStyleObject = {
-        borderColor: "transparent",
-        backgroundColor: "secondary",
-        resize: "none",
-        fontSize: 2,
-        "&::placeholder": {
-            fontWeight: "bold",
-        },
-    };
-
     return (
-        <Box sx={{ mt: 1 }}>
-            <Flex>
-                <Flex sx={{ position: "relative", flexGrow: 1 }}>
-                    <Textarea
-                        value={commentForm.comment}
-                        onChange={(e) => setCommentForm({ ...commentForm, comment: e.currentTarget.value })}
-                        placeholder="Commnet"
-                        sx={commentStyle}
-                    />
-                    <Box
-                        sx={{
-                            cursor: "pointer",
-                            my: "auto",
-                            position: "absolute",
-                            right: "8px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                        }}
-                        onClick={() => {
-                            hiddenCommentFileInput.current?.click();
-                        }}
-                    >
-                        <MdAddAPhoto color={commentForm.file !== null ? "#2ce" : undefined} size={16} />
-                        <Input
-                            onChange={(e) => setCommentForm({ ...commentForm, file: e.currentTarget.files?.item(0) })}
-                            ref={hiddenCommentFileInput}
-                            type="file"
-                            sx={{ display: "none" }}
-                        />
-                    </Box>
-                </Flex>
-                <Button onClick={postComment} sx={{ ml: 1 }}>
-                    Post
-                </Button>
-            </Flex>
-            {commentForm.file && (
-                <Flex>
-                    <Text sx={{ mr: "0.5rem", fontSize: 1, fontWeight: "bold", lineHeight: 1.5 }}>
-                        {commentForm.file?.name}
-                    </Text>
-                    <Box onClick={() => setCommentForm({ ...commentForm, file: null })} sx={{ mt: "auto" }}>
-                        <RiCloseCircleFill size={16} />
-                    </Box>
-                </Flex>
-            )}
+        <Box className={classes.root}>
+            <Box className={classes.inputBox}>
+                <InputBase
+                    multiline
+                    fullWidth
+                    value={commentForm.comment}
+                    onChange={(e) => setCommentForm({ ...commentForm, comment: e.currentTarget.value })}
+                />
+
+                <IconButton
+                    color={commentForm.file ? "primary" : "secondary"}
+                    className={classes.inputIconButton}
+                    onClick={() => setDropzoneOpen(!dropzoneOpen)}
+                >
+                    <ImAttachment />
+                </IconButton>
+                <IconButton color="secondary" className={classes.inputIconButton} onClick={postComment}>
+                    <IoMdSend />
+                </IconButton>
+            </Box>
+
+            <DropzoneDialog
+                acceptedFiles={["image/*", "video/*"]}
+                maxFileSize={5242880} //5mb
+                filesLimit={1}
+                showFileNames
+                cancelButtonText={"Cancel"}
+                submitButtonText={"Upload"}
+                showPreviewsInDropzone
+                showPreviews={false}
+                open={dropzoneOpen}
+                clearOnUnmount={false}
+                onClose={() => setDropzoneOpen(false)}
+                onSave={(files) => {
+                    setCommentForm({ ...commentForm, file: files[0] });
+                    setDropzoneOpen(false);
+                }}
+            />
         </Box>
     );
 };

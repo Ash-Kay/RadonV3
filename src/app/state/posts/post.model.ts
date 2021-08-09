@@ -17,19 +17,19 @@ export interface Post {
 export interface User {
     id: number;
     username: string;
-    avatarUrl?: string | null;
+    avatarUrl?: string | undefined;
 }
 export interface Comment {
     id: number;
     message: string;
-    mediaUrl: string;
+    mediaUrl?: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;
     timeago: string;
     tagTo?: User;
     user: User;
-    mime: string;
+    mime?: string;
     vote?: number;
     voteSum: number;
 }
@@ -61,7 +61,7 @@ export const POST_INITIAL_STATE: Post = {
     user: {
         id: 0,
         username: "",
-        avatarUrl: null,
+        avatarUrl: undefined,
     },
     timeago: "",
     vote: 0,

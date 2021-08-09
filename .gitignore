@@ -25,3 +25,7 @@ yarn-error.log*
 
 #env
 .env
+
+# next.js build output
+.next
+out
