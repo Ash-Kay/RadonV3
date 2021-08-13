@@ -1,10 +1,11 @@
 import { Box, makeStyles } from "@material-ui/core";
 import { NextPageContext } from "next";
-import React from "react";
+import Head from "next/head";
+import React, { useEffect } from "react";
 import Navbar from "../../src/app/components/Navbar";
 import PostItem from "../../src/app/components/PostItem";
 import { AuthContext } from "../../src/app/context/auth.context";
-import { AuthStateData, AUTH_INITIAL_STATE } from "../../src/app/state/auth/auth.model";
+import { AuthStateData } from "../../src/app/state/auth/auth.model";
 import useAuthStore from "../../src/app/state/auth/auth.store";
 import { Post } from "../../src/app/state/posts/post.model";
 import { main } from "../../src/utils/axios";
@@ -32,9 +33,38 @@ const useFullScreenPostStyles = makeStyles((theme) => ({
 const FullScreenPost = (props: Props) => {
     const classes = useFullScreenPostStyles();
     const authState = useAuthStore((state) => state.data);
+    const updateAuthState = useAuthStore((state) => state.updateState);
+
+    const url = "https://memenese.com/posts/";
+
+    useEffect(() => {
+        updateAuthState({ ...props.user, isLoggedIn: props.user.id == 0 ? false : true });
+    }, []);
 
     return (
         <AuthContext.Provider value={authState}>
+            <Head>
+                {/* <!-- Google / Search Engine Tags --> */}
+                <meta charSet="utf-8" />
+                <title>{props.post.title + "•Memenese"}</title>
+                <meta itemProp="name" content={props.post.title} />
+                <meta itemProp="description" content={props.post.title} />
+                <meta itemProp="image" content={props.post.mediaUrl} />
+                <link rel="canonical" href={url + props.post.id} />
+
+                {/* <!-- Facebook Meta Tags --> */}
+                <meta property="og:url" content={url + props.post.id} />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content={props.post.title} />
+                <meta property="og:description" content={props.post.title} />
+                <meta property="og:image" content={props.post.mediaUrl} />
+
+                {/* <!-- Twitter Meta Tags --/> */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={props.post.title} />
+                <meta name="twitter:description" content={props.post.title} />
+                <meta name="twitter:image" content={props.post.mediaUrl} />
+            </Head>
             <Navbar />
             <Box className={classes.root}>
                 <Box className={classes.homeFeedBox}>
@@ -51,7 +81,8 @@ export const getServerSideProps = async (context: NextPageContext) => {
     const { id } = context.query;
 
     try {
-        const cookieHeader = { Cookie: context.req ? context.req.headers.cookie : undefined };
+        const cookieHeader = { Cookie: context.req.headers.cookie ? context.req.headers.cookie : "loggedout" };
+
         const postResponse = await main.get(`/posts/${id}`, { headers: cookieHeader });
         const userDataResponse = await main.get("/users/me", { headers: cookieHeader });
 

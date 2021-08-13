@@ -81,7 +81,7 @@ const NewPostButton: React.FC = () => {
     const [tagInput, setTagInput] = React.useState("");
 
     const submitNewPostForm = () => {
-        if (createPostForm.file && createPostForm.title && createPostForm.file) {
+        if (createPostForm.file && createPostForm.title) {
             postService.createNewPost(createPostForm, (isSuccess) => {
                 if (isSuccess) setCreatePostForm(emtyForm);
             });
@@ -153,6 +153,7 @@ const NewPostButton: React.FC = () => {
                                 variant="outlined"
                                 label="Title"
                                 placeholder="Creative title"
+                                inputProps={{ maxLength: 100 }}
                                 onChange={(e) => setCreatePostForm({ ...createPostForm, title: e.currentTarget.value })}
                             />
                         </Box>

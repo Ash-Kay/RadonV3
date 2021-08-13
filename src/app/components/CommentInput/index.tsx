@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import postService from "../../state/posts/post.service";
 import { AuthContext } from "../../context/auth.context";
 import { IoMdSend } from "react-icons/io";
@@ -35,17 +35,26 @@ const useCommentInputStyles = makeStyles((theme) => ({
 
 const CommentInput: React.FC<Props> = (props: Props) => {
     const classes = useCommentInputStyles();
-    const [dropzoneOpen, setDropzoneOpen] = React.useState(false);
+    const [dropzoneOpen, setDropzoneOpen] = useState(false);
     const authState = useContext(AuthContext);
-    const [commentForm, setCommentForm] = React.useState(emptyCommentForm);
+    const [commentForm, setCommentForm] = useState(emptyCommentForm);
     const updateGlobalState = useGlobalStore((state) => state.updateState);
+    const [isCommentSubmitDisabled, setCommentSubmitDisabled] = useState(true);
+
+    useEffect(() => {
+        if (commentForm.comment || commentForm.file) {
+            setCommentSubmitDisabled(false);
+        } else {
+            setCommentSubmitDisabled(true);
+        }
+    }, [commentForm]);
 
     const postComment = () => {
         if (!authState.isLoggedIn) {
             updateGlobalState({ isLoginModalOpen: true });
             return;
         }
-        if (commentForm.comment) {
+        if (commentForm.comment || commentForm.file) {
             postService.postComment(props.postId, commentForm, (isSuccess) => {
                 if (isSuccess) setCommentForm(emptyCommentForm);
             });
@@ -73,7 +82,12 @@ const CommentInput: React.FC<Props> = (props: Props) => {
                 >
                     <ImAttachment />
                 </IconButton>
-                <IconButton color="secondary" className={classes.inputIconButton} onClick={postComment}>
+                <IconButton
+                    disabled={isCommentSubmitDisabled}
+                    color="secondary"
+                    className={classes.inputIconButton}
+                    onClick={postComment}
+                >
                     <IoMdSend />
                 </IconButton>
             </Box>
@@ -93,6 +107,9 @@ const CommentInput: React.FC<Props> = (props: Props) => {
                 onSave={(files) => {
                     setCommentForm({ ...commentForm, file: files[0] });
                     setDropzoneOpen(false);
+                }}
+                onDelete={() => {
+                    setCommentForm({ ...commentForm, file: null });
                 }}
             />
         </Box>

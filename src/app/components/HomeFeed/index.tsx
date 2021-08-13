@@ -25,13 +25,21 @@ const HomeFeed: React.FC<Props> = (props: Props) => {
         if (data.data.length == 0) {
             setHasMore(false);
         } else {
-            props.updatePosts(data.data);
+            props.updatePosts([...props.posts, ...data.data]);
         }
         return data;
     };
 
+    const deletePost = (postId: number) => {
+        props.updatePosts(
+            props.posts.filter((value) => {
+                if (postId != value.id) return value;
+            })
+        );
+    };
+
     const getPostList = (post: Post[]) => {
-        return post.map((item) => <PostItem item={item} key={item.id} />);
+        return post.map((item) => <PostItem item={item} key={item.id} deletePost={deletePost} />);
     };
 
     return (

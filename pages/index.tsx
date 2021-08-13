@@ -35,8 +35,11 @@ const Index = (props: Props) => {
     const updateAuthState = useAuthStore((state) => state.updateState);
     const [posts, setPosts] = useState(props.posts);
 
-    const updatePosts = (newPosts: Post[]) => {
-        setPosts([...posts, ...newPosts]);
+    const updatePosts = (updatedPostList: Post[]) => {
+        console.log(`oldPosts`, posts);
+        console.log(`newPosts`, updatedPostList);
+
+        setPosts(updatedPostList);
     };
 
     useEffect(() => {
@@ -59,7 +62,8 @@ export default Index;
 
 export const getServerSideProps = async (context: NextPageContext) => {
     try {
-        const cookieHeader = { Cookie: context.req ? context.req.headers.cookie : undefined };
+        const cookieHeader = { Cookie: context.req ? context.req.headers.cookie : "loggedout" };
+
         const postListResponse = await main.get("/posts/?page=1", { headers: cookieHeader });
         const userDataResponse = await main.get("/users/me", { headers: cookieHeader });
 

@@ -113,16 +113,11 @@ const CommentItem: React.FC<Props> = (props: Props) => {
                             <MoreVertIcon />
                         </IconButton>
                         <Menu
-                            id="menu-earning-card"
                             anchorEl={anchorEl}
                             keepMounted
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                             variant="selectedMenu"
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "right",
-                            }}
                             transformOrigin={{
                                 vertical: "top",
                                 horizontal: "right",
@@ -146,8 +141,16 @@ const CommentItem: React.FC<Props> = (props: Props) => {
                         </Menu>
                     </ConditionalComponent>
                 }
-                title={props.item.user.username}
-                subheader={props.item.timeago}
+                title={
+                    <Typography variant="body2" component="h1">
+                        {props.item.user.username}
+                    </Typography>
+                }
+                subheader={
+                    <Typography variant="body2" component="h2">
+                        {props.item.timeago}
+                    </Typography>
+                }
             />
             <Box className={classes.commentBoxSection}>
                 {props.item.mediaUrl && props.item.mime && (

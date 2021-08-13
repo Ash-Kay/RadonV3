@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Post, Vote, Comment } from "../../state/posts/post.model";
 import Media from "../core/Media";
 import UpvoteButton from "../core/Buttons/UpvoteButton";
@@ -8,7 +8,6 @@ import DownvoteButton from "../core/Buttons/DownvoteButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ReportIcon from "@material-ui/icons/Report";
 import {
-    Box,
     Card,
     CardHeader,
     IconButton,
@@ -33,6 +32,7 @@ import ConditionalComponent from "../ConditionalComponent";
 interface Props {
     item: Post;
     fullScreenPost?: boolean;
+    deletePost?: (postId: number) => void;
 }
 
 const usePostItemStyles = makeStyles((theme) => ({
@@ -85,6 +85,7 @@ const PostItem: React.FC<Props> = (props: Props) => {
 
     const handlePostDelete = async () => {
         const { data } = await postService.softDeletePost(props.item.id);
+        props.deletePost?.(props.item.id);
 
         setAnchorEl(null);
     };
@@ -148,16 +149,11 @@ const PostItem: React.FC<Props> = (props: Props) => {
                             <MoreVertIcon />
                         </IconButton>
                         <Menu
-                            id="menu-earning-card"
                             anchorEl={anchorEl}
                             keepMounted
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                             variant="selectedMenu"
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "right",
-                            }}
                             transformOrigin={{
                                 vertical: "top",
                                 horizontal: "right",
@@ -181,8 +177,16 @@ const PostItem: React.FC<Props> = (props: Props) => {
                         </Menu>
                     </ConditionalComponent>
                 }
-                title={props.item.title}
-                subheader={props.item.timeago}
+                title={
+                    <Typography variant="body2" component="h1">
+                        {props.item.title}
+                    </Typography>
+                }
+                subheader={
+                    <Typography variant="body2" component="h2">
+                        {props.item.timeago}
+                    </Typography>
+                }
             />
 
             <Media

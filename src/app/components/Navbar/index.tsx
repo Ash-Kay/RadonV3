@@ -2,11 +2,11 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/auth.context";
 import { FiLogOut } from "react-icons/fi";
 import Link from "next/link";
+import Image from "next/image";
 import {
     Box,
     Typography,
     makeStyles,
-    Chip,
     Avatar,
     Popper,
     Paper,
@@ -18,7 +18,6 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    Button,
     IconButton,
 } from "@material-ui/core";
 import authService from "../../state/auth/auth.service";
@@ -39,14 +38,8 @@ const useNavbarStyles = makeStyles((theme) => ({
         zIndex: theme.zIndex.appBar,
     },
     logoRoot: {
-        // color: theme.palette.grey[900],
-        color: theme.palette.secondary.main,
-        cursor: "pointer",
-        fontFamily: "Pirata One",
-        fontSize: 35,
-        height: 40,
-        width: 40,
-        lineHeight: "40px",
+        height: 50,
+        width: 50,
     },
     fullWidth: {
         margin: "0 auto 0 auto",
@@ -109,29 +102,6 @@ const Navbar: React.FC = () => {
         return (
             <>
                 <CreatePostButton />
-                {/* <Chip
-                    className={classes.profileChip}
-                    icon={
-                        <Avatar1
-                            src={authState.avatarUrl}
-                            className={classes.headerAvatar}
-                            ref={anchorRef}
-                            aria-controls={isDropdownOpen ? "menu-list-grow" : undefined}
-                            aria-haspopup="true"
-                            alt={authState.username}
-                        />
-                    }
-                    label={
-                        //TODO:FIX
-                        <Typography className={classes.avatarLabel}>{authState.username}</Typography>
-                    }
-                    variant="outlined"
-                    ref={anchorRef}
-                    aria-controls={isDropdownOpen ? "menu-list-grow" : undefined}
-                    aria-haspopup="true"
-                    onClick={handleToggle}
-                    color="primary"
-                /> */}
                 <Avatar
                     src={authState.avatarUrl}
                     className={classes.headerAvatar}
@@ -176,8 +146,8 @@ const Navbar: React.FC = () => {
     return (
         <Box className={classes.navRoot}>
             <Link href="/">
-                <IconButton size="small">
-                    <Typography className={classes.logoRoot}>M</Typography>
+                <IconButton className={classes.logoRoot}>
+                    <Image src="/logo.png" height={30} width={24} quality={1} />
                 </IconButton>
             </Link>
             <Box className={classes.fullWidth} />
