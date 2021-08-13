@@ -1,7 +1,7 @@
+import React, { useEffect } from "react";
 import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import React, { useEffect } from "react";
 import theme from "../src/theme";
 import ReactGA from "react-ga";
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -18,7 +18,7 @@ export default function MyApp(props) {
             jssStyles.parentElement.removeChild(jssStyles);
         }
 
-        //Event Tracker
+        // Event Tracker
         ReactGA.initialize("UA-194977580-1", { debug: process.env.NODE_ENV === "development" });
     }, []);
 
@@ -32,7 +32,7 @@ export default function MyApp(props) {
         <>
             <Head>
                 <meta charSet="utf-8" />
-                <title>{process.env.NODE_ENV == "development" ? "DEV•Memenese" : "Memenese"}</title>
+                <title>{process.env.NODE_ENV === "development" ? "DEV•Memenese" : "Memenese"}</title>
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
                 <link rel="canonical" href={url} />
 

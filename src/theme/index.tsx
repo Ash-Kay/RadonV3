@@ -1,4 +1,4 @@
-import { createMuiTheme, ThemeOptions } from "@material-ui/core/styles";
+import { createTheme, ThemeOptions } from "@material-ui/core/styles";
 
 const commonProps = {
     typography: {
@@ -61,7 +61,7 @@ const commonProps = {
     },
 };
 
-const lightTheme = createMuiTheme({
+const lightTheme = createTheme({
     palette: {
         type: "light",
         primary: {
@@ -77,7 +77,7 @@ const lightTheme = createMuiTheme({
     ...(commonProps as ThemeOptions),
 });
 
-const darkTheme = createMuiTheme({
+const darkTheme = createTheme({
     palette: {
         type: "dark",
         primary: {

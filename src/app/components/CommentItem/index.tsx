@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import ReactMarkdown, { NodeType } from "react-markdown";
+import ReactMarkdown from "react-markdown";
 import { Comment, Vote } from "../../state/posts/post.model";
 import Media from "../core/Media";
 import { AuthContext } from "../../context/auth.context";
@@ -74,7 +74,7 @@ const useCommentItemStyles = makeStyles((theme) => ({
 const CommentItem: React.FC<Props> = (props: Props) => {
     const classes = useCommentItemStyles();
     const authState = useContext(AuthContext);
-    const disallowedTypes: NodeType[] = ["image", "link", "listItem", "list"];
+    const disallowedTypes = ["image", "link", "listItem", "list"];
     const [vote, setVote] = useState<number>(props.item.vote ? props.item.vote : 0);
     const [voteSum, setVoteSum] = useState<number>(props.item.voteSum ? props.item.voteSum : 0);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -157,7 +157,7 @@ const CommentItem: React.FC<Props> = (props: Props) => {
                     <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} cursor="pointer" />
                 )}
 
-                <ReactMarkdown className={classes.commentBoxText} disallowedTypes={disallowedTypes}>
+                <ReactMarkdown className={classes.commentBoxText} disallowedElements={disallowedTypes}>
                     {props.item.message}
                 </ReactMarkdown>
             </Box>

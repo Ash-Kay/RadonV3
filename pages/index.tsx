@@ -43,7 +43,7 @@ const Index = (props: Props) => {
     };
 
     useEffect(() => {
-        updateAuthState({ ...props.user, isLoggedIn: props.user.id == 0 ? false : true });
+        updateAuthState({ ...props.user, isLoggedIn: props.user.id !== 0 });
     }, []);
 
     return (
