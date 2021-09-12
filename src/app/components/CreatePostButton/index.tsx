@@ -1,5 +1,5 @@
 import React from "react";
-import postService from "../../state/posts/post.service";
+import { createNewPost } from "../../state/posts/post.service";
 import { Event } from "../../../analytics/Events";
 import useAuthStore from "../../state/auth/auth.store";
 import {
@@ -43,7 +43,7 @@ const useNewPostButtonStyles = makeStyles((theme) => ({
         width: 500,
         maxWidth: "100vw",
         padding: theme.spacing(2, 4, 3),
-        maxHeight: "90vh",
+        maxHeight: "calc(100vh - 38px)",
         overflowY: "auto",
     },
     formElements: {
@@ -62,6 +62,10 @@ const useNewPostButtonStyles = makeStyles((theme) => ({
     },
     innerFlex: {
         display: "flex",
+        [theme.breakpoints.down("sm")]: {
+            flexDirection: "column-reverse",
+            alignItems: "flex-end",
+        },
     },
     closeButton: {
         marginLeft: theme.spacing(1),
@@ -82,7 +86,7 @@ const NewPostButton: React.FC = () => {
 
     const submitNewPostForm = () => {
         if (createPostForm.file && createPostForm.title) {
-            postService.createNewPost(createPostForm, (isSuccess) => {
+            createNewPost(createPostForm, authState.token, (isSuccess) => {
                 if (isSuccess) setCreatePostForm(emtyForm);
             });
             setCreatePostModalOpen(false);

@@ -24,7 +24,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { VscComment } from "react-icons/vsc";
 import CommentInput from "../CommentInput";
 import CommentItem from "../CommentItem";
-import postService from "../../state/posts/post.service";
+import { getComments, softDeletePost } from "../../state/posts/post.service";
 import { useQuery } from "react-query";
 import { AxiosResponse } from "axios";
 import ConditionalComponent from "../ConditionalComponent";
@@ -84,7 +84,7 @@ const PostItem: React.FC<Props> = (props: Props) => {
     };
 
     const handlePostDelete = async () => {
-        const { data } = await postService.softDeletePost(props.item.id);
+        const { data } = await softDeletePost(props.item.id, authState.token);
         props.deletePost?.(props.item.id);
 
         setAnchorEl(null);
@@ -99,7 +99,7 @@ const PostItem: React.FC<Props> = (props: Props) => {
         refetch: refetchComments,
     } = useQuery<AxiosResponse<Comment[]>>(
         ["comments", props.item.id],
-        () => postService.getComments(props.item.id).then((response) => response.data),
+        () => getComments(props.item.id, authState.token).then((response) => response.data),
         { enabled: false }
     );
 

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import postService from "../../state/posts/post.service";
+import { getPostPage } from "../../state/posts/post.service";
 import InfiniteScroll from "react-infinite-scroller";
 import { Post } from "../../state/posts/post.model";
 import PostItem from "../PostItem";
 import { Box, CircularProgress, makeStyles } from "@material-ui/core";
+import useAuthStore from "../../state/auth/auth.store";
 
 interface Props {
     posts: Post[];
@@ -19,9 +20,10 @@ const useHomeFeedStyles = makeStyles((theme) => ({
 const HomeFeed: React.FC<Props> = (props: Props) => {
     const classes = useHomeFeedStyles();
     const [hasMore, setHasMore] = useState(true);
+    const authState = useAuthStore((state) => state.data);
 
     const fetchPage = async (page: number) => {
-        const { data } = await postService.getPostPage(page);
+        const { data } = await getPostPage(page, authState.token);
         if (data.data.length == 0) {
             setHasMore(false);
         } else {

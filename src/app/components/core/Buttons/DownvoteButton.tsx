@@ -2,9 +2,8 @@ import React, { useContext } from "react";
 import { EntityType, Event } from "../../../../analytics/Events";
 import { AuthContext } from "../../../context/auth.context";
 import useGlobalStore from "../../../state/global/global.store";
-import postService from "../../../state/posts/post.service";
 import { ImArrowDown } from "react-icons/im";
-
+import { downvote as downvoteService, removeVote } from "../../../state/posts/post.service";
 interface Props {
     id: number;
     checked: boolean;
@@ -21,12 +20,12 @@ const DownvoteButton: React.FC<Props> = (props: Props) => {
             return;
         }
         if (!props.checked) {
-            const { data } = await postService.downvote(props.id);
+            const { data } = await downvoteService(props.id, authState.token);
             props.updateVoteState(data.data.vote, data.data.voteSum);
 
             Event.DOWNVOTE_BUTTON_CLICKED(props.id, EntityType.POST);
         } else {
-            const { data } = await postService.removeVote(props.id);
+            const { data } = await removeVote(props.id, authState.token);
             props.updateVoteState(data.data.vote, data.data.voteSum);
 
             Event.VOTE_REMOVED_BUTTON_CLICKED(props.id, EntityType.POST);

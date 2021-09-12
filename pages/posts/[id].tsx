@@ -1,18 +1,20 @@
 import { Box, makeStyles } from "@material-ui/core";
 import { NextPageContext } from "next";
+import { ClientSafeProvider, getProviders, getSession } from "next-auth/client";
 import Head from "next/head";
 import React, { useEffect } from "react";
 import Navbar from "../../src/app/components/Navbar";
 import PostItem from "../../src/app/components/PostItem";
 import { AuthContext } from "../../src/app/context/auth.context";
-import { AuthStateData } from "../../src/app/state/auth/auth.model";
+import { AuthStateData, AUTH_INITIAL_STATE } from "../../src/app/state/auth/auth.model";
 import useAuthStore from "../../src/app/state/auth/auth.store";
 import { Post } from "../../src/app/state/posts/post.model";
-import { main } from "../../src/utils/axios";
+import { getPost } from "../../src/app/state/posts/post.service";
 
 interface Props {
     post: Post;
     user: AuthStateData;
+    providers: Record<string, ClientSafeProvider>;
 }
 
 const useFullScreenPostStyles = makeStyles((theme) => ({
@@ -65,7 +67,7 @@ const FullScreenPost = (props: Props) => {
                 <meta name="twitter:description" content={props.post.title} />
                 <meta name="twitter:image" content={props.post.mediaUrl} />
             </Head>
-            <Navbar />
+            <Navbar providers={props.providers} />
             <Box className={classes.root}>
                 <Box className={classes.homeFeedBox}>
                     <PostItem item={props.post} fullScreenPost />
@@ -81,13 +83,18 @@ export const getServerSideProps = async (context: NextPageContext) => {
     const { id } = context.query;
 
     try {
-        const cookieHeader = { Cookie: context.req.headers.cookie ? context.req.headers.cookie : "loggedout" };
+        const session = await getSession(context);
 
-        const postResponse = await main.get(`/posts/${id}`, { headers: cookieHeader });
-        const userDataResponse = await main.get("/users/me", { headers: cookieHeader });
+        const postResponse = await getPost(id, session?.user?.token);
+
+        const providers = await getProviders();
 
         return {
-            props: { post: postResponse.data.data, user: userDataResponse.data.data },
+            props: {
+                post: postResponse.data.data,
+                user: session ? session.user : AUTH_INITIAL_STATE,
+                providers,
+            },
         };
     } catch (error) {
         console.log(error);

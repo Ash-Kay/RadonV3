@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import GoogleLogin from "react-google-login";
 import authService from "../../state/auth/auth.service";
-import { FaGoogle } from "react-icons/fa";
 import { Event, LoginType } from "../../../analytics/Events";
 import useGlobalStore from "../../state/global/global.store";
 import { Box, Button, makeStyles, Typography, Modal } from "@material-ui/core";
-import clsx from "clsx";
 import { Role } from "../../state/auth/auth.model";
 import useAuthStore from "../../state/auth/auth.store";
+import { ClientSafeProvider, signIn } from "next-auth/client";
+import { FcGoogle } from "react-icons/fc";
+import Image from "next/image";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const useLoginModalStyles = makeStyles((theme) => ({
     //TODO: common
@@ -18,28 +19,61 @@ const useLoginModalStyles = makeStyles((theme) => ({
     modal: {
         display: "flex",
         alignItems: "center",
+        [theme.breakpoints.down("sm")]: {
+            alignItems: "flex-end",
+        },
         justifyContent: "center",
     },
     paper: {
         width: 500,
+        maxWidth: "100vw",
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
         borderRadius: theme.shape.borderRadius,
+        maxHeight: "calc(100vh - 38px)", //close button size + margin
+        overflowY: "auto",
     },
     boldText: {
         fontWeight: 700,
     },
-    //commonend
+    //commonent
     buttonMargin: {
         marginTop: theme.spacing(4),
     },
     googleLoginButton: {
         backgroundColor: "red",
     },
+    description: {
+        marginTop: theme.spacing(2),
+    },
+    loginButtonSection: {
+        marginTop: theme.spacing(2),
+    },
+    innerFlex: {
+        display: "flex",
+        [theme.breakpoints.down("sm")]: {
+            flexDirection: "column-reverse",
+            alignItems: "flex-end",
+        },
+    },
+    closeButton: {
+        marginLeft: theme.spacing(1),
+        cursor: "pointer",
+        "&:hover": {
+            opacity: 0.7,
+        },
+    },
+    bold: {
+        fontWeight: 700,
+    },
 }));
 
-const LoginModal: React.FC = () => {
+interface Props {
+    providers: Record<string, ClientSafeProvider>;
+}
+
+const LoginModal: React.FC<Props> = (props: Props) => {
     const classes = useLoginModalStyles();
 
     const updateAuthState = useAuthStore((state) => state.updateState);
@@ -98,35 +132,36 @@ const LoginModal: React.FC = () => {
                 Log In
             </Button>
             <Modal disablePortal open={isSignInModalOpen} onClose={closeSignInModal} className={classes.modal}>
-                <Box className={classes.paper}>
-                    <Typography variant="h6" className={classes.boldText}>
+                <Box className={classes.innerFlex}>
+                    <Box className={classes.paper}>
+                        <Box>
+                            <Image src="/full-logo.png" height={40} width={200} quality={1} />
+                        </Box>
+                        {/* <Typography variant="h6" className={classes.boldText}>
                         Welcome to Memenese!
-                    </Typography>
+                    </Typography> */}
 
-                    <GoogleLogin
-                        clientId="946380795317-321u8sasdpeqe6uuja0cs5c071bs8vqb.apps.googleusercontent.com"
-                        buttonText="Continue with Google"
-                        onSuccess={successResponse}
-                        onFailure={failureResponse}
-                        render={(renderProps) => (
-                            <Box className={classes.buttonMargin}>
+                        <Typography variant="body1" className={classes.description}>
+                            Choose how to Login or Register your Memenese account
+                        </Typography>
+
+                        <Box className={classes.loginButtonSection}>
+                            {Object.values(props.providers).map((provider) => (
                                 <Button
-                                    className={clsx(classes.googleLoginButton, classes.loginButton)}
+                                    key={provider.name}
+                                    variant="outlined"
+                                    startIcon={<FcGoogle />}
+                                    onClick={() => signIn(provider.id)}
                                     fullWidth
-                                    disabled={renderProps.disabled}
-                                    variant="contained"
-                                    color="secondary"
-                                    startIcon={<FaGoogle size={13} />}
-                                    onClick={() => {
-                                        renderProps.onClick();
-                                        onLoginWithGoogleButtonClick();
-                                    }}
                                 >
-                                    Continue with Google
+                                    <Typography variant="body1" className={classes.bold}>
+                                        {provider.name}
+                                    </Typography>
                                 </Button>
-                            </Box>
-                        )}
-                    />
+                            ))}
+                        </Box>
+                    </Box>
+                    <CancelIcon fontSize="large" className={classes.closeButton} onClick={closeSignInModal} />
                 </Box>
             </Modal>
         </>

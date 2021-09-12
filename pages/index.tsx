@@ -5,13 +5,14 @@ import { AuthContext } from "../src/app/context/auth.context";
 import { AuthStateData, AUTH_INITIAL_STATE } from "../src/app/state/auth/auth.model";
 import useAuthStore from "../src/app/state/auth/auth.store";
 import { Post } from "../src/app/state/posts/post.model";
-import { main } from "../src/utils/axios";
 import { Box, makeStyles } from "@material-ui/core";
 import HomeFeed from "../src/app/components/HomeFeed";
-
+import { ClientSafeProvider, getProviders, getSession } from "next-auth/client";
+import { getPostPage } from "../src/app/state/posts/post.service";
 interface Props {
     posts: Post[];
     user: AuthStateData;
+    providers: Record<string, ClientSafeProvider>;
 }
 
 const useIndexStyles = makeStyles((theme) => ({
@@ -36,19 +37,19 @@ const Index = (props: Props) => {
     const [posts, setPosts] = useState(props.posts);
 
     const updatePosts = (updatedPostList: Post[]) => {
-        console.log(`oldPosts`, posts);
-        console.log(`newPosts`, updatedPostList);
-
         setPosts(updatedPostList);
     };
 
     useEffect(() => {
-        updateAuthState({ ...props.user, isLoggedIn: props.user.id !== 0 });
+        updateAuthState({
+            ...props.user,
+            isLoggedIn: props.user.id !== null && props.user.id !== undefined && props.user.id !== 0,
+        });
     }, []);
 
     return (
         <AuthContext.Provider value={authState}>
-            <Navbar />
+            <Navbar providers={props.providers} />
             <Box className={classes.root}>
                 <Box className={classes.homeFeedBox}>
                     <HomeFeed posts={posts} updatePosts={updatePosts} />
@@ -62,18 +63,23 @@ export default Index;
 
 export const getServerSideProps = async (context: NextPageContext) => {
     try {
-        const cookieHeader = { Cookie: context.req ? context.req.headers.cookie : "loggedout" };
+        const session = await getSession(context);
 
-        const postListResponse = await main.get("/posts/?page=1", { headers: cookieHeader });
-        const userDataResponse = await main.get("/users/me", { headers: cookieHeader });
+        const postListResponse = await getPostPage(1, session?.user?.token);
+
+        const providers = await getProviders();
 
         return {
-            props: { posts: postListResponse.data.data, user: userDataResponse.data.data },
+            props: {
+                posts: postListResponse.data.data,
+                user: session ? session.user : AUTH_INITIAL_STATE,
+                providers,
+            },
         };
     } catch (error) {
         console.log(error);
     }
     return {
-        props: { posts: [], user: AUTH_INITIAL_STATE },
+        props: { posts: [], user: AUTH_INITIAL_STATE, providers: [] },
     };
 };

@@ -30,6 +30,9 @@ const commonProps = {
                 padding: "0 !important",
                 margin: "12px auto",
             },
+            removeButton: {
+                opacity: 1,
+            },
         },
         MuiDropzoneArea: {
             root: {

@@ -3,8 +3,7 @@ import { ImArrowUp } from "react-icons/im";
 import { EntityType, Event } from "../../../../analytics/Events";
 import { AuthContext } from "../../../context/auth.context";
 import useGlobalStore from "../../../state/global/global.store";
-import postService from "../../../state/posts/post.service";
-
+import { cremoveVote, cupvote } from "../../../state/posts/post.service";
 interface Props {
     commId: number;
     postId: number;
@@ -23,12 +22,12 @@ const CUpvoteButton: React.FC<Props> = (props: Props) => {
             return;
         }
         if (!props.checked) {
-            const { data } = await postService.cupvote(props.postId, props.commId);
+            const { data } = await cupvote(props.postId, props.commId, authState.token);
             props.updateVoteState(data.data.vote, data.data.voteSum);
 
             Event.UPVOTE_BUTTON_CLICKED(props.commId, EntityType.COMMENT);
         } else {
-            const { data } = await postService.cremoveVote(props.postId, props.commId);
+            const { data } = await cremoveVote(props.postId, props.commId, authState.token);
             props.updateVoteState(data.data.vote, data.data.voteSum);
 
             Event.VOTE_REMOVED_BUTTON_CLICKED(props.commId, EntityType.COMMENT);

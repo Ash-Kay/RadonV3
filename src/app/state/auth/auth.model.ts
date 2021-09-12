@@ -13,6 +13,7 @@ export interface AuthStateData {
     googleId: string;
     role: Role;
     username: string;
+    token: string;
     isLoggedIn: boolean;
     avatarUrl?: string;
 }
@@ -23,5 +24,6 @@ export const AUTH_INITIAL_STATE: AuthStateData = {
     role: Role.USER,
     username: "",
     googleId: "",
+    token: "",
     isLoggedIn: false,
 };

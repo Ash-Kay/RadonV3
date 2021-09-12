@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import postService from "../../state/posts/post.service";
+import { postComment } from "../../state/posts/post.service";
 import { AuthContext } from "../../context/auth.context";
 import { IoMdSend } from "react-icons/io";
 import { Event } from "../../../analytics/Events";
@@ -49,17 +49,16 @@ const CommentInput: React.FC<Props> = (props: Props) => {
         }
     }, [commentForm]);
 
-    const postComment = () => {
+    const handlePostComment = () => {
         if (!authState.isLoggedIn) {
             updateGlobalState({ isLoginModalOpen: true });
             return;
         }
         if (commentForm.comment || commentForm.file) {
-            postService.postComment(props.postId, commentForm, (isSuccess) => {
+            postComment(props.postId, commentForm, authState.token, (isSuccess) => {
                 if (isSuccess) setCommentForm(emptyCommentForm);
+                props.refetchComments();
             });
-
-            props.refetchComments();
 
             Event.COMMENT_BUTTON_VALID_SUBMIT(commentForm);
         }
@@ -86,7 +85,7 @@ const CommentInput: React.FC<Props> = (props: Props) => {
                     disabled={isCommentSubmitDisabled}
                     color="secondary"
                     className={classes.inputIconButton}
-                    onClick={postComment}
+                    onClick={handlePostComment}
                 >
                     <IoMdSend />
                 </IconButton>

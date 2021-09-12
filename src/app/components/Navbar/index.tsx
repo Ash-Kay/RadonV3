@@ -23,6 +23,7 @@ import {
 import authService from "../../state/auth/auth.service";
 import CreatePostButton from "../CreatePostButton";
 import LoginModal from "../LoginModal";
+import { ClientSafeProvider, signOut } from "next-auth/client";
 
 const useNavbarStyles = makeStyles((theme) => ({
     navRoot: {
@@ -78,7 +79,11 @@ const useNavbarStyles = makeStyles((theme) => ({
     },
 }));
 
-const Navbar: React.FC = () => {
+interface Props {
+    providers: Record<string, ClientSafeProvider>;
+}
+
+const Navbar: React.FC<Props> = (props: Props) => {
     const classes = useNavbarStyles();
 
     const authState = useContext(AuthContext);
@@ -95,7 +100,11 @@ const Navbar: React.FC = () => {
     };
 
     const loggedOutItems = () => {
-        return <LoginModal />;
+        return <LoginModal providers={props.providers} />;
+    };
+
+    const handleLogoutClick = () => {
+        signOut();
     };
 
     const loggedInItems = () => {
@@ -124,7 +133,7 @@ const Navbar: React.FC = () => {
                                 <CardContent className={classes.cardContent}>
                                     <Grid container direction="column" spacing={0}>
                                         <List component="nav">
-                                            <ListItem className={classes.listItem} button onClick={authService.logout}>
+                                            <ListItem className={classes.listItem} button onClick={handleLogoutClick}>
                                                 <ListItemIcon>
                                                     <FiLogOut />
                                                 </ListItemIcon>

@@ -22,7 +22,7 @@ import {
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ConditionalComponent from "../ConditionalComponent";
-import postService from "../../state/posts/post.service";
+import { softDeleteComment } from "../../state/posts/post.service";
 
 interface Props {
     postId: number;
@@ -88,7 +88,7 @@ const CommentItem: React.FC<Props> = (props: Props) => {
     };
 
     const handleCommentDelete = async () => {
-        const { data } = await postService.softDeleteComment(props.postId, props.item.id);
+        const { data } = await softDeleteComment(props.postId, props.item.id, authState.token);
 
         if (data.success) {
             props.refetchComments();
