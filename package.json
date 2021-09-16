@@ -47,6 +47,7 @@
         "react-markdown": "^7.0.0",
         "react-query": "^3.19.6",
         "react-swipeable": "^6.1.2",
+        "sharp": "^0.29.1",
         "zustand": "^3.5.8"
     },
     "scripts": {
