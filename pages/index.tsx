@@ -65,6 +65,7 @@ export const getServerSideProps = async (context: NextPageContext) => {
     try {
         const session = await getSession(context);
 
+        //@ts-ignore
         const postListResponse = await getPostPage(1, session?.user?.token);
 
         const providers = await getProviders();

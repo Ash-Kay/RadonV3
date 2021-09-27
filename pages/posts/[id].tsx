@@ -52,6 +52,7 @@ const FullScreenPost = (props: Props) => {
                 <meta itemProp="name" content={props.post.title} />
                 <meta itemProp="description" content={props.post.title} />
                 <meta itemProp="image" content={props.post.mediaUrl} />
+                <meta itemProp="author" content={props.post.user.username} />
                 <link rel="canonical" href={url + props.post.id} />
 
                 {/* <!-- Facebook Meta Tags --> */}
@@ -85,6 +86,7 @@ export const getServerSideProps = async (context: NextPageContext) => {
     try {
         const session = await getSession(context);
 
+        //@ts-ignore
         const postResponse = await getPost(id, session?.user?.token);
 
         const providers = await getProviders();

@@ -19,6 +19,7 @@ import {
     CardContent,
     Menu,
     MenuItem,
+    Box,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { VscComment } from "react-icons/vsc";
@@ -28,6 +29,7 @@ import { getComments, softDeletePost } from "../../state/posts/post.service";
 import { useQuery } from "react-query";
 import { AxiosResponse } from "axios";
 import ConditionalComponent from "../ConditionalComponent";
+import clsx from "clsx";
 
 interface Props {
     item: Post;
@@ -65,6 +67,9 @@ const usePostItemStyles = makeStyles((theme) => ({
     menuOptionLabel: {
         marginLeft: theme.spacing(1),
     },
+    inline: { display: "inline" },
+    bold: { fontWeight: 500 },
+    timeago: { marginLeft: theme.spacing(2) },
 }));
 
 const PostItem: React.FC<Props> = (props: Props) => {
@@ -183,9 +188,14 @@ const PostItem: React.FC<Props> = (props: Props) => {
                     </Typography>
                 }
                 subheader={
-                    <Typography variant="body2" component="h2">
-                        {props.item.timeago}
-                    </Typography>
+                    <Box>
+                        <Typography variant="body2" component="h2" className={clsx(classes.inline, classes.bold)}>
+                            {props.item.user.username}
+                        </Typography>
+                        <Typography variant="body2" component="h2" className={clsx(classes.inline, classes.timeago)}>
+                            {props.item.timeago}
+                        </Typography>
+                    </Box>
                 }
             />
 

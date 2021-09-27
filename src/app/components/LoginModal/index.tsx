@@ -146,19 +146,20 @@ const LoginModal: React.FC<Props> = (props: Props) => {
                         </Typography>
 
                         <Box className={classes.loginButtonSection}>
-                            {Object.values(props.providers).map((provider) => (
-                                <Button
-                                    key={provider.name}
-                                    variant="outlined"
-                                    startIcon={<FcGoogle />}
-                                    onClick={() => signIn(provider.id)}
-                                    fullWidth
-                                >
-                                    <Typography variant="body1" className={classes.bold}>
-                                        {provider.name}
-                                    </Typography>
-                                </Button>
-                            ))}
+                            {props.providers &&
+                                Object.values(props.providers).map((provider) => (
+                                    <Button
+                                        key={provider.name}
+                                        variant="outlined"
+                                        startIcon={<FcGoogle />}
+                                        onClick={() => signIn(provider.id)}
+                                        fullWidth
+                                    >
+                                        <Typography variant="body1" className={classes.bold}>
+                                            {provider.name}
+                                        </Typography>
+                                    </Button>
+                                ))}
                         </Box>
                     </Box>
                     <CancelIcon fontSize="large" className={classes.closeButton} onClick={closeSignInModal} />

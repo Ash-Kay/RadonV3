@@ -2,10 +2,10 @@ interface Props {
     mediaUrl: string;
     mime: string;
     id: number;
-    isFullPostScreen?: boolean;
     cursor?: string;
     onMediaClick?: (param: React.MouseEvent<HTMLImageElement | HTMLVideoElement, MouseEvent>) => void;
     fullScreenPost?: boolean;
+    style?: React.CSSProperties;
 }
 
 const Media: React.FC<Props> = (props: Props) => {
@@ -17,6 +17,7 @@ const Media: React.FC<Props> = (props: Props) => {
                     maxHeight: props.fullScreenPost ? "unset" : "800px",
                     objectFit: "cover",
                     display: "block",
+                    ...props.style,
                 }}
                 src={props.mediaUrl}
                 onClick={(e) => props.onMediaClick && props.onMediaClick(e)}
@@ -41,6 +42,5 @@ const Media: React.FC<Props> = (props: Props) => {
 export default Media;
 
 Media.defaultProps = {
-    isFullPostScreen: false,
     cursor: "auto",
 };

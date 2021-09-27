@@ -1,6 +1,6 @@
 module.exports = {
     images: {
-        domains: ["localhost"],
+        domains: ["radiumbucket.s3.ap-south-1.amazonaws.com", "localhost"],
     },
     eslint: {
         // Warning: This allows production builds to successfully complete even if
