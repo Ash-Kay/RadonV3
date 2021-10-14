@@ -68,8 +68,8 @@ const usePostItemStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(1),
     },
     inline: { display: "inline" },
-    bold: { fontWeight: 500 },
-    timeago: { marginLeft: theme.spacing(2) },
+    username: { fontWeight: 500, color: theme.palette.grey[500] },
+    timeago: { marginLeft: theme.spacing(1), color: theme.palette.grey[600] },
 }));
 
 const PostItem: React.FC<Props> = (props: Props) => {
@@ -189,7 +189,7 @@ const PostItem: React.FC<Props> = (props: Props) => {
                 }
                 subheader={
                     <Box>
-                        <Typography variant="body2" component="h2" className={clsx(classes.inline, classes.bold)}>
+                        <Typography variant="body2" component="h2" className={clsx(classes.inline, classes.username)}>
                             {props.item.user.username}
                         </Typography>
                         <Typography variant="body2" component="h2" className={clsx(classes.inline, classes.timeago)}>
