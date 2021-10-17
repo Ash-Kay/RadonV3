@@ -7,6 +7,7 @@ import { checkVoteState } from "../../../utils/checkVoteState";
 import DownvoteButton from "../core/Buttons/DownvoteButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ReportIcon from "@material-ui/icons/Report";
+import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import {
     Card,
     CardHeader,
@@ -223,8 +224,15 @@ const PostItem: React.FC<Props> = (props: Props) => {
                         updateVoteState={updateVoteState}
                     />
                 </IconButton>
-                <IconButton aria-label="downvote" className={classes.comment} onClick={handleCommentActionClicked}>
+                <IconButton className={classes.comment} onClick={handleCommentActionClicked}>
                     <VscComment />
+                </IconButton>
+                <IconButton
+                    aria-label="share on whatsapp"
+                    className={classes.comment}
+                    href={`https://api.whatsapp.com/send?text=https://memenese.com/posts/${props.item.id}`}
+                >
+                    <WhatsAppIcon />
                 </IconButton>
             </CardActions>
 
