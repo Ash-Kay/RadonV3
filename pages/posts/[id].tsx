@@ -41,6 +41,10 @@ const FullScreenPost = (props: Props) => {
 
     useEffect(() => {
         updateAuthState({ ...props.user, isLoggedIn: props.user.id == 0 ? false : true });
+        window.scroll({
+            top: 0,
+            left: 0,
+        });
     }, []);
 
     return (

@@ -30,6 +30,8 @@ import { getComments, softDeletePost } from "../../state/posts/post.service";
 import { useQuery } from "react-query";
 import { AxiosResponse } from "axios";
 import ConditionalComponent from "../ConditionalComponent";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import clsx from "clsx";
 
 interface Props {
@@ -71,10 +73,17 @@ const usePostItemStyles = makeStyles((theme) => ({
     inline: { display: "inline" },
     username: { fontWeight: 500, color: theme.palette.grey[500] },
     timeago: { marginLeft: theme.spacing(1), color: theme.palette.grey[600] },
+    link: {
+        "&:hover": {
+            textDecoration: "underline",
+            cursor: "pointer",
+        },
+    },
 }));
 
 const PostItem: React.FC<Props> = (props: Props) => {
     const classes = usePostItemStyles();
+    const router = useRouter();
     const authState = useContext(AuthContext);
     const [expanded, setExpanded] = useState(false || props.fullScreenPost);
     const [vote, setVote] = useState<number>(props.item.vote ? props.item.vote : 0);
@@ -141,6 +150,10 @@ const PostItem: React.FC<Props> = (props: Props) => {
         setVoteSum(voteSum);
     };
 
+    const openModalPost = () => {
+        router.push(`/?postId=${props.item.id}`, `/posts/${props.item.id}`, { scroll: false });
+    };
+
     useEffect(() => {
         if (props.fullScreenPost) refetchComments();
     }, []);
@@ -184,13 +197,17 @@ const PostItem: React.FC<Props> = (props: Props) => {
                     </ConditionalComponent>
                 }
                 title={
-                    <Typography variant="body2" component="h1">
+                    <Typography variant="body2" component="h1" onClick={openModalPost} className={classes.link}>
                         {props.item.title}
                     </Typography>
                 }
                 subheader={
                     <Box>
-                        <Typography variant="body2" component="h2" className={clsx(classes.inline, classes.username)}>
+                        <Typography
+                            variant="body2"
+                            component="h2"
+                            className={clsx(classes.inline, classes.username, classes.link)}
+                        >
                             {props.item.user.username}
                         </Typography>
                         <Typography variant="body2" component="h2" className={clsx(classes.inline, classes.timeago)}>
@@ -206,6 +223,8 @@ const PostItem: React.FC<Props> = (props: Props) => {
                 id={props.item.id}
                 cursor="pointer"
                 fullScreenPost={props.fullScreenPost}
+                onMediaClick={openModalPost}
+                style={{ width: "100%" }}
             />
 
             <CardActions disableSpacing>

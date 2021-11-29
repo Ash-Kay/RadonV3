@@ -154,7 +154,13 @@ const CommentItem: React.FC<Props> = (props: Props) => {
             />
             <Box className={classes.commentBoxSection}>
                 {props.item.mediaUrl && props.item.mime && (
-                    <Media mediaUrl={props.item.mediaUrl} mime={props.item.mime} id={props.item.id} cursor="pointer" />
+                    <Media
+                        mediaUrl={props.item.mediaUrl}
+                        mime={props.item.mime}
+                        id={props.item.id}
+                        cursor="pointer"
+                        style={{ width: "100%" }}
+                    />
                 )}
 
                 <ReactMarkdown className={classes.commentBoxText} disallowedElements={disallowedTypes}>

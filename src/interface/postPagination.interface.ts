@@ -1,4 +1,4 @@
-import { Post } from "../app/state/posts/post.model";
+import { Post, Comment } from "../app/state/posts/post.model";
 
 export interface PaginationResponse {
     success: boolean;
@@ -7,4 +7,11 @@ export interface PaginationResponse {
     errorCode?: string;
     previousPage: string;
     nextPage: string;
+}
+
+export interface NormalResponse<T> {
+    success: boolean;
+    message: string;
+    data: T;
+    errorCode?: string;
 }

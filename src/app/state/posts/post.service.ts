@@ -2,7 +2,8 @@ import { NewPostForm } from "../../components/CreatePostButton";
 import { main } from "../../../utils/axios";
 import { CommentForm } from "../../components/CommentInput";
 import { AxiosResponse } from "axios";
-import { PaginationResponse } from "../../../interface/postPagination.interface";
+import { NormalResponse, PaginationResponse } from "../../../interface/postPagination.interface";
+import { Post } from "./post.model";
 
 enum HeaderType {
     AUTH_TOKEN = 1,
@@ -17,7 +18,7 @@ export const getPostPage = (pageNo: number, token?: string): Promise<AxiosRespon
     }
 };
 
-export const getPost = (postId: number, token?: string): Promise<AxiosResponse<PaginationResponse>> => {
+export const getPost = (postId: number, token?: string): Promise<AxiosResponse<NormalResponse<Post>>> => {
     if (token) {
         return main.get(`/posts/${postId}`, getHeader({ token }, HeaderType.AUTH_TOKEN));
     } else {
@@ -37,7 +38,7 @@ export const removeVote = (postId: number, token: string) => {
     return main.delete(`/posts/${postId}/removevote`, getHeader({ token }, HeaderType.AUTH_TOKEN));
 };
 
-export const getComments = (postId: number, token: string) => {
+export const getComments = (postId: number, token?: string) => {
     if (token) {
         return main.get(`/posts/${postId}/comment`, getHeader({ token }, HeaderType.AUTH_TOKEN));
     } else {

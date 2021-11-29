@@ -13,10 +13,11 @@ const Media: React.FC<Props> = (props: Props) => {
         return (
             <img
                 style={{
-                    width: "100%",
-                    maxHeight: props.fullScreenPost ? "unset" : "800px",
+                    // width: "100%",
+                    // maxHeight: props.fullScreenPost ? "unset" : "800px",
                     objectFit: "cover",
                     display: "block",
+                    cursor: props.cursor,
                     ...props.style,
                 }}
                 src={props.mediaUrl}

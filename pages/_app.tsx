@@ -24,7 +24,7 @@ export default function MyApp(props) {
 
     //
     const title = "Memenese: The language of Memes";
-    const description = "Create, Share and Enjoy Memes";
+    const description = "Meta description tags, while not tied to search engine rankings, are extremely important in";
     const imageUrl = "https://memenese.com/apple-touch-icon.png";
     const url = "https://memenese.com";
 
@@ -32,13 +32,13 @@ export default function MyApp(props) {
         <>
             <Head>
                 <meta charSet="utf-8" />
-                <title>{process.env.NODE_ENV === "development" ? "DEV•Memenese" : "Memenese"}</title>
+                <title>{process.env.NODE_ENV === "development" ? "DEV•" + title : title}</title>
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
                 <link rel="canonical" href={url} />
 
                 {/* <!-- Google / Search Engine Tags --> */}
                 <meta itemProp="name" content={title} />
-                <meta itemProp="description" content={description} />
+                <meta itemProp="description" name="description" content={description} />
                 <meta itemProp="image" content={imageUrl} />
                 <link rel="canonical" href={url} />
 
