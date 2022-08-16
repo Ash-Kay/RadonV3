@@ -32,6 +32,10 @@ export default NextAuth({
         async jwt(token, user, account, profile, isNewUser) {
             if (!token.id || !token.role) {
                 if (account && account.provider === "google") {
+                    console.log(`account`, account);
+
+                    console.log(`account.idToken`, account.idToken);
+
                     const { data } = await authService.getTokenWithGoogleAuth(account.idToken);
                     const decodedUser: AuthToken = jwtDecode(data.data.token);
                     token.id = decodedUser.id;
